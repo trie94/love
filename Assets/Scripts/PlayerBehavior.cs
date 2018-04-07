@@ -216,9 +216,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         // disable the net
         float lerpTime = 0f;
-        releasePos = new Vector3
-            (net.pieceInNet.transform.position.x + bounceRange,
-            net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
+        releasePos = net.transform.position + net.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
+        //releasePos = new Vector3
+        //    (net.pieceInNet.transform.position.x + bounceRange,
+        //    net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
         netCol.SetActive(false);
 
         while (true)
@@ -244,9 +245,10 @@ public class PlayerBehavior : MonoBehaviour
     IEnumerator BounceBack()
     {
         float lerpTime = 0f;
-        releasePos = new Vector3
-    (net.pieceInNet.transform.position.x + bounceRange,
-    net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
+        releasePos = net.transform.position + net.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
+        //    releasePos = new Vector3
+        //(net.pieceInNet.transform.position.x + bounceRange,
+        //net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
 
         while (true)
         {
