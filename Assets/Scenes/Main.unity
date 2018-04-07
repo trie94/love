@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465791, g: 0.49641317, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -687,6 +687,21 @@ Prefab:
       propertyPath: m_Size.z
       value: 1.6
       objectReference: {fileID: 0}
+    - target: {fileID: 82156963037611382, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1,
+        type: 2}
+      propertyPath: panLevelCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 82156963037611382, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1,
+        type: 2}
+      propertyPath: spreadCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 82156963037611382, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1,
+        type: 2}
+      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   m_IsPrefabParent: 0
@@ -695,6 +710,48 @@ GameObject:
   m_PrefabParentObject: {fileID: 1718981230671566, guid: 2edb075027c5a814ea5531b2e287204e,
     type: 2}
   m_PrefabInternal: {fileID: 1065488884}
+--- !u!1001 &702693360
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575211162189372, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 28c795e28faed2646a9d8ddf4ba0a257, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &798405351
 Prefab:
   m_ObjectHideFlags: 0
@@ -1408,6 +1465,16 @@ Prefab:
       propertyPath: nonInteractableSound
       value: 
       objectReference: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841, type: 3}
+    - target: {fileID: 82727673354312624, guid: 44254283c9c8b5e418d8c03da30a1945,
+        type: 2}
+      propertyPath: spreadCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114935323897885298, guid: 44254283c9c8b5e418d8c03da30a1945,
+        type: 2}
+      propertyPath: spawnSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ac1a2b3ec231cb146b6db25e004f2b56, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44254283c9c8b5e418d8c03da30a1945, type: 2}
   m_IsPrefabParent: 0

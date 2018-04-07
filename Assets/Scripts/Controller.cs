@@ -184,7 +184,7 @@ public class Controller : MonoBehaviour
 			
         for (int i = 0; i < piecesNum; i++)
         {
-			float yRange = Random.Range(0, 3f);
+			float yRange = Random.Range(0, 3.5f);
 			float xRange = Random.Range(-3f, 3f);
 			float zRange = Random.Range(-3f, 3f);
             int index = i % piecesPrefab.Length;

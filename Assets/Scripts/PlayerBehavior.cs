@@ -30,6 +30,9 @@ public class PlayerBehavior : MonoBehaviour
     AudioClip releaseSound;
 
     [SerializeField]
+    AudioClip spawnSound;
+
+    [SerializeField]
     LineRenderer lineRenderer;
 
     Vector3[] points;
@@ -73,6 +76,12 @@ public class PlayerBehavior : MonoBehaviour
         if (points == null)
         {
             points = new Vector3[pointsNum];
+        }
+
+        // spawn sound
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(spawnSound);
         }
     }
 
