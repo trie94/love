@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using TMPro;
 
-public class PlayerManager : NetworkBehaviour
-{
+public class PlayerManager : MonoBehaviour {
 
     [SerializeField]
     PlayerBehavior playerBehavior;
@@ -18,16 +17,9 @@ public class PlayerManager : NetworkBehaviour
     {
         playerBehavior.enabled = false;
         lineRenderer.enabled = false;
-
-        if (!isLocalPlayer)
-        {
-            Debug.Log("this is not a local player");
-            Destroy(this);
-            return;
-        }
     }
 
-    void Update()
+	void Update()
     {
         // start counting
         if (!isDone && playerBehavior.enabled)

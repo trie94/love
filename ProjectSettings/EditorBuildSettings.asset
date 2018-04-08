@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
-    guid: ec5dd6ac101763546a726015d92781e1
-  - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: a9028011c08f7564cb28279d98930378
+  - enabled: 0
+    path: Assets/ThirdParties/GoogleARCore/Examples/HelloAR/Scenes/HelloAR.unity
+    guid: e6a6fa04348cb45c9b0221eb19c946da
+  - enabled: 0
+    path: Assets/Scenes/TouchInputTest.unity
+    guid: 51e02cfdc14399344a760530bf6c50e4

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleARCore;
-using UnityEngine.Networking;
 
-public class PieceBehavior : NetworkBehaviour
-{
+public class PieceBehavior : MonoBehaviour {
 
     float range = 5f;
     float speed = 2f;
@@ -43,14 +41,8 @@ public class PieceBehavior : NetworkBehaviour
         net = GameObject.Find("Net");
     }
 
-    [ServerCallback]
-    void Update()
+	void Update ()
     {
-        if (!isServer)
-        {
-            return;
-        }
-
         if (transform.parent != null)
         {
             Snap();
@@ -63,11 +55,11 @@ public class PieceBehavior : NetworkBehaviour
         {
             Float();
         }
-    }
+	}
 
     void Float()
     {
-        transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
+        transform.RotateAround(anchor,Vector3.up,Time.deltaTime * speed);
     }
 
     void Snap()

@@ -4,10 +4,9 @@ using UnityEngine;
 using GoogleARCore;
 using GoogleARCore.HelloAR;
 using UnityEngine.Rendering;
-using UnityEngine.Networking;
 using TMPro;
 
-public class Controller : NetworkBehaviour
+public class Controller : MonoBehaviour
 {
     bool m_IsQuitting = false;
 
@@ -168,7 +167,6 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    [Command]
     void SpawnPieces()
     {
         // spawn pieces
@@ -183,25 +181,24 @@ public class Controller : NetworkBehaviour
         }
 
         GameSingleton.instance.Anchor(trackedPlane.CenterPose.position);
-
+			
         for (int i = 0; i < piecesNum; i++)
         {
-            float yRange = Random.Range(0, 3.5f);
-            float xRange = Random.Range(-3f, 3f);
-            float zRange = Random.Range(-3f, 3f);
+			float yRange = Random.Range(0, 3.5f);
+			float xRange = Random.Range(-3f, 3f);
+			float zRange = Random.Range(-3f, 3f);
             int index = i % piecesPrefab.Length;
             pieces = Instantiate(piecesPrefab[index], trackedPlane.CenterPose.position + new Vector3(xRange, yRange, zRange), Random.rotation);
-            NetworkServer.Spawn(pieces);
-            // store piece list
-            GameSingleton.instance.spawnedPieces.Add(pieces);
+			// store piece list
+			GameSingleton.instance.spawnedPieces.Add(pieces);
 
             // locate wall
             wall.transform.position = trackedPlane.CenterPose.position + new Vector3(0f, height, 0f);
         }
         Debug.Log("spawn");
-        // store piece num info
-        GameSingleton.instance.PieceNum(piecesNum);
-        // allow snapping interaction
+		// store piece num info
+		GameSingleton.instance.PieceNum (piecesNum);
+		// allow snapping interaction
         GameSingleton.instance.AllowSnap(true);
     }
 
