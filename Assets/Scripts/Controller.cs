@@ -4,9 +4,10 @@ using UnityEngine;
 using GoogleARCore;
 using GoogleARCore.HelloAR;
 using UnityEngine.Rendering;
+using UnityEngine.Networking;
 using TMPro;
 
-public class Controller : MonoBehaviour
+public class Controller : NetworkBehaviour
 {
     bool m_IsQuitting = false;
 
@@ -167,6 +168,7 @@ public class Controller : MonoBehaviour
         }
     }
 
+    [Command]
     void SpawnPieces()
     {
         // spawn pieces
@@ -189,6 +191,7 @@ public class Controller : MonoBehaviour
 			float zRange = Random.Range(-3f, 3f);
             int index = i % piecesPrefab.Length;
             pieces = Instantiate(piecesPrefab[index], trackedPlane.CenterPose.position + new Vector3(xRange, yRange, zRange), Random.rotation);
+            NetworkServer.Spawn(pieces);
 			// store piece list
 			GameSingleton.instance.spawnedPieces.Add(pieces);
 

@@ -9,47 +9,47 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1694652955997506}
+  m_RootGameObject: {fileID: 1511968742859622}
   m_IsPrefabParent: 1
---- !u!1 &1694652955997506
+--- !u!1 &1511968742859622
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4603811699947452}
-  - component: {fileID: 114024120515887034}
-  - component: {fileID: 114371709778152474}
+  - component: {fileID: 4108924948580834}
+  - component: {fileID: 114424527910348800}
+  - component: {fileID: 114767350111568362}
   m_Layer: 0
-  m_Name: Network Manager
+  m_Name: Network Lobby Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4603811699947452
+--- !u!4 &4108924948580834
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1694652955997506}
+  m_GameObject: {fileID: 1511968742859622}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114024120515887034
+--- !u!114 &114424527910348800
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1694652955997506}
+  m_GameObject: {fileID: 1511968742859622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: -859942077, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 7777
@@ -61,8 +61,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1153112139641388, guid: 44254283c9c8b5e418d8c03da30a1945,
-    type: 2}
+  m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
@@ -127,12 +126,23 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
---- !u!114 &114371709778152474
+  m_ShowLobbyGUI: 1
+  m_MaxPlayers: 4
+  m_MaxPlayersPerConnection: 1
+  m_MinPlayers: 0
+  m_LobbyPlayerPrefab: {fileID: 114082959298453840, guid: 68ca6532a1957dc499ef07b4fa28aabd,
+    type: 2}
+  m_GamePlayerPrefab: {fileID: 1153112139641388, guid: 44254283c9c8b5e418d8c03da30a1945,
+    type: 2}
+  m_LobbyScene: 
+  m_PlayScene: 
+  lobbySlots: []
+--- !u!114 &114767350111568362
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1694652955997506}
+  m_GameObject: {fileID: 1511968742859622}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}

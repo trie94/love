@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleARCore;
+using UnityEngine.Networking;
 
-public class PieceBehavior : MonoBehaviour {
+public class PieceBehavior : NetworkBehaviour {
 
     float range = 5f;
     float speed = 2f;
@@ -41,8 +42,14 @@ public class PieceBehavior : MonoBehaviour {
         net = GameObject.Find("Net");
     }
 
+    [ServerCallback]
 	void Update ()
     {
+        if (!isServer)
+        {
+            return;
+        }
+
         if (transform.parent != null)
         {
             Snap();
