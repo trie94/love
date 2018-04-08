@@ -1440,41 +1440,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 114570049648669978, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: wall
-      value: 
-      objectReference: {fileID: 1934021467}
-    - target: {fileID: 114570049648669978, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: canvas
-      value: 
-      objectReference: {fileID: 174899997}
-    - target: {fileID: 114570049648669978, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: time
-      value: 
-      objectReference: {fileID: 1864090899}
-    - target: {fileID: 114570049648669978, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: score
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114935323897885298, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: nonInteractableSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841, type: 3}
-    - target: {fileID: 82727673354312624, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: spreadCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114935323897885298, guid: 44254283c9c8b5e418d8c03da30a1945,
-        type: 2}
-      propertyPath: spawnSound
-      value: 
-      objectReference: {fileID: 8300000, guid: ac1a2b3ec231cb146b6db25e004f2b56, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44254283c9c8b5e418d8c03da30a1945, type: 2}
   m_IsPrefabParent: 0
