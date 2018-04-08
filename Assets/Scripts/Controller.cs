@@ -168,7 +168,7 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    [Command]
+    //[Command]
     void SpawnPieces()
     {
         // spawn pieces
