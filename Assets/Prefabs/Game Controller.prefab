@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4780495315286116}
   - component: {fileID: 114561612033168116}
+  - component: {fileID: 114298870230248618}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -40,6 +41,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114298870230248618
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1531706397753440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 203
+    i1: 90
+    i2: 131
+    i3: 232
+    i4: 231
+    i5: 54
+    i6: 190
+    i7: 196
+    i8: 105
+    i9: 150
+    i10: 0
+    i11: 4
+    i12: 21
+    i13: 22
+    i14: 157
+    i15: 126
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114561612033168116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -60,3 +93,8 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   piecesNum: 28
+  wall: {fileID: 0}
+  canvas: {fileID: 0}
+  time: {fileID: 0}
+  score: {fileID: 0}
+  height: 1.2
