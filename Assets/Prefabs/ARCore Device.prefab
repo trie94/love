@@ -25,6 +25,8 @@ GameObject:
   - component: {fileID: 82727673354312624}
   - component: {fileID: 81373334162033596}
   - component: {fileID: 120052215531844904}
+  - component: {fileID: 114086047091228942}
+  - component: {fileID: 114673359474213700}
   m_Layer: 0
   m_Name: ARCore Device
   m_TagString: Untagged
@@ -318,7 +320,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -331,6 +333,38 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114086047091228942
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1153112139641388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 68
+    i1: 37
+    i2: 66
+    i3: 131
+    i4: 201
+    i5: 200
+    i6: 181
+    i7: 228
+    i8: 24
+    i9: 216
+    i10: 192
+    i11: 61
+    i12: 163
+    i13: 10
+    i14: 25
+    i15: 69
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114423977971586600
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -372,10 +406,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBehavior: {fileID: 114935323897885298}
   lineRenderer: {fileID: 120052215531844904}
-  wall: {fileID: 0}
-  canvas: {fileID: 0}
-  time: {fileID: 0}
-  score: {fileID: 0}
+--- !u!114 &114673359474213700
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1153112139641388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 2
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114858239647309650
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -404,9 +455,10 @@ MonoBehaviour:
   wallDisOffset: 1
   audioSource: {fileID: 82727673354312624}
   snapSound: {fileID: 8300000, guid: 95175d4eaf6bd9e49b0d674547282bb1, type: 3}
-  nonInteractableSound: {fileID: 8300000, guid: dfd4a1d06b5703247885ccce87507402,
+  nonInteractableSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841,
     type: 3}
   releaseSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841, type: 3}
+  spawnSound: {fileID: 8300000, guid: ac1a2b3ec231cb146b6db25e004f2b56, type: 3}
   lineRenderer: {fileID: 120052215531844904}
   pointsNum: 10
   shakeDetectionThreshold: 1
