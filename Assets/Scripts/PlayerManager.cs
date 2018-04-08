@@ -32,7 +32,7 @@ public class PlayerManager : MonoBehaviour {
             playerBehavior.enabled = true;
         }
 
-        if (GameSingleton.instance.score >= 8)
+        if (GameSingleton.instance.score >= 10)
         {
             isDone = true;
         }
