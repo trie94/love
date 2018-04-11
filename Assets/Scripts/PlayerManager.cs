@@ -12,6 +12,11 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField]
     LineRenderer lineRenderer;
 
+    [SerializeField]
+    GameObject arCoreDevice;
+
+    bool doesDiviceExist;
+
     bool isDone;
 
     void Start()
@@ -25,17 +30,43 @@ public class PlayerManager : NetworkBehaviour
             Destroy(this);
             return;
         }
+
+        if (!arCoreDevice && !doesDiviceExist)
+        {
+            arCoreDevice = GameObject.Find("ARCore Device(Clone)");
+            if (!arCoreDevice)
+            {
+                doesDiviceExist = false;
+            }
+            else
+            {
+                doesDiviceExist = true;
+            }
+        } 
     }
 
     void Update()
     {
+        if (!arCoreDevice && !doesDiviceExist)
+        {
+            arCoreDevice = GameObject.Find("ARCore Device(Clone)");
+            if (!arCoreDevice)
+            {
+                doesDiviceExist = false;
+            }
+            else
+            {
+                doesDiviceExist = true;
+            }
+        }
+
         // start counting
         if (!isDone && playerBehavior.enabled)
         {
             GameSingleton.instance.CountTime();
         }
 
-        if (GameSingleton.instance.allowSnap)
+        if (GameSingleton.instance.allowSnap || arCoreDevice)
         {
             playerBehavior.enabled = true;
         }

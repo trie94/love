@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using GoogleARCore;
 
+#if UNITY_EDITOR
+using Input = GoogleARCore.InstantPreviewInput;
+#endif
+
 public class PlayerBehavior : MonoBehaviour
 {
     [SerializeField]
@@ -87,17 +91,17 @@ public class PlayerBehavior : MonoBehaviour
 
     void Start()
     {
-        lowPassValue = Input.acceleration;
+        //lowPassValue = Input.acceleration;
         isTabbed = false;
         insideNet = net.GetInsideNet();
     }
 
     void Update()
     {
-        Vector3 acceleration = Input.acceleration;
+        //Vector3 acceleration = Input.acceleration;
         filter = Time.deltaTime * shakeDetectionThreshold;
-        lowPassValue = Vector3.Lerp(lowPassValue, acceleration, filter);
-        Vector3 deltaAcceleration = acceleration - lowPassValue;
+        //lowPassValue = Vector3.Lerp(lowPassValue, acceleration, filter);
+        //Vector3 deltaAcceleration = acceleration - lowPassValue;
         //Debug.Log("Input acceleration: " + Input.acceleration);
         //Debug.Log("delta acceleration: " + deltaAcceleration.sqrMagnitude);
         //Debug.Log("shake detection threshold: " + shakeDetectionThreshold);
@@ -140,10 +144,16 @@ public class PlayerBehavior : MonoBehaviour
             // tab to release
             if (Input.touchCount >= 1 && !isTabbed)
             {
-                Debug.Log("tab");
-                Release();
-                isTabbed = true;
-                Debug.Log("touch and release");
+                if (GameSingleton.instance.isSnapped)
+                {
+                    Release();
+                    isTabbed = true;
+                    Debug.Log("touch and release");
+                }
+                else
+                {
+                    Debug.Log("nothing to release");
+                }
             }
 
             if (_debug)

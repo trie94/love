@@ -29,6 +29,9 @@ public class Controller : NetworkBehaviour
     GameObject wall;
 
     [SerializeField]
+    WallGrid[] wallGrid;
+
+    [SerializeField]
     GameObject canvas;
 
     [SerializeField]
@@ -48,7 +51,11 @@ public class Controller : NetworkBehaviour
     void Start()
     {
         wall.SetActive(false);
-
+        for (int i = 0; i < wallGrid.Length; i++)
+        {
+            wallGrid[i].enabled = false;
+            wallGrid[i].gameObject.SetActive(false);
+        }
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
         score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
     }
@@ -112,8 +119,13 @@ public class Controller : NetworkBehaviour
 
         if (spawn && !didSpawn)
         {
-            SpawnPieces();
+            CmdSpawnPieces();
             wall.SetActive(true);
+            for (int i = 0; i < wallGrid.Length; i++)
+            {
+                wallGrid[i].enabled = true;
+                wallGrid[i].gameObject.SetActive(true);
+            }
             didSpawn = true;
         }
 
@@ -168,8 +180,8 @@ public class Controller : NetworkBehaviour
         }
     }
 
-    //[Command]
-    void SpawnPieces()
+    [Command]
+    void CmdSpawnPieces()
     {
         // spawn pieces
         TrackedPlane trackedPlane = null;

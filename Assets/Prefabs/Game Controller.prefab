@@ -94,6 +94,27 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   piecesNum: 28
   wall: {fileID: 0}
+  wallGrid:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   canvas: {fileID: 0}
   time: {fileID: 0}
   score: {fileID: 0}

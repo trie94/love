@@ -19,8 +19,8 @@ public class WallGrid : MonoBehaviour {
     GameObject matchedPiece;
     PieceBehavior pieceBehavior;
 
-    [SerializeField]
     Net net;
+    bool isNetValid;
 
     [SerializeField]
     float absorbSpeed;
@@ -30,11 +30,25 @@ public class WallGrid : MonoBehaviour {
 
 	void Start ()
     {
-        //Debug.Log(pieceName);
+        net = GameObject.Find("Net").GetComponent<Net>();
 	}
 	
 	void Update ()
     {
+        if (!net && !isNetValid)
+        {
+            net = GameObject.Find("Net").GetComponent<Net>();
+
+            if (net)
+            {
+                isNetValid = true;
+            }
+            else
+            {
+                isNetValid = false;
+            }
+        }
+
         if (isAbsorbed)
         {
             gameObject.SetActive(false);
