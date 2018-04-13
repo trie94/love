@@ -43,13 +43,13 @@ public class PieceBehavior : NetworkBehaviour
         net = GameObject.Find("Net");
     }
 
-    [ServerCallback]
+    //[ServerCallback]
     void Update()
     {
-        if (!isServer)
-        {
-            return;
-        }
+        //if (!isServer)
+        //{
+          //  return;
+        //}
 
         if (transform.parent != null)
         {

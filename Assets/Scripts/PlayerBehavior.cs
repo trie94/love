@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using GoogleARCore;
 
 #if UNITY_EDITOR
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
-public class PlayerBehavior : MonoBehaviour
-{
+public class PlayerBehavior : NetworkBehaviour {
+    
     [SerializeField]
     GameObject[] pieces;
 
@@ -76,7 +77,13 @@ public class PlayerBehavior : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log(GameSingleton.instance.spawnedPieces.Count);
+        if (!isLocalPlayer)
+        {
+            Debug.Log("this is not a local player");
+            Destroy(this);
+            return;
+        }
+
         if (points == null)
         {
             points = new Vector3[pointsNum];
@@ -107,7 +114,7 @@ public class PlayerBehavior : MonoBehaviour
         //Debug.Log("shake detection threshold: " + shakeDetectionThreshold);
 
         insideNet = net.GetInsideNet();
-        Debug.Log("is snapped: " + GameSingleton.instance.isSnapped);
+        Debug.Log("is snapped: " + PlayerGameSingleton.instance.isSnapped);
         Debug.Log("net.GetInsideNet: " + net.GetInsideNet());
         for (int i = 0; i < GameSingleton.instance.spawnedPieces.Count; i++)
         {
@@ -118,12 +125,12 @@ public class PlayerBehavior : MonoBehaviour
                     isTabbed = false;
                 }
                 // check the tag
-                if (!GameSingleton.instance.isSnapped)
+                if (!PlayerGameSingleton.instance.isSnapped)
                 {
                     if (net.pieceInNet.tag == "player1")
                     {
                         Snap();
-                        GameSingleton.instance.SnappedPiece(i);
+                        PlayerGameSingleton.instance.SnappedPiece(i);
 
                     }
                     else if (net.pieceInNet.tag == "player2")
@@ -134,17 +141,17 @@ public class PlayerBehavior : MonoBehaviour
             }
             else if (net.pieceInNet != null && net.pieceInNet.transform.parent != null)
             {
-                GameSingleton.instance.IsSnapped(true);
+                PlayerGameSingleton.instance.IsSnapped(true);
             }
             else
             {
-                GameSingleton.instance.IsSnapped(false);
+                PlayerGameSingleton.instance.IsSnapped(false);
             }
 
             // tab to release
             if (Input.touchCount >= 1 && !isTabbed)
             {
-                if (GameSingleton.instance.isSnapped)
+                if (PlayerGameSingleton.instance.isSnapped)
                 {
                     Release();
                     isTabbed = true;
@@ -169,7 +176,7 @@ public class PlayerBehavior : MonoBehaviour
             //    Release();
             //}
 
-            if (GameSingleton.instance.isSnapped)
+            if (PlayerGameSingleton.instance.isSnapped)
             {
                // DrawLine();
             }
@@ -179,10 +186,11 @@ public class PlayerBehavior : MonoBehaviour
     void Snap()
     {
         // parenting
-        snappedPiece = GameSingleton.instance.snappedPiece;
+        snappedPiece = PlayerGameSingleton.instance.snappedPiece;
         // net.pieceInNet.transform.rotation = Quaternion.identity;
+        net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         net.pieceInNet.transform.parent = container.transform;
-        GameSingleton.instance.IsSnapped(true);
+        PlayerGameSingleton.instance.IsSnapped(true);
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
@@ -207,7 +215,7 @@ public class PlayerBehavior : MonoBehaviour
         net.SetInsideNet(false);
         lineRenderer.enabled = false;
         releasePiece = StartCoroutine(ReleasePiece());
-        GameSingleton.instance.IsSnapped(false);
+        PlayerGameSingleton.instance.IsSnapped(false);
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);
@@ -247,6 +255,7 @@ public class PlayerBehavior : MonoBehaviour
             {
                 netCol.SetActive(true);
                 net.pieceInNet.transform.parent = null;
+                net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
                 //StopCoroutine(releasePiece);
                 yield break;
             }

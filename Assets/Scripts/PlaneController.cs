@@ -15,6 +15,7 @@ public class PlaneController : NetworkBehaviour
     {
         return hasPlaneFound;
     }
+    bool GetCenterAnchor = false;
 
     [SerializeField]
     GameObject SearchingForPlaneUI;
@@ -75,9 +76,11 @@ public class PlaneController : NetworkBehaviour
         }
         hasPlaneFound = !showSearchingUI;
 
-        if (hasPlaneFound)
+        if (hasPlaneFound && !GetCenterAnchor)
         {
-            LoadLobbyScene();
+            FindCenterAnchor();
+            //LoadLobbyScene();
+            GetCenterAnchor = true;
         }
     }
 
@@ -123,6 +126,20 @@ public class PlaneController : NetworkBehaviour
                 toastObject.Call("show");
             }));
         }
+    }
+
+    void FindCenterAnchor()
+    {
+        TrackedPlane trackedPlane = null;
+        for (int i = 0; i < m_AllPlanes.Count; i++)
+        {
+            if (m_AllPlanes[i].TrackingState == TrackingState.Tracking)
+            {
+                trackedPlane = m_AllPlanes[i];
+                break;
+            }
+        }
+        GameSingleton.instance.Anchor(trackedPlane.CenterPose.position);
     }
 
     void LoadLobbyScene()

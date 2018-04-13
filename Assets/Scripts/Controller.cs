@@ -116,7 +116,7 @@ public class Controller : NetworkBehaviour
         bool spawn = !showSearchingUI;
 
         SearchingForPlaneUI.SetActive(showSearchingUI);
-
+    
         if (spawn && !didSpawn)
         {
             CmdSpawnPieces();

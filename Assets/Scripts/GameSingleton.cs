@@ -8,12 +8,12 @@ public class GameSingleton : MonoBehaviour {
 
     public bool allowSnap;
 	public int pieceNum;
-    public int snappedPiece;
-    public bool isSnapped;
+    //public int snappedPiece;
+    //public bool isSnapped;
     public Vector3 anchor;
     public float playTime = 0f;
-    public int score = 0;
-    public int matchedPiece;
+    public int totalScore = 0;
+    //public int matchedPiece;
 
 	public List<GameObject> spawnedPieces = new List<GameObject> ();
 
@@ -47,34 +47,34 @@ public class GameSingleton : MonoBehaviour {
 		pieceNum = _pieceNum;
 	}
 
-    public void SnappedPiece(int _snappedPiece)
-    {
-        snappedPiece = _snappedPiece;
-    }
+    //public void SnappedPiece(int _snappedPiece)
+    //{
+      //  snappedPiece = _snappedPiece;
+    //}
 
-    public void IsSnapped(bool _isSnapped)
-    {
-        isSnapped = _isSnapped;
-    }
+    //public void IsSnapped(bool _isSnapped)
+    //{
+      //  isSnapped = _isSnapped;
+    //}
 
     public void Anchor(Vector3 _anchor)
     {
         anchor = _anchor;
     }
 
-    public void MatchedPiece(int _matchedPiece)
-    {
-        matchedPiece = _matchedPiece;
-    }
+    //public void MatchedPiece(int _matchedPiece)
+    //{
+      //  matchedPiece = _matchedPiece;
+    //}
 
     public void AddScore()
     {
-        score++;
+        totalScore++;
     }
 
     public string PrintScore()
     {
-        return score.ToString();
+        return totalScore.ToString();
     }
 
     public void CountTime()

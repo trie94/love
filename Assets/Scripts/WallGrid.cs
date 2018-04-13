@@ -31,6 +31,7 @@ public class WallGrid : MonoBehaviour {
 	void Start ()
     {
         net = GameObject.Find("Net").GetComponent<Net>();
+        matchedPiece = null;
 	}
 	
 	void Update ()
@@ -58,12 +59,19 @@ public class WallGrid : MonoBehaviour {
             GameSingleton.instance.AddScore();
             isAbsorbed = false;
         }
+
+        Debug.Log("is net valid?: " + net);
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        if (GameSingleton.instance.isSnapped)
+        if (PlayerGameSingleton.instance.isSnapped)
         {
+            //Debug.Log("other.name: " + other.name);
+            //Debug.Log("pieceName: " + pieceName);
+            Debug.Log("other.gameObject: " + other.gameObject);
+            Debug.Log("net.pieceInNet: " + net.pieceInNet);
+
             if ((other.name == pieceName) && (net.pieceInNet == other.gameObject))
             {
                 matchedPiece = other.gameObject;
@@ -105,7 +113,7 @@ public class WallGrid : MonoBehaviour {
             if (lerpTime >= 1f)
             {
                 isAbsorbed = true;
-                GameSingleton.instance.IsSnapped(false);
+                PlayerGameSingleton.instance.IsSnapped(false);
                 yield break;
             }
             else

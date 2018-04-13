@@ -19,7 +19,7 @@ public class Wall : MonoBehaviour {
 	
 	void Update ()
     {
-        if (GameSingleton.instance.score == 10 && !isFinal)
+        if (GameSingleton.instance.totalScore == 10 && !isFinal)
         {
             if (!audioSource.isPlaying)
             {

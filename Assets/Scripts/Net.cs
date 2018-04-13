@@ -23,7 +23,7 @@ public class Net : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (!GameSingleton.instance.isSnapped)
+        if (!PlayerGameSingleton.instance.isSnapped)
         {
             pieceInNet = other.gameObject;
             insideNet = true;

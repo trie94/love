@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4780495315286116}
   - component: {fileID: 114561612033168116}
+  - component: {fileID: 114390216699486928}
+  - component: {fileID: 114186606533746922}
   - component: {fileID: 114298870230248618}
   m_Layer: 0
   m_Name: Game Controller
@@ -41,6 +43,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114186606533746922
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1531706397753440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519099b5d4e3a054192947917cf0dade, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SearchingForPlaneUI: {fileID: 0}
+  TrackedPlanePrefab: {fileID: 1654175882956584, guid: 6a35c744e5010405c847fad90282d2be,
+    type: 2}
 --- !u!114 &114298870230248618
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -71,15 +87,39 @@ MonoBehaviour:
     i13: 22
     i14: 157
     i15: 126
-  m_ServerOnly: 0
+  m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
---- !u!114 &114561612033168116
+--- !u!114 &114390216699486928
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1531706397753440}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2360e54c0cd8d63459277e05ce760012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planeController: {fileID: 114186606533746922}
+  piecesPrefab:
+  - {fileID: 1258271792516574, guid: 99abfcf5ef7bd9a42adb1c46b10cafbd, type: 2}
+  - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
+  - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
+  - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
+  piecesNum: 28
+  wall: {fileID: 0}
+  gridNum: 20
+  canvas: {fileID: 0}
+  time: {fileID: 0}
+  score: {fileID: 0}
+  height: 1.2
+--- !u!114 &114561612033168116
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1531706397753440}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5c5d41ac27dae6469f2cab64745e26e, type: 3}
   m_Name: 
