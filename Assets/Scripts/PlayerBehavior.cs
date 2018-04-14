@@ -20,8 +20,6 @@ public class PlayerBehavior : NetworkBehaviour {
     float wallDisOffset;
     float wallDis;
 
-    int snappedPiece;
-
     [SerializeField]
     AudioSource audioSource;
 
@@ -130,8 +128,6 @@ public class PlayerBehavior : NetworkBehaviour {
                     if (net.pieceInNet.tag == "player1")
                     {
                         Snap();
-                        PlayerGameSingleton.instance.SnappedPiece(i);
-
                     }
                     else if (net.pieceInNet.tag == "player2")
                     {
@@ -186,8 +182,6 @@ public class PlayerBehavior : NetworkBehaviour {
     void Snap()
     {
         // parenting
-        snappedPiece = PlayerGameSingleton.instance.snappedPiece;
-        // net.pieceInNet.transform.rotation = Quaternion.identity;
         net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         net.pieceInNet.transform.parent = container.transform;
         PlayerGameSingleton.instance.IsSnapped(true);
@@ -195,7 +189,7 @@ public class PlayerBehavior : NetworkBehaviour {
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("snaped piece: " + snappedPiece);
+        Debug.Log("snaped piece: " + PlayerGameSingleton.instance.snappedPiece.name);
     }
 
     void NonInteractable()
@@ -221,22 +215,6 @@ public class PlayerBehavior : NetworkBehaviour {
             audioSource.PlayOneShot(releaseSound);
             Debug.Log("release sound");
         }
-    }
-
-    void DrawLine()
-    {
-        //float distance = Vector3.Distance(transform.position, GameSingleton.instance.spawnedPieces[snappedPiece].transform.position);
-        //float addDis = distance / pointsNum;
-        //for (int i = 0; i < pointsNum; i++)
-        //{
-        //    points[i] = new Vector3(transform.position.x + (addDis * i), transform.position.y + (addDis * i), transform.position.z + (addDis * i));
-        //    Debug.Log(points[i]);
-        //}
-        lineRenderer.enabled = true;
-        points[0] = transform.position;
-        points[1] = GameSingleton.instance.spawnedPieces[snappedPiece].transform.position;
-        lineRenderer.SetPositions(points);
-        Debug.Log("draw line");
     }
 
     IEnumerator ReleasePiece()

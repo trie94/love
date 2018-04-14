@@ -19,9 +19,6 @@ public class WallGrid : MonoBehaviour {
     GameObject matchedPiece;
     PieceBehavior pieceBehavior;
 
-    Net net;
-    bool isNetValid;
-
     [SerializeField]
     float absorbSpeed;
     float lerpTime;
@@ -30,26 +27,11 @@ public class WallGrid : MonoBehaviour {
 
 	void Start ()
     {
-        net = GameObject.Find("Net").GetComponent<Net>();
         matchedPiece = null;
 	}
 	
 	void Update ()
     {
-        if (!net && !isNetValid)
-        {
-            net = GameObject.Find("Net").GetComponent<Net>();
-
-            if (net)
-            {
-                isNetValid = true;
-            }
-            else
-            {
-                isNetValid = false;
-            }
-        }
-
         if (isAbsorbed)
         {
             gameObject.SetActive(false);
@@ -59,20 +41,13 @@ public class WallGrid : MonoBehaviour {
             GameSingleton.instance.AddScore();
             isAbsorbed = false;
         }
-
-        Debug.Log("is net valid?: " + net);
 	}
 
     void OnTriggerEnter(Collider other)
     {
         if (PlayerGameSingleton.instance.isSnapped)
         {
-            //Debug.Log("other.name: " + other.name);
-            //Debug.Log("pieceName: " + pieceName);
-            Debug.Log("other.gameObject: " + other.gameObject);
-            Debug.Log("net.pieceInNet: " + net.pieceInNet);
-
-            if ((other.name == pieceName) && (net.pieceInNet == other.gameObject))
+            if ((other.name == PlayerGameSingleton.instance.snappedPiece.name))
             {
                 matchedPiece = other.gameObject;
                 Match();
@@ -114,6 +89,7 @@ public class WallGrid : MonoBehaviour {
             {
                 isAbsorbed = true;
                 PlayerGameSingleton.instance.IsSnapped(false);
+                PlayerGameSingleton.instance.SnappedPiece(null);
                 yield break;
             }
             else

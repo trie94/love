@@ -7,7 +7,7 @@ public class PlayerGameSingleton : NetworkBehaviour {
 
     public static PlayerGameSingleton instance;
 
-    public int snappedPiece;
+    public GameObject snappedPiece;
     public bool isSnapped;
     public int matchedPiece;
 
@@ -23,7 +23,7 @@ public class PlayerGameSingleton : NetworkBehaviour {
         }
     }
 
-    public void SnappedPiece(int _snappedPiece)
+    public void SnappedPiece(GameObject _snappedPiece)
     {
         snappedPiece = _snappedPiece;
     }

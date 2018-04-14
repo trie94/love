@@ -26,8 +26,9 @@ public class Net : MonoBehaviour {
         if (!PlayerGameSingleton.instance.isSnapped)
         {
             pieceInNet = other.gameObject;
+            PlayerGameSingleton.instance.SnappedPiece(pieceInNet);
             insideNet = true;
-            Debug.Log("some piece is inside the net: " + pieceInNet);
+            Debug.Log("some piece is inside the net: " + PlayerGameSingleton.instance.snappedPiece.name);
         }
     }
     void OnTriggerExit(Collider other)
