@@ -11,8 +11,6 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField]
     LineRenderer lineRenderer;
 
-    bool doesDiviceExist;
-
     bool isDone;
 
     void Start()

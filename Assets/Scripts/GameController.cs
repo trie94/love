@@ -19,9 +19,12 @@ public class GameController : NetworkBehaviour {
     int piecesNum;
 
     [SerializeField]
+    GameObject wallPrefab;
+
     GameObject wall;
 
     WallGrid[] wallGrid;
+
     [SerializeField]
     int gridNum;
 
@@ -44,7 +47,7 @@ public class GameController : NetworkBehaviour {
         wallGrid = new WallGrid[gridNum];
         for (int i = 0; i < wallGrid.Length; i++)
         {
-            wallGrid[i] = wall.GetComponentInChildren<WallGrid>();
+            wallGrid[i] = wallPrefab.GetComponentInChildren<WallGrid>();
         }
     }
 	
@@ -52,14 +55,14 @@ public class GameController : NetworkBehaviour {
     {
         if (planeController.GetHasPlaneFound() && !didSpawn)
         {
-            // server spawns pieces
+            // server spawns pieces and wall
             CmdSpawnPieces();
-            wall.SetActive(true);
-            for (int i = 0; i < wallGrid.Length; i++)
-            {
-                wallGrid[i].enabled = true;
-                wallGrid[i].gameObject.SetActive(true);
-            }
+            CmdSpawnWall();
+            //for (int i = 0; i < wallGrid.Length; i++)
+            //{
+            //    wallGrid[i].enabled = true;
+            //    wallGrid[i].gameObject.SetActive(true);
+            //}
             didSpawn = true;
         }
 
@@ -84,15 +87,20 @@ public class GameController : NetworkBehaviour {
             NetworkServer.Spawn(pieces);
             // store piece list
             GameSingleton.instance.spawnedPieces.Add(pieces);
-
-            // locate wall
-            wall.transform.position = GameSingleton.instance.anchor + new Vector3(0f, height, 0f);
+            Debug.Log("spawn");
+            // store piece num info
+            GameSingleton.instance.PieceNum(piecesNum);
+            // allow snapping interaction
+            GameSingleton.instance.AllowSnap(true);
         }
-        Debug.Log("spawn");
-        // store piece num info
-        GameSingleton.instance.PieceNum(piecesNum);
-        // allow snapping interaction
-        GameSingleton.instance.AllowSnap(true);
+    }
+
+    [Command]
+    void CmdSpawnWall()
+    {
+        wall = Instantiate(wallPrefab, GameSingleton.instance.anchor + new Vector3(0f, height, 0f), Quaternion.identity);
+        NetworkServer.Spawn(wall);
+        Debug.Log("wall");
     }
 
     void OnDisable()

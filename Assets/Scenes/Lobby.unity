@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465934, g: 0.49642956, b: 0.57482487, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -312,6 +312,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4708635384783408, guid: a1aef29f96d2220459d86a64caee661d, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -354,6 +359,27 @@ Prefab:
         type: 2}
       propertyPath: m_MaxPlayersPerConnection
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1,
+        type: 2}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_UseSimulator
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[6]
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a1aef29f96d2220459d86a64caee661d, type: 2}

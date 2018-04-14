@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WallGrid : MonoBehaviour {
+public class WallGrid : NetworkBehaviour {
 
     [SerializeField]
     AudioSource audioSource;

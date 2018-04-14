@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4372291239437602}
   - component: {fileID: 114774201873650164}
+  - component: {fileID: 114738288803526780}
   m_Layer: 0
   m_Name: Game Singleton
   m_TagString: Untagged
@@ -40,6 +41,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114738288803526780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1949447996575882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 244
+    i1: 248
+    i2: 243
+    i3: 138
+    i4: 120
+    i5: 113
+    i6: 165
+    i7: 212
+    i8: 200
+    i9: 98
+    i10: 28
+    i11: 248
+    i12: 160
+    i13: 203
+    i14: 122
+    i15: 62
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114774201873650164
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,3 +85,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowSnap: 0
+  pieceNum: 0
+  anchor: {x: 0, y: 0, z: 0}
+  playTime: 0
+  totalScore: 0
+  spawnedPieces: []
