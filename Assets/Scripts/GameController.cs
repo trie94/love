@@ -29,6 +29,9 @@ public class GameController : NetworkBehaviour {
     int gridNum;
 
     [SerializeField]
+    int lightsNum;
+
+    [SerializeField]
     GameObject canvas;
 
     [SerializeField]
@@ -58,11 +61,6 @@ public class GameController : NetworkBehaviour {
             // server spawns pieces and wall
             CmdSpawnPieces();
             CmdSpawnWall();
-            //for (int i = 0; i < wallGrid.Length; i++)
-            //{
-            //    wallGrid[i].enabled = true;
-            //    wallGrid[i].gameObject.SetActive(true);
-            //}
             didSpawn = true;
         }
 

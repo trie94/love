@@ -1,19 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class GameSingleton : MonoBehaviour {
+public class GameSingleton : NetworkBehaviour {
 
     public static GameSingleton instance;
 
+    [SyncVar]
     public bool allowSnap;
-	public int pieceNum;
-    //public int snappedPiece;
-    //public bool isSnapped;
+    [SyncVar]
+    public int pieceNum;
+    [SyncVar]
     public Vector3 anchor;
+    [SyncVar]
     public float playTime = 0f;
+    [SyncVar]
     public int totalScore = 0;
-    //public int matchedPiece;
 
 	public List<GameObject> spawnedPieces = new List<GameObject> ();
 

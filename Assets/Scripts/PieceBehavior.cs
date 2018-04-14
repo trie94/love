@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 
 public class PieceBehavior : NetworkBehaviour
 {
-
     float range = 5f;
     float speed = 2f;
 
@@ -53,7 +52,7 @@ public class PieceBehavior : NetworkBehaviour
 
         if (transform.parent != null)
         {
-            Snap();
+            RpcSnap();
         }
         else if (isMatch)
         {
@@ -70,7 +69,8 @@ public class PieceBehavior : NetworkBehaviour
         transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
     }
 
-    void Snap()
+    [ClientRpc]
+    void RpcSnap()
     {
         speed = 0f;
         if (!isSnapped)

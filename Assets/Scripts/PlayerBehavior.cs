@@ -9,7 +9,10 @@ using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
 public class PlayerBehavior : NetworkBehaviour {
-    
+
+    [SerializeField]
+    PlayerAttributes playerAtt;
+
     [SerializeField]
     GameObject[] pieces;
 
@@ -112,7 +115,7 @@ public class PlayerBehavior : NetworkBehaviour {
         //Debug.Log("shake detection threshold: " + shakeDetectionThreshold);
 
         insideNet = net.GetInsideNet();
-        Debug.Log("is snapped: " + PlayerGameSingleton.instance.isSnapped);
+        Debug.Log("is snapped: " + playerAtt.isSnapped);
         Debug.Log("net.GetInsideNet: " + net.GetInsideNet());
         for (int i = 0; i < GameSingleton.instance.spawnedPieces.Count; i++)
         {
@@ -123,33 +126,34 @@ public class PlayerBehavior : NetworkBehaviour {
                     isTabbed = false;
                 }
                 // check the tag
-                if (!PlayerGameSingleton.instance.isSnapped)
+                if (!playerAtt.isSnapped)
                 {
                     if (net.pieceInNet.tag == "player1")
                     {
-                        Snap();
+                        CmdSnap();
                     }
                     else if (net.pieceInNet.tag == "player2")
                     {
-                        NonInteractable();
+                        CmdBounce();
                     }
                 }
             }
             else if (net.pieceInNet != null && net.pieceInNet.transform.parent != null)
             {
-                PlayerGameSingleton.instance.IsSnapped(true);
+                playerAtt.IsSnapped(true);
             }
             else
             {
-                PlayerGameSingleton.instance.IsSnapped(false);
+                playerAtt.IsSnapped(false);
+                playerAtt.SnappedPiece(null);
             }
 
             // tab to release
             if (Input.touchCount >= 1 && !isTabbed)
             {
-                if (PlayerGameSingleton.instance.isSnapped)
+                if (playerAtt.isSnapped)
                 {
-                    Release();
+                    CmdRelease();
                     isTabbed = true;
                     Debug.Log("touch and release");
                 }
@@ -161,7 +165,7 @@ public class PlayerBehavior : NetworkBehaviour {
 
             if (_debug)
             {
-                Release();
+                CmdRelease();
                 _debug = false;
             }
 
@@ -172,27 +176,29 @@ public class PlayerBehavior : NetworkBehaviour {
             //    Release();
             //}
 
-            if (PlayerGameSingleton.instance.isSnapped)
+            if (playerAtt.isSnapped)
             {
                // DrawLine();
             }
         }
     }
 
-    void Snap()
+    [Command]
+    void CmdSnap()
     {
         // parenting
         net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         net.pieceInNet.transform.parent = container.transform;
-        PlayerGameSingleton.instance.IsSnapped(true);
+        playerAtt.IsSnapped(true);
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("snaped piece: " + PlayerGameSingleton.instance.snappedPiece.name);
+        Debug.Log("snaped piece: " + playerAtt.snappedPiece.name);
     }
 
-    void NonInteractable()
+    [Command]
+    void CmdBounce()
     {
         //add behavior here
         bounceBack = StartCoroutine(BounceBack());
@@ -203,13 +209,14 @@ public class PlayerBehavior : NetworkBehaviour {
         }
     }
 
-    void Release()
+    [Command]
+    void CmdRelease()
     {
         net.pieceInNet.transform.parent = null;
         net.SetInsideNet(false);
         lineRenderer.enabled = false;
         releasePiece = StartCoroutine(ReleasePiece());
-        PlayerGameSingleton.instance.IsSnapped(false);
+        playerAtt.IsSnapped(false);
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);

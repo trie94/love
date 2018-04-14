@@ -106,9 +106,10 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
-  piecesNum: 28
-  wall: {fileID: 0}
+  piecesNum: 35
+  wallPrefab: {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   gridNum: 20
+  lightsNum: 2
   canvas: {fileID: 0}
   time: {fileID: 0}
   score: {fileID: 0}
@@ -133,7 +134,7 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   piecesNum: 28
-  wall: {fileID: 0}
+  wall: {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   wallGrid:
   - {fileID: 0}
   - {fileID: 0}

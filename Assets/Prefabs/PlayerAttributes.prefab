@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114707349690582368}
   - component: {fileID: 114546423346225816}
   m_Layer: 0
-  m_Name: Player Game Singleton
+  m_Name: PlayerAttributes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,3 +84,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2739a0e207043599e289ad7908011c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snappedPiece: {fileID: 0}
+  isSnapped: 0
+  matchedPiece: 0

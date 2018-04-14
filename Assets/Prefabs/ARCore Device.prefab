@@ -20,14 +20,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4096548886269156}
   - component: {fileID: 114981094903519126}
-  - component: {fileID: 114935323897885298}
   - component: {fileID: 114570049648669978}
+  - component: {fileID: 114935323897885298}
+  - component: {fileID: 114004413680590752}
   - component: {fileID: 82727673354312624}
   - component: {fileID: 81373334162033596}
   - component: {fileID: 120052215531844904}
   - component: {fileID: 114509378473157140}
   - component: {fileID: 114363662178080986}
-  - component: {fileID: 114004413680590752}
   m_Layer: 0
   m_Name: ARCore Device
   m_TagString: Untagged
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2739a0e207043599e289ad7908011c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snappedPiece: 0
+  snappedPiece: {fileID: 0}
   isSnapped: 0
   matchedPiece: 0
 --- !u!114 &114101487075870770
@@ -509,6 +509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceInNet: {fileID: 0}
+  playerAtt: {fileID: 114004413680590752}
 --- !u!114 &114935323897885298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -520,6 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb49fec40bad063408f0e549f844b9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAtt: {fileID: 114004413680590752}
   pieces: []
   pieceHoverThreshold: 2
   wallDisOffset: 1

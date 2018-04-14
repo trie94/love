@@ -46,22 +46,27 @@ public class WallGrid : NetworkBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (PlayerGameSingleton.instance.isSnapped)
+        Debug.Log("collide");
+        if (other.gameObject.transform.parent != null)
         {
-            if ((other.name == PlayerGameSingleton.instance.snappedPiece.name))
+            Debug.Log("have parent?");
+            if ((this.gameObject.tag == "grid1" && other.gameObject.tag == "piece1")
+                || (this.gameObject.tag == "grid2" && other.gameObject.tag == "piece2")
+                || (this.gameObject.tag == "grid3" && other.gameObject.tag == "piece3")
+                || (this.gameObject.tag == "grid4" && other.gameObject.tag == "piece4"))
             {
                 matchedPiece = other.gameObject;
                 Match();
             }
-            else
-            {
-                // mis-match behavior here
+        }
+        else
+        {
+            // mis-match behavior here
 
-                //if (!audioSource.isPlaying)
-                //{
-                //    audioSource.PlayOneShot(misMatchSound);
-                //}
-            }
+            //if (!audioSource.isPlaying)
+            //{
+            //    audioSource.PlayOneShot(misMatchSound);
+            //}
         }
     }
 
@@ -89,8 +94,6 @@ public class WallGrid : NetworkBehaviour {
             if (lerpTime >= 1f)
             {
                 isAbsorbed = true;
-                PlayerGameSingleton.instance.IsSnapped(false);
-                PlayerGameSingleton.instance.SnappedPiece(null);
                 yield break;
             }
             else

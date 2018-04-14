@@ -8,6 +8,10 @@ TagManager:
   - player1
   - player2
   - grid
+  - grid1
+  - grid2
+  - grid3
+  - grid4
   layers:
   - Default
   - TransparentFX

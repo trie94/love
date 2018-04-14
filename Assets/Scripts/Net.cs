@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Net : MonoBehaviour {
+public class Net : NetworkBehaviour {
 
     bool insideNet;
     public bool GetInsideNet()
@@ -16,6 +17,9 @@ public class Net : MonoBehaviour {
 
     public GameObject pieceInNet;
 
+    [SerializeField]
+    PlayerAttributes playerAtt;
+
     void Start()
     {
         pieceInNet = null;
@@ -23,14 +27,15 @@ public class Net : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (!PlayerGameSingleton.instance.isSnapped)
+        if (!playerAtt.isSnapped)
         {
             pieceInNet = other.gameObject;
-            PlayerGameSingleton.instance.SnappedPiece(pieceInNet);
+            playerAtt.SnappedPiece(pieceInNet);
             insideNet = true;
-            Debug.Log("some piece is inside the net: " + PlayerGameSingleton.instance.snappedPiece.name);
+            Debug.Log("some piece is inside the net: " + playerAtt.snappedPiece.name);
         }
     }
+
     void OnTriggerExit(Collider other)
     {
         insideNet = false;
