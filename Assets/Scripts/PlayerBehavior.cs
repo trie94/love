@@ -128,11 +128,11 @@ public class PlayerBehavior : NetworkBehaviour {
                 // check the tag
                 if (!playerAtt.isSnapped)
                 {
-                    if (net.pieceInNet.tag == "player1")
+                    if (net.pieceInNet.tag == "piece1" || net.pieceInNet.tag == "piece2")
                     {
                         CmdSnap();
                     }
-                    else if (net.pieceInNet.tag == "player2")
+                    else if (net.pieceInNet.tag == "piece3" || net.pieceInNet.tag == "piece4")
                     {
                         CmdBounce();
                     }

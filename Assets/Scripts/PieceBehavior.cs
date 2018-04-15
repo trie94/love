@@ -56,7 +56,7 @@ public class PieceBehavior : NetworkBehaviour
         }
         else if (isMatch)
         {
-            Stop();
+            Match();
         }
         else
         {
@@ -80,12 +80,11 @@ public class PieceBehavior : NetworkBehaviour
         }
         if (startFollowing)
         {
-            //transform.LookAt(net.transform.position);
             transform.position = Vector3.MoveTowards(transform.position, net.transform.position, Time.deltaTime);
         }
     }
 
-    void Stop()
+    void Match()
     {
         speed = 0f;
     }

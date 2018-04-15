@@ -132,10 +132,10 @@ namespace GoogleARCoreInternal
 
             if (m_SessionComponent != null)
             {
-                Debug.LogError("Multiple session components cannot exist in the scene. " +
-                    "Destroying the newest.");
+                //Debug.LogError("Multiple session components cannot exist in the scene. " +
+                    //"Destroying the newest.");
                 //GameObject.Destroy(session);
-                return;
+                //return;
             }
 
             m_SessionComponent = session;

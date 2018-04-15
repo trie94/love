@@ -25,6 +25,9 @@ public class WallGrid : NetworkBehaviour {
     float lerpTime;
 
     bool isAbsorbed;
+    public bool GetIsAbsorbed(){
+        return isAbsorbed;
+    }
 
 	void Start ()
     {
@@ -35,27 +38,21 @@ public class WallGrid : NetworkBehaviour {
     {
         if (isAbsorbed)
         {
-            gameObject.SetActive(false);
-            //matchedPiece.SetActive(false);
-            Destroy(matchedPiece);
-            // add score
-            GameSingleton.instance.AddScore();
-            isAbsorbed = false;
+            DestroyGrid();
         }
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("collide");
         if (other.gameObject.transform.parent != null)
         {
-            Debug.Log("have parent?");
             if ((this.gameObject.tag == "grid1" && other.gameObject.tag == "piece1")
                 || (this.gameObject.tag == "grid2" && other.gameObject.tag == "piece2")
                 || (this.gameObject.tag == "grid3" && other.gameObject.tag == "piece3")
                 || (this.gameObject.tag == "grid4" && other.gameObject.tag == "piece4"))
             {
                 matchedPiece = other.gameObject;
+                Debug.Log("before match");
                 Match();
             }
         }
@@ -103,5 +100,15 @@ public class WallGrid : NetworkBehaviour {
             }
             yield return null;
         }
+    }
+
+    void DestroyGrid()
+    {
+        GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+        Destroy(gameObject);
+        Destroy(matchedPiece);
+        // add score
+        GameSingleton.instance.AddScore();
+        isAbsorbed = false;
     }
 }

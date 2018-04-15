@@ -12,6 +12,10 @@ TagManager:
   - grid2
   - grid3
   - grid4
+  - piece1
+  - piece2
+  - piece3
+  - piece4
   layers:
   - Default
   - TransparentFX
