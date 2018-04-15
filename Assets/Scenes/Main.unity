@@ -310,51 +310,9 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 223389143515108920, guid: 2edb075027c5a814ea5531b2e287204e,
-        type: 2}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2edb075027c5a814ea5531b2e287204e, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1065488885 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1368542002867132, guid: 2edb075027c5a814ea5531b2e287204e,
-    type: 2}
-  m_PrefabInternal: {fileID: 1065488884}
---- !u!114 &1065488886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1065488885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 46
-    i1: 219
-    i2: 7
-    i3: 80
-    i4: 39
-    i5: 197
-    i6: 168
-    i7: 20
-    i8: 234
-    i9: 85
-    i10: 49
-    i11: 178
-    i12: 226
-    i13: 135
-    i14: 32
-    i15: 78
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!1001 &1172916250
 Prefab:
   m_ObjectHideFlags: 0
@@ -618,17 +576,22 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
+        type: 2}
+      propertyPath: SearchingForPlaneUI
+      value: 
+      objectReference: {fileID: 665519209}
+    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: canvas
       value: 
       objectReference: {fileID: 174899997}
-    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: time
       value: 
       objectReference: {fileID: 1864090899}
-    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: score
       value: 
@@ -638,22 +601,17 @@ Prefab:
       propertyPath: SearchingForPlaneUI
       value: 
       objectReference: {fileID: 665519209}
-    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
-        type: 2}
-      propertyPath: SearchingForPlaneUI
-      value: 
-      objectReference: {fileID: 665519209}
-    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: canvas
       value: 
       objectReference: {fileID: 174899997}
-    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: time
       value: 
       objectReference: {fileID: 1864090899}
-    - target: {fileID: 114561612033168116, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114390216699486928, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
       propertyPath: score
       value: 

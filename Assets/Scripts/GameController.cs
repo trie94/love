@@ -51,6 +51,7 @@ public class GameController : NetworkBehaviour {
         for (int i = 0; i < wallGrid.Length; i++)
         {
             wallGrid[i] = wallPrefab.GetComponentInChildren<WallGrid>();
+            GameSingleton.instance.wallGrids.Add(wallGrid[i].gameObject);
         }
     }
 	

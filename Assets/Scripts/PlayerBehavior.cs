@@ -46,11 +46,6 @@ public class PlayerBehavior : NetworkBehaviour {
     int pointsNum;
 
     [SerializeField]
-    float shakeDetectionThreshold;
-    float filter;
-    Vector3 lowPassValue;
-
-    [SerializeField]
     Net net;
 
     [SerializeField]
@@ -99,21 +94,13 @@ public class PlayerBehavior : NetworkBehaviour {
 
     void Start()
     {
-        //lowPassValue = Input.acceleration;
         isTabbed = false;
         insideNet = net.GetInsideNet();
     }
 
+    [ClientCallback]
     void Update()
     {
-        //Vector3 acceleration = Input.acceleration;
-        filter = Time.deltaTime * shakeDetectionThreshold;
-        //lowPassValue = Vector3.Lerp(lowPassValue, acceleration, filter);
-        //Vector3 deltaAcceleration = acceleration - lowPassValue;
-        //Debug.Log("Input acceleration: " + Input.acceleration);
-        //Debug.Log("delta acceleration: " + deltaAcceleration.sqrMagnitude);
-        //Debug.Log("shake detection threshold: " + shakeDetectionThreshold);
-
         insideNet = net.GetInsideNet();
         Debug.Log("is snapped: " + playerAtt.isSnapped);
         Debug.Log("net.GetInsideNet: " + net.GetInsideNet());
@@ -169,16 +156,9 @@ public class PlayerBehavior : NetworkBehaviour {
                 _debug = false;
             }
 
-            //// shake to release
-            //if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
-            //{
-            //    Debug.Log("shake?");
-            //    Release();
-            //}
-
-            if (playerAtt.isSnapped)
+            if (GameSingleton.instance.isPieceAbsorbed == true && GameSingleton.instance.targetGrid != null)
             {
-               // DrawLine();
+                CmdDestroy();
             }
         }
     }
@@ -205,7 +185,7 @@ public class PlayerBehavior : NetworkBehaviour {
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(nonInteractableSound);
-            Debug.Log("nope");
+            Debug.Log("not interactable");
         }
     }
 
@@ -220,15 +200,18 @@ public class PlayerBehavior : NetworkBehaviour {
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);
-            Debug.Log("release sound");
         }
     }
 
     [Command]
     void CmdDestroy()
     {
-        Destroy(net.pieceInNet);
-        Destroy()
+        NetworkServer.Destroy(net.pieceInNet);
+        net.SetInsideNet(false);
+        NetworkServer.Destroy(GameSingleton.instance.targetGrid);
+        GameSingleton.instance.targetGrid = null;
+        GameSingleton.instance.SetIsPieceAbsorbed(false);
+        GameSingleton.instance.AddScore();
     }
 
     IEnumerator ReleasePiece()
@@ -236,9 +219,6 @@ public class PlayerBehavior : NetworkBehaviour {
         // disable the net
         float lerpTime = 0f;
         releasePos = net.transform.position + net.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
-        //releasePos = new Vector3
-        //    (net.pieceInNet.transform.position.x + bounceRange,
-        //    net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
         netCol.SetActive(false);
 
         while (true)
@@ -248,12 +228,10 @@ public class PlayerBehavior : NetworkBehaviour {
                 netCol.SetActive(true);
                 net.pieceInNet.transform.parent = null;
                 net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
-                //StopCoroutine(releasePiece);
                 yield break;
             }
             else if (net.pieceInNet != null)
             {
-                // bounce back
                 lerpTime += Time.deltaTime * lerpSpeed;
                 net.pieceInNet.transform.position = Vector3.Lerp(net.pieceInNet.transform.position,
                     transform.InverseTransformDirection(releasePos), lerpTime);
@@ -266,9 +244,6 @@ public class PlayerBehavior : NetworkBehaviour {
     {
         float lerpTime = 0f;
         releasePos = net.transform.position + net.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
-        //    releasePos = new Vector3
-        //(net.pieceInNet.transform.position.x + bounceRange,
-        //net.pieceInNet.transform.position.y, net.pieceInNet.transform.position.z + bounceRange);
 
         while (true)
         {
@@ -278,7 +253,6 @@ public class PlayerBehavior : NetworkBehaviour {
             }
             else
             {
-                // bounce back
                 lerpTime += Time.deltaTime * lerpSpeed;
                 net.pieceInNet.transform.position = Vector3.Lerp(net.pieceInNet.transform.position,
                     transform.TransformDirection(releasePos), lerpTime);

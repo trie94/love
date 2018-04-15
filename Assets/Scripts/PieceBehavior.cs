@@ -42,7 +42,7 @@ public class PieceBehavior : NetworkBehaviour
         net = GameObject.Find("Net");
     }
 
-    //[ServerCallback]
+    [ServerCallback]
     void Update()
     {
         //if (!isServer)
@@ -56,15 +56,16 @@ public class PieceBehavior : NetworkBehaviour
         }
         else if (isMatch)
         {
-            Match();
+            RpcMatch();
         }
         else
         {
-            Float();
+            RpcFloat();
         }
     }
 
-    void Float()
+    [ClientRpc]
+    void RpcFloat()
     {
         transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
     }
@@ -84,7 +85,8 @@ public class PieceBehavior : NetworkBehaviour
         }
     }
 
-    void Match()
+    [ClientRpc]
+    void RpcMatch()
     {
         speed = 0f;
     }

@@ -71,7 +71,7 @@ MonoBehaviour:
     i13: 203
     i14: 122
     i15: 62
-  m_ServerOnly: 0
+  m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
 --- !u!114 &114774201873650164
 MonoBehaviour:
@@ -89,4 +89,8 @@ MonoBehaviour:
   anchor: {x: 0, y: 0, z: 0}
   playTime: 0
   totalScore: 0
+  isPieceAbsorbed: 0
+  targetGrid: {fileID: 0}
+  wallGrids: []
+  targetGrids: []
   spawnedPieces: []

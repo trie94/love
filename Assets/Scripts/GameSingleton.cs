@@ -17,8 +17,16 @@ public class GameSingleton : NetworkBehaviour {
     public float playTime = 0f;
     [SyncVar]
     public int totalScore = 0;
+    [SyncVar]
+    public bool isPieceAbsorbed;
 
-	public List<GameObject> spawnedPieces = new List<GameObject> ();
+    public GameObject targetGrid;
+
+    public List<GameObject> wallGrids = new List<GameObject>();
+
+    public List<GameObject> targetGrids = new List<GameObject>();
+
+	public List<GameObject> spawnedPieces = new List<GameObject>();
 
     void Awake()
     {
@@ -38,6 +46,13 @@ public class GameSingleton : NetworkBehaviour {
 		{
 			spawnedPieces.Clear();
 		}
+
+        if (wallGrids == null)
+        {
+            wallGrids.Clear();
+        }
+
+        targetGrid = null;
 	}
 
     public void AllowSnap(bool _allowSnap)
@@ -50,29 +65,29 @@ public class GameSingleton : NetworkBehaviour {
 		pieceNum = _pieceNum;
 	}
 
-    //public void SnappedPiece(int _snappedPiece)
-    //{
-      //  snappedPiece = _snappedPiece;
-    //}
-
-    //public void IsSnapped(bool _isSnapped)
-    //{
-      //  isSnapped = _isSnapped;
-    //}
-
     public void Anchor(Vector3 _anchor)
     {
         anchor = _anchor;
     }
 
-    //public void MatchedPiece(int _matchedPiece)
-    //{
-      //  matchedPiece = _matchedPiece;
-    //}
-
     public void AddScore()
     {
         totalScore++;
+    }
+
+    public void AddTargetGrid(GameObject _targetGrid)
+    {
+        targetGrids.Add(_targetGrid);
+    }
+
+    public void SetTargetGrid(GameObject _targetGrid)
+    {
+        targetGrid = _targetGrid;
+    }
+
+    public void SetIsPieceAbsorbed(bool _isPieceAbsorbed)
+    {
+        isPieceAbsorbed = _isPieceAbsorbed;
     }
 
     public string PrintScore()

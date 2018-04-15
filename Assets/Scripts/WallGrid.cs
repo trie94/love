@@ -24,21 +24,27 @@ public class WallGrid : NetworkBehaviour {
     float absorbSpeed;
     float lerpTime;
 
+    NetworkIdentity networkIdentity;
+    NetworkConnection conn;
+
     bool isAbsorbed;
-    public bool GetIsAbsorbed(){
+    public bool GetIsAbsorbed()
+    {
         return isAbsorbed;
     }
 
 	void Start ()
     {
         matchedPiece = null;
-	}
+        networkIdentity = GetComponent<NetworkIdentity>();
+
+    }
 	
 	void Update ()
     {
         if (isAbsorbed)
         {
-            DestroyGrid();
+            SendTargetInfo();
         }
 	}
 
@@ -102,13 +108,12 @@ public class WallGrid : NetworkBehaviour {
         }
     }
 
-    void DestroyGrid()
+    void SendTargetInfo()
     {
-        GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-        Destroy(gameObject);
-        Destroy(matchedPiece);
-        // add score
-        GameSingleton.instance.AddScore();
+        Debug.Log("destory");
+        GameSingleton.instance.SetTargetGrid(this.gameObject);
+        //GameSingleton.instance.AddTargetGrid(this.gameObject);
+        GameSingleton.instance.SetIsPieceAbsorbed(true);
         isAbsorbed = false;
     }
 }
