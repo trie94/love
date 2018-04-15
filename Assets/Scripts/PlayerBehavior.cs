@@ -224,6 +224,13 @@ public class PlayerBehavior : NetworkBehaviour {
         }
     }
 
+    [Command]
+    void CmdDestroy()
+    {
+        Destroy(net.pieceInNet);
+        Destroy()
+    }
+
     IEnumerator ReleasePiece()
     {
         // disable the net

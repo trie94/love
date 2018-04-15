@@ -11,9 +11,6 @@ public class Wall : NetworkBehaviour {
     [SerializeField]
     AudioSource audioSource;
 
-    [SyncVar]
-    Transform wallPos;
-
     bool isFinal;
 
 	void Start ()
