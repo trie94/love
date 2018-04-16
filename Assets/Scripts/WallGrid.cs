@@ -14,19 +14,16 @@ public class WallGrid : NetworkBehaviour {
     [SerializeField]
     AudioClip misMatchSound;
 
-    [SerializeField]
-    string pieceName;
-
+    [SyncVar]
     GameObject matchedPiece;
+
     PieceBehavior pieceBehavior;
 
     [SerializeField]
     float absorbSpeed;
     float lerpTime;
 
-    NetworkIdentity networkIdentity;
-    NetworkConnection conn;
-
+    [SyncVar]
     bool isAbsorbed;
     public bool GetIsAbsorbed()
     {
@@ -36,8 +33,6 @@ public class WallGrid : NetworkBehaviour {
 	void Start ()
     {
         matchedPiece = null;
-        networkIdentity = GetComponent<NetworkIdentity>();
-
     }
 	
 	void Update ()

@@ -114,6 +114,7 @@ MonoBehaviour:
   time: {fileID: 0}
   score: {fileID: 0}
   height: 1.2
+  player: {fileID: 1153112139641388, guid: 44254283c9c8b5e418d8c03da30a1945, type: 2}
 --- !u!114 &114561612033168116
 MonoBehaviour:
   m_ObjectHideFlags: 1

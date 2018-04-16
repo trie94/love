@@ -6,39 +6,37 @@ using UnityEngine.Networking;
 public class Net : NetworkBehaviour {
 
     bool insideNet;
-    public bool GetInsideNet()
-    {
-        return insideNet;
-    }
     public void SetInsideNet(bool _insideNet)
     {
         insideNet = _insideNet;
     }
+    public bool GetInsideNet()
+    {
+        return insideNet;
+    }
 
     public GameObject pieceInNet;
-
-    [SerializeField]
-    PlayerAttributes playerAtt;
+    PlayerBehavior player;
 
     void Start()
     {
         pieceInNet = null;
+        player = GetComponentInParent<PlayerBehavior>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!playerAtt.isSnapped)
+        if (!player.GetIsSnapped())
         {
             pieceInNet = other.gameObject;
-            playerAtt.SnappedPiece(pieceInNet);
             insideNet = true;
-            Debug.Log("some piece is inside the net: " + playerAtt.snappedPiece.name);
+            Debug.Log("x snapped and obj in the net");
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        insideNet = false;
+        //insideNet = false;
         Debug.Log("piece out");
     }
 }

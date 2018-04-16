@@ -5,21 +5,19 @@ using UnityEngine.Networking;
 
 public class PlayerAttributes : NetworkBehaviour {
 
-    public GameObject snappedPiece;
+    [SyncVar]
     public bool isSnapped;
+    [SyncVar]
     public int matchedPiece;
 
-    public void SnappedPiece(GameObject _snappedPiece)
-    {
-        snappedPiece = _snappedPiece;
-    }
-
-    public void IsSnapped(bool _isSnapped)
+    [Command]
+    public void CmdIsSnapped(bool _isSnapped)
     {
         isSnapped = _isSnapped;
     }
 
-    public void MatchedPiece(int _matchedPiece)
+    [Command]
+    public void CmdMatchedPiece(int _matchedPiece)
     {
         matchedPiece = _matchedPiece;
     }

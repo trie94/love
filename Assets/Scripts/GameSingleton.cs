@@ -19,7 +19,7 @@ public class GameSingleton : NetworkBehaviour {
     public int totalScore = 0;
     [SyncVar]
     public bool isPieceAbsorbed;
-
+    [SyncVar]
     public GameObject targetGrid;
 
     public List<GameObject> wallGrids = new List<GameObject>();

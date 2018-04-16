@@ -45,6 +45,9 @@ public class GameController : NetworkBehaviour {
 
     bool didSpawn;
 
+    [SerializeField]
+    GameObject player;
+
     void Start ()
     {
         wallGrid = new WallGrid[gridNum];
@@ -60,8 +63,8 @@ public class GameController : NetworkBehaviour {
         if (planeController.GetHasPlaneFound() && !didSpawn)
         {
             // server spawns pieces and wall
-            CmdSpawnPieces();
-            CmdSpawnWall();
+            SpawnPieces();
+            SpawnWall();
             didSpawn = true;
         }
 
@@ -72,8 +75,7 @@ public class GameController : NetworkBehaviour {
         }
 	}
 
-    [Command]
-    void CmdSpawnPieces()
+    void SpawnPieces()
     {
         // spawn pieces
         for (int i = 0; i < piecesNum; i++)
@@ -94,8 +96,7 @@ public class GameController : NetworkBehaviour {
         }
     }
 
-    [Command]
-    void CmdSpawnWall()
+    void SpawnWall()
     {
         wall = Instantiate(wallPrefab, GameSingleton.instance.anchor + new Vector3(0f, height, 0f), Quaternion.identity);
         NetworkServer.Spawn(wall);

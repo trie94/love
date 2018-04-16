@@ -87,26 +87,6 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   - {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1150396157018696, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1539714920382572, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1036305651033834, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1621970205870014, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1526443355929080, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1778957581397612, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1841889193935496, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1360967148287372, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1138164063394584, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1789182514686154, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1936427640404564, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1448927148808986, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1496152065899068, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1106976542785898, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1960868866848190, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1601398905503218, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1498348522610170, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1852357993893220, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1140344374230450, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
-  - {fileID: 1233610670359246, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -149,7 +129,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1

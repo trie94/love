@@ -18,6 +18,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerBehavior.enabled = false;
         lineRenderer.enabled = false;
+
         if (!isLocalPlayer)
         {
             Debug.Log("this is not a local player");

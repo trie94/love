@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using GoogleARCore;
+using TMPro;
 
 #if UNITY_EDITOR
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
 public class PlayerBehavior : NetworkBehaviour {
-
-    [SerializeField]
-    PlayerAttributes playerAtt;
 
     [SerializeField]
     GameObject[] pieces;
@@ -39,13 +37,6 @@ public class PlayerBehavior : NetworkBehaviour {
     AudioClip spawnSound;
 
     [SerializeField]
-    LineRenderer lineRenderer;
-
-    Vector3[] points;
-    [SerializeField]
-    int pointsNum;
-
-    [SerializeField]
     Net net;
 
     [SerializeField]
@@ -58,8 +49,12 @@ public class PlayerBehavior : NetworkBehaviour {
     float lerpSpeed = 0.5f;
 
     bool insideNet;
-    // release pieces by tabbing
     bool isTabbed;
+    bool isSnapped;
+    public bool GetIsSnapped()
+    {
+        return isSnapped;
+    }
 
     Vector3 releasePos;
     [SerializeField]
@@ -69,7 +64,10 @@ public class PlayerBehavior : NetworkBehaviour {
     Coroutine bounceBack;
 
     [SerializeField]
-    bool _debug;
+    TextMeshProUGUI log;
+
+    // piece behavior
+    bool startFollowing;
 
     void OnEnable()
     {
@@ -78,11 +76,6 @@ public class PlayerBehavior : NetworkBehaviour {
             Debug.Log("this is not a local player");
             Destroy(this);
             return;
-        }
-
-        if (points == null)
-        {
-            points = new Vector3[pointsNum];
         }
 
         // spawn sound
@@ -94,26 +87,26 @@ public class PlayerBehavior : NetworkBehaviour {
 
     void Start()
     {
-        isTabbed = false;
         insideNet = net.GetInsideNet();
     }
 
-    [ClientCallback]
     void Update()
     {
         insideNet = net.GetInsideNet();
-        Debug.Log("is snapped: " + playerAtt.isSnapped);
+        Debug.Log("is snapped: " + isSnapped);
         Debug.Log("net.GetInsideNet: " + net.GetInsideNet());
         for (int i = 0; i < GameSingleton.instance.spawnedPieces.Count; i++)
         {
             if (insideNet)
             {
-                if (isTabbed)
+                if (!net.pieceInNet.GetComponent<NetworkIdentity>().hasAuthority)
                 {
-                    isTabbed = false;
+                    net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+                    Debug.Log("local player authority: " + net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority);
                 }
+
                 // check the tag
-                if (!playerAtt.isSnapped)
+                if (!isSnapped)
                 {
                     if (net.pieceInNet.tag == "piece1" || net.pieceInNet.tag == "piece2")
                     {
@@ -124,36 +117,35 @@ public class PlayerBehavior : NetworkBehaviour {
                         CmdBounce();
                     }
                 }
-            }
-            else if (net.pieceInNet != null && net.pieceInNet.transform.parent != null)
-            {
-                playerAtt.IsSnapped(true);
+
+                if (net.pieceInNet.transform.parent != null && startFollowing)
+                {
+                    CmdFollowPhone();
+                }
+
+                if (isTabbed)
+                {
+                    isTabbed = false;
+                }
             }
             else
             {
-                playerAtt.IsSnapped(false);
-                playerAtt.SnappedPiece(null);
+                isSnapped = false;
+                net.pieceInNet = null;
             }
 
             // tab to release
             if (Input.touchCount >= 1 && !isTabbed)
             {
-                if (playerAtt.isSnapped)
+                if (isSnapped)
                 {
                     CmdRelease();
                     isTabbed = true;
-                    Debug.Log("touch and release");
                 }
                 else
                 {
                     Debug.Log("nothing to release");
                 }
-            }
-
-            if (_debug)
-            {
-                CmdRelease();
-                _debug = false;
             }
 
             if (GameSingleton.instance.isPieceAbsorbed == true && GameSingleton.instance.targetGrid != null)
@@ -166,22 +158,33 @@ public class PlayerBehavior : NetworkBehaviour {
     [Command]
     void CmdSnap()
     {
-        // parenting
-        net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+        if (!net.pieceInNet.GetComponent<NetworkIdentity>().hasAuthority)
+        {
+            net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+            Debug.Log("local player authority: " + net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority);
+        }
         net.pieceInNet.transform.parent = container.transform;
-        playerAtt.IsSnapped(true);
+        StartCoroutine(SnapToPhone());
+        isSnapped = true;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("snaped piece: " + playerAtt.snappedPiece.name);
+        Debug.Log("cmd snap");
+    }
+
+    [Command]
+    void CmdFollowPhone()
+    {
+        net.pieceInNet.transform.position
+            = Vector3.MoveTowards(net.pieceInNet.transform.position, net.transform.position, Time.deltaTime);
+        Debug.Log("stop coroutine and follow phone");
     }
 
     [Command]
     void CmdBounce()
     {
-        //add behavior here
-        bounceBack = StartCoroutine(BounceBack());
+        StartCoroutine(BounceBack());
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(nonInteractableSound);
@@ -192,15 +195,13 @@ public class PlayerBehavior : NetworkBehaviour {
     [Command]
     void CmdRelease()
     {
-        net.pieceInNet.transform.parent = null;
-        net.SetInsideNet(false);
-        lineRenderer.enabled = false;
-        releasePiece = StartCoroutine(ReleasePiece());
-        playerAtt.IsSnapped(false);
+        StartCoroutine(ReleasePiece());
+        isSnapped = false;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);
         }
+        Debug.Log("cmd release");
     }
 
     [Command]
@@ -210,13 +211,45 @@ public class PlayerBehavior : NetworkBehaviour {
         net.SetInsideNet(false);
         NetworkServer.Destroy(GameSingleton.instance.targetGrid);
         GameSingleton.instance.targetGrid = null;
+        RpcDestroy();
+        startFollowing = false;
         GameSingleton.instance.SetIsPieceAbsorbed(false);
         GameSingleton.instance.AddScore();
+        Debug.Log("cmd destroy");
+    }
+
+    [ClientRpc]
+    void RpcDestroy()
+    {
+        Destroy(GameSingleton.instance.targetGrid);
+        Debug.Log("rpc destroy");
+    }
+
+    IEnumerator SnapToPhone()
+    {
+        float lerpTime = 0f;
+        startFollowing = false;
+
+        while (true)
+        {
+            if (lerpTime >= 0.7f)
+            {
+                startFollowing = true;
+                Debug.Log("start following");
+                yield break;
+            }
+            else
+            {
+                lerpTime += Time.deltaTime * lerpSpeed;
+                net.pieceInNet.transform.position = Vector3.Lerp(net.pieceInNet.transform.position, net.transform.position, lerpTime);
+                Debug.Log("snap to phone coroutine");
+            }
+            yield return null;
+        }
     }
 
     IEnumerator ReleasePiece()
     {
-        // disable the net
         float lerpTime = 0f;
         releasePos = net.transform.position + net.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
         netCol.SetActive(false);
@@ -226,12 +259,20 @@ public class PlayerBehavior : NetworkBehaviour {
             if (lerpTime >= 1f)
             {
                 netCol.SetActive(true);
-                net.pieceInNet.transform.parent = null;
+                net.SetInsideNet(false);
+
+                if (net.pieceInNet.transform.parent != null)
+                {
+                    net.pieceInNet.transform.parent = null;
+                }
+
                 net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
+                Debug.Log("release and net set active");
                 yield break;
             }
             else if (net.pieceInNet != null)
             {
+                Debug.Log("release coroutine");
                 lerpTime += Time.deltaTime * lerpSpeed;
                 net.pieceInNet.transform.position = Vector3.Lerp(net.pieceInNet.transform.position,
                     transform.InverseTransformDirection(releasePos), lerpTime);
@@ -249,6 +290,7 @@ public class PlayerBehavior : NetworkBehaviour {
         {
             if (lerpTime >= 1f)
             {
+                net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
                 yield break;
             }
             else
