@@ -14,7 +14,6 @@ public class WallGrid : NetworkBehaviour {
     [SerializeField]
     AudioClip misMatchSound;
 
-    [SyncVar]
     GameObject matchedPiece;
 
     PieceBehavior pieceBehavior;
@@ -23,7 +22,6 @@ public class WallGrid : NetworkBehaviour {
     float absorbSpeed;
     float lerpTime;
 
-    [SyncVar]
     bool isAbsorbed;
     public bool GetIsAbsorbed()
     {
@@ -75,6 +73,10 @@ public class WallGrid : NetworkBehaviour {
         pieceBehavior = matchedPiece.GetComponent<PieceBehavior>();
         pieceBehavior.SetIsMatch(true);
         matchedPiece.transform.LookAt(transform.position);
+
+        pieceBehavior.matchedPiece = matchedPiece;
+        pieceBehavior.matchedGrid = this.gameObject;
+
         StartCoroutine(Absorb());
 
         // sound effect
@@ -107,7 +109,7 @@ public class WallGrid : NetworkBehaviour {
     {
         Debug.Log("destory");
         GameSingleton.instance.SetTargetGrid(this.gameObject);
-        //GameSingleton.instance.AddTargetGrid(this.gameObject);
+        Debug.Log("target grid: " + GameSingleton.instance.targetGrid);
         GameSingleton.instance.SetIsPieceAbsorbed(true);
         isAbsorbed = false;
     }

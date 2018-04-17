@@ -16,6 +16,7 @@ TagManager:
   - piece2
   - piece3
   - piece4
+  - player
   layers:
   - Default
   - TransparentFX

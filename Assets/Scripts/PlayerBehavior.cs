@@ -66,6 +66,8 @@ public class PlayerBehavior : NetworkBehaviour {
     [SerializeField]
     TextMeshProUGUI log;
 
+    NetworkIdentity networkId;
+
     // piece behavior
     bool startFollowing;
 
@@ -77,6 +79,8 @@ public class PlayerBehavior : NetworkBehaviour {
             Destroy(this);
             return;
         }
+
+        networkId = GetComponent<NetworkIdentity>();
 
         // spawn sound
         if (!audioSource.isPlaying)
@@ -94,15 +98,14 @@ public class PlayerBehavior : NetworkBehaviour {
     {
         insideNet = net.GetInsideNet();
         Debug.Log("is snapped: " + isSnapped);
-        Debug.Log("net.GetInsideNet: " + net.GetInsideNet());
+        Debug.Log("net.pieceInNet: " + net.pieceInNet);
         for (int i = 0; i < GameSingleton.instance.spawnedPieces.Count; i++)
         {
             if (insideNet)
             {
                 if (!net.pieceInNet.GetComponent<NetworkIdentity>().hasAuthority)
                 {
-                    net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-                    Debug.Log("local player authority: " + net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority);
+                    CmdSetAuthority(net.id, networkId);
                 }
 
                 // check the tag
@@ -128,12 +131,6 @@ public class PlayerBehavior : NetworkBehaviour {
                     isTabbed = false;
                 }
             }
-            else
-            {
-                isSnapped = false;
-                net.pieceInNet = null;
-            }
-
             // tab to release
             if (Input.touchCount >= 1 && !isTabbed)
             {
@@ -148,9 +145,10 @@ public class PlayerBehavior : NetworkBehaviour {
                 }
             }
 
-            if (GameSingleton.instance.isPieceAbsorbed == true && GameSingleton.instance.targetGrid != null)
+            if (GameSingleton.instance.isPieceAbsorbed && GameSingleton.instance.targetGrid != null)
             {
                 CmdDestroy();
+                CmdAddScore();
             }
         }
     }
@@ -158,11 +156,7 @@ public class PlayerBehavior : NetworkBehaviour {
     [Command]
     void CmdSnap()
     {
-        if (!net.pieceInNet.GetComponent<NetworkIdentity>().hasAuthority)
-        {
-            net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-            Debug.Log("local player authority: " + net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority);
-        }
+        CmdSetAuthority(net.id, networkId);
         net.pieceInNet.transform.parent = container.transform;
         StartCoroutine(SnapToPhone());
         isSnapped = true;
@@ -196,6 +190,7 @@ public class PlayerBehavior : NetworkBehaviour {
     void CmdRelease()
     {
         StartCoroutine(ReleasePiece());
+        CmdRemoveAuthority(net.id, networkId);
         isSnapped = false;
         if (!audioSource.isPlaying)
         {
@@ -211,18 +206,111 @@ public class PlayerBehavior : NetworkBehaviour {
         net.SetInsideNet(false);
         NetworkServer.Destroy(GameSingleton.instance.targetGrid);
         GameSingleton.instance.targetGrid = null;
-        RpcDestroy();
         startFollowing = false;
         GameSingleton.instance.SetIsPieceAbsorbed(false);
-        GameSingleton.instance.AddScore();
         Debug.Log("cmd destroy");
+        RpcDestroy();
+    }
+
+    [Command]
+    void CmdAddScore()
+    {
+        GameSingleton.instance.AddScore();
+        RpcAddScore();
+    }
+
+    [ClientRpc]
+    void RpcAddScore()
+    {
+        GameSingleton.instance.AddScore();
+        log.SetText("rpc add score: " + GameSingleton.instance.PrintScore());
     }
 
     [ClientRpc]
     void RpcDestroy()
     {
-        Destroy(GameSingleton.instance.targetGrid);
+        NetworkServer.Destroy(net.pieceInNet);
+        NetworkServer.Destroy(GameSingleton.instance.targetGrid);
+        startFollowing = false;
         Debug.Log("rpc destroy");
+        log.SetText("rpc destroy");
+    }
+
+    [Command]
+    void CmdNetTest()
+    {
+        Debug.Log("cmd test script: something inside the net");
+        log.SetText("cmd test script: something inside the net");
+    }
+
+    [ClientRpc]
+    void RpcNetTest()
+    {
+        Debug.Log("rpc test script: something inside the net");
+        log.SetText("rpc test script: something inside the net");
+    }
+
+    [Command]
+    void CmdSnapTest()
+    {
+        Debug.Log("cmd test script: is snapped true");
+        log.SetText("cmd test script: is snapped true");
+    }
+
+    [ClientRpc]
+    void RpcSnapTest()
+    {
+        Debug.Log("rpc test script: is snapped true");
+        log.SetText("rpc test script: is snapped true");
+    }
+
+    [Command]
+    void CmdTabTest()
+    {
+        Debug.Log("cmd test script: tab");
+        log.SetText("cmd test script: tab");
+    }
+
+    [ClientRpc]
+    void RpcTabTest()
+    {
+        Debug.Log("rpc test script: tab");
+        log.SetText("rpc test script: tab");
+    }
+
+    [Command]
+    public void CmdSetAuthority(NetworkInstanceId objectId, NetworkIdentity player)
+    {
+        var iObject = NetworkServer.FindLocalObject(objectId);
+        var networkIdentity = iObject.GetComponent<NetworkIdentity>();
+        var otherOwner = networkIdentity.clientAuthorityOwner;
+
+        if (otherOwner == player.connectionToClient)
+        {
+            return;
+        }
+        else
+        {
+            if (otherOwner != null)
+            {
+                networkIdentity.RemoveClientAuthority(otherOwner);
+            }
+            networkIdentity.localPlayerAuthority = true;
+            networkIdentity.AssignClientAuthority(player.connectionToClient);
+        }
+    }
+
+    [Command]
+    public void CmdRemoveAuthority(NetworkInstanceId objectId, NetworkIdentity player)
+    {
+        var iObject = NetworkServer.FindLocalObject(objectId);
+        var networkIdentity = iObject.GetComponent<NetworkIdentity>();
+        var otherOwner = networkIdentity.clientAuthorityOwner;
+
+        if (networkIdentity.hasAuthority)
+        {
+            networkIdentity.RemoveClientAuthority(player.connectionToClient);
+        }
     }
 
     IEnumerator SnapToPhone()
@@ -265,8 +353,6 @@ public class PlayerBehavior : NetworkBehaviour {
                 {
                     net.pieceInNet.transform.parent = null;
                 }
-
-                net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
                 Debug.Log("release and net set active");
                 yield break;
             }
@@ -290,7 +376,7 @@ public class PlayerBehavior : NetworkBehaviour {
         {
             if (lerpTime >= 1f)
             {
-                net.pieceInNet.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
+                CmdRemoveAuthority(net.id, networkId);
                 yield break;
             }
             else

@@ -85,6 +85,7 @@ public class GameController : NetworkBehaviour {
             float zRange = Random.Range(-3f, 3f);
             int index = i % piecesPrefab.Length;
             pieces = Instantiate(piecesPrefab[index], GameSingleton.instance.anchor + new Vector3(xRange, yRange, zRange), Random.rotation);
+
             NetworkServer.Spawn(pieces);
             // store piece list
             GameSingleton.instance.spawnedPieces.Add(pieces);

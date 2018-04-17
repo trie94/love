@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 114523467212211528}
   m_Layer: 0
   m_Name: ARCore Device
-  m_TagString: Untagged
+  m_TagString: player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -552,7 +552,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -462.57245, y: 0, z: -481.71368, w: -323.50116}
+  m_margin: {x: -128.73221, y: 0, z: -130.45578, w: -323.50116}
   m_textInfo:
     textComponent: {fileID: 114287222970991966}
     characterCount: 0

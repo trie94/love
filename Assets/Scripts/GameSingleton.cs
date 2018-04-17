@@ -26,7 +26,7 @@ public class GameSingleton : NetworkBehaviour {
 
     public List<GameObject> targetGrids = new List<GameObject>();
 
-	public List<GameObject> spawnedPieces = new List<GameObject>();
+    public List<GameObject> spawnedPieces = new List<GameObject>();
 
     void Awake()
     {

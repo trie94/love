@@ -22,6 +22,10 @@ public class PieceBehavior : NetworkBehaviour
     float lerpSpeed = 0.2f;
 
     GameObject net;
+    GameObject player;
+    NetworkIdentity playerId;
+    public GameObject matchedPiece;
+    public GameObject matchedGrid;
 
     public void SetIsMatch(bool _isMatch)
     {
@@ -41,17 +45,9 @@ public class PieceBehavior : NetworkBehaviour
         net = GameObject.Find("Net");
     }
 
-    [ServerCallback]
     void Update()
     {
-        //if (isMatch)
-        //{
-        //    Match();
-        //}
-        //else
-        //{
-        //    Float();
-        //}
+
     }
 
     public void Float()
@@ -59,45 +55,8 @@ public class PieceBehavior : NetworkBehaviour
         transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
     }
 
-    //[ClientRpc]
-    //public void RpcSnap()
-    //{
-    //    speed = 0f;
-    //    if (!isSnapped)
-    //    {
-    //        StartCoroutine(SnapToPhone());
-    //        isSnapped = true;
-    //    }
-    //    if (startFollowing)
-    //    {
-    //        transform.position = Vector3.MoveTowards(transform.position, net.transform.position, Time.deltaTime);
-    //    }
-    //    Debug.Log("rpc snap..");
-    //}
-
     public void Match()
     {
         speed = 0f;
     }
-
-    //IEnumerator SnapToPhone()
-    //{
-    //    float lerpTime = 0f;
-
-    //    while (true)
-    //    {
-    //        if (lerpTime >= 0.7f)
-    //        {
-    //            startFollowing = true;
-    //            yield break;
-    //        }
-    //        else
-    //        {
-    //            lerpTime += Time.deltaTime * lerpSpeed;
-    //            transform.position = Vector3.Lerp(transform.position, net.transform.position, lerpTime);
-    //            Debug.Log("to the net!");
-    //        }
-    //        yield return null;
-    //    }
-    //}
 }

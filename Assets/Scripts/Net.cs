@@ -16,6 +16,7 @@ public class Net : NetworkBehaviour {
     }
 
     public GameObject pieceInNet;
+    public NetworkInstanceId id;
     PlayerBehavior player;
 
     void Start()
@@ -29,6 +30,7 @@ public class Net : NetworkBehaviour {
         if (!player.GetIsSnapped())
         {
             pieceInNet = other.gameObject;
+            id = pieceInNet.GetComponent<PieceBehavior>().netId;
             insideNet = true;
             Debug.Log("x snapped and obj in the net");
         }
