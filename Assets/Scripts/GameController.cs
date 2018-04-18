@@ -48,6 +48,15 @@ public class GameController : NetworkBehaviour {
     [SerializeField]
     GameObject player;
 
+    [SerializeField]
+    GameObject[] spawnables;
+
+    [SerializeField]
+    AudioSource audioSource;
+
+    [SerializeField]
+    AudioClip spawnSound;
+
     void Start ()
     {
         wallGrid = new WallGrid[gridNum];
@@ -101,7 +110,22 @@ public class GameController : NetworkBehaviour {
     {
         wall = Instantiate(wallPrefab, GameSingleton.instance.anchor + new Vector3(0f, height, 0f), Quaternion.identity);
         NetworkServer.Spawn(wall);
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(spawnSound);
+        }
+
         Debug.Log("wall");
+    }
+
+    void SpawnControllers()
+    {
+        for (int i = 0; i < spawnables.Length; i++)
+        {
+            Instantiate(spawnables[i]);
+            NetworkServer.Spawn(spawnables[i]);
+        }
     }
 
     void OnDisable()

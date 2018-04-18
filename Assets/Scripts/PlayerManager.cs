@@ -10,14 +10,14 @@ public class PlayerManager : NetworkBehaviour
     PlayerBehavior playerBehavior;
 
     [SerializeField]
-    LineRenderer lineRenderer;
+    Net net;
 
     bool isDone;
 
     void Start()
     {
         playerBehavior.enabled = false;
-        lineRenderer.enabled = false;
+        net.enabled = false;
 
         if (!isLocalPlayer)
         {
@@ -38,6 +38,7 @@ public class PlayerManager : NetworkBehaviour
         if (GameSingleton.instance.allowSnap)
         {
             playerBehavior.enabled = true;
+            net.enabled = true;
         }
 
         if (GameSingleton.instance.totalScore >= 10)

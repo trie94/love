@@ -6,27 +6,14 @@ using UnityEngine.Networking;
 
 public class PieceBehavior : NetworkBehaviour
 {
-    float range = 5f;
     float speed = 2f;
 
-    Vector3 startPos;
-    Vector3 targetPos;
-    Vector3 fixPos;
     Vector3 anchor;
-
-
-    bool isMatch;
-    bool isSnapped;
-    bool startFollowing;
-
-    float lerpSpeed = 0.2f;
-
-    GameObject net;
-    GameObject player;
-    NetworkIdentity playerId;
-    public GameObject matchedPiece;
     public GameObject matchedGrid;
 
+    Vector3 stopPos;
+
+    bool isMatch;
     public void SetIsMatch(bool _isMatch)
     {
         isMatch = _isMatch;
@@ -37,26 +24,79 @@ public class PieceBehavior : NetworkBehaviour
         return isMatch;
     }
 
+    bool isSnapped;
+    bool startFollowing;
+
+    bool isAbsorbed;
+    public void SetIsAbsorbed(bool _isAbsorbed)
+    {
+        isAbsorbed = _isAbsorbed;
+    }
+
+    public bool GetIsAbsorbed()
+    {
+        return isAbsorbed;
+    }
+
+
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
-        startPos = transform.position;
-        targetPos = Random.insideUnitSphere * range;
-        net = GameObject.Find("Net");
     }
 
     void Update()
     {
+        if (isMatch)
+        {
+            Match();
+        }
 
+        if (transform.parent)
+        {
+            Stop();
+        }
+        else
+        {
+            Float();
+        }
     }
 
-    public void Float()
+    void Float()
     {
         transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
     }
 
-    public void Match()
+    void Stop()
     {
         speed = 0f;
+    }
+
+    void Match()
+    {
+        StartCoroutine(Absorb());
+        isMatch = false;
+    }
+
+    IEnumerator Absorb()
+    {
+        speed = 0f;
+        float lerpTime = 0f;
+        float absorbSpeed = 0.5f;
+
+        while (true)
+        {
+            lerpTime += Time.deltaTime * absorbSpeed;
+
+            if (lerpTime >= 1f)
+            {
+                isAbsorbed = true;
+                yield break;
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, matchedGrid.transform.position, lerpTime);
+            }
+            yield return null;
+        }
     }
 }

@@ -28,6 +28,8 @@ public class GameSingleton : NetworkBehaviour {
 
     public List<GameObject> spawnedPieces = new List<GameObject>();
 
+    public bool testIsSnapped;
+
     void Awake()
     {
         if (instance == null)

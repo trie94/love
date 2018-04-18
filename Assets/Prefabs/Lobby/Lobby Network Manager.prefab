@@ -86,7 +86,31 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
-  - {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
+  - {fileID: 1949447996575882, guid: f4f8f38a7871a5d4c8621cf8a0cb7a3e, type: 2}
+  - {fileID: 1734265912357596, guid: 51b739260f9c5d443a77d8f68865d4d3, type: 2}
+  - {fileID: 1249040293978788, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1832819067275642, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1658671781595120, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1967987900050246, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1035248904759814, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1463077890312034, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1568315070885898, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1273602411341884, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1779048292718974, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1704285902770040, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1969107795821094, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1121534588581840, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1454867739471028, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1504616208655814, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1947307291108216, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1200711395191954, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1788207634429856, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1174215589916624, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1753063801729258, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1633206118833308, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1620328737685506, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1035081655278508, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
+  - {fileID: 1659408091664098, guid: a174f519555c25f49801c946c8d3ad8f, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -148,7 +172,7 @@ MonoBehaviour:
   m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 114744920142361056, guid: d0bfb56e24341cf49b4948c0a1b761f9,
     type: 2}
-  m_GamePlayerPrefab: {fileID: 1153112139641388, guid: 44254283c9c8b5e418d8c03da30a1945,
+  m_GamePlayerPrefab: {fileID: 1164273264216806, guid: 5b5530f997e8acb4db4b320abc0cd37b,
     type: 2}
   m_LobbyScene: Lobby
   m_PlayScene: Main

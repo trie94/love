@@ -16,23 +16,36 @@ public class Net : NetworkBehaviour {
     }
 
     public GameObject pieceInNet;
-    public NetworkInstanceId id;
     PlayerBehavior player;
 
     void Start()
     {
         pieceInNet = null;
-        player = GetComponentInParent<PlayerBehavior>();
+        player = GetComponent<PlayerBehavior>();
+
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
+    }
+
+    void Update()
+    {
+        if (!player)
+        {
+            player = GetComponent<PlayerBehavior>();
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("player: "+player);
         if (!player.GetIsSnapped())
         {
             pieceInNet = other.gameObject;
-            id = pieceInNet.GetComponent<PieceBehavior>().netId;
             insideNet = true;
-            Debug.Log("x snapped and obj in the net");
+            CmdPiece();
         }
     }
 
@@ -40,5 +53,17 @@ public class Net : NetworkBehaviour {
     {
         //insideNet = false;
         Debug.Log("piece out");
+    }
+
+    [Command]
+    void CmdPiece()
+    {
+        RpcPiece();
+    }
+
+    [ClientRpc]
+    void RpcPiece()
+    {
+        Debug.Log("this is rpc piece when collide");
     }
 }
