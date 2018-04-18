@@ -7,58 +7,28 @@ using TMPro;
 
 public class GameController : NetworkBehaviour {
 
-    [SerializeField]
-    PlaneController planeController;
+    [SerializeField] PlaneController planeController;
 
-    [SerializeField]
-    GameObject[] piecesPrefab;
+    [SerializeField] GameObject[] piecesPrefab;
+    [SerializeField] int piecesNum;
 
-    GameObject pieces;
-
-    [SerializeField]
-    int piecesNum;
-
-    [SerializeField]
-    GameObject wallPrefab;
-
-    GameObject wall;
-
+    [SerializeField] GameObject wallPrefab;
     WallGrid[] wallGrid;
+    [SerializeField] int gridNum;
 
-    [SerializeField]
-    int gridNum;
-
-    [SerializeField]
-    int lightsNum;
-
-    [SerializeField]
-    GameObject canvas;
-
-    [SerializeField]
-    TextMeshProUGUI time;
-
-    [SerializeField]
-    TextMeshProUGUI score;
-
-    [SerializeField]
-    float height = 1.2f;
+    [SerializeField] float height = 1.2f;
 
     bool didSpawn;
 
-    [SerializeField]
-    GameObject player;
+    [SerializeField] GameObject[] controllersPrefab;
 
-    [SerializeField]
-    GameObject[] spawnables;
-
-    [SerializeField]
-    AudioSource audioSource;
-
-    [SerializeField]
-    AudioClip spawnSound;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip spawnSound;
 
     void Start ()
     {
+        SpawnControllers();
+
         wallGrid = new WallGrid[gridNum];
         for (int i = 0; i < wallGrid.Length; i++)
         {
@@ -76,12 +46,6 @@ public class GameController : NetworkBehaviour {
             SpawnWall();
             didSpawn = true;
         }
-
-        if (GameSingleton.instance.allowSnap)
-        {
-            time.SetText("Time: " + GameSingleton.instance.PrintTime());
-            score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
-        }
 	}
 
     void SpawnPieces()
@@ -93,7 +57,7 @@ public class GameController : NetworkBehaviour {
             float xRange = Random.Range(-3f, 3f);
             float zRange = Random.Range(-3f, 3f);
             int index = i % piecesPrefab.Length;
-            pieces = Instantiate(piecesPrefab[index], GameSingleton.instance.anchor + new Vector3(xRange, yRange, zRange), Random.rotation);
+            GameObject pieces = Instantiate(piecesPrefab[index], GameSingleton.instance.anchor + new Vector3(xRange, yRange, zRange), Random.rotation);
 
             NetworkServer.Spawn(pieces);
             // store piece list
@@ -108,7 +72,7 @@ public class GameController : NetworkBehaviour {
 
     void SpawnWall()
     {
-        wall = Instantiate(wallPrefab, GameSingleton.instance.anchor + new Vector3(0f, height, 0f), Quaternion.identity);
+        GameObject wall = Instantiate(wallPrefab, GameSingleton.instance.anchor + new Vector3(0f, height, 0f), Quaternion.identity);
         NetworkServer.Spawn(wall);
 
         if (!audioSource.isPlaying)
@@ -121,16 +85,10 @@ public class GameController : NetworkBehaviour {
 
     void SpawnControllers()
     {
-        for (int i = 0; i < spawnables.Length; i++)
+        for (int i = 0; i < controllersPrefab.Length; i++)
         {
-            Instantiate(spawnables[i]);
-            NetworkServer.Spawn(spawnables[i]);
+            GameObject controllers = Instantiate(controllersPrefab[i]);
+            NetworkServer.Spawn(controllers);
         }
-    }
-
-    void OnDisable()
-    {
-        time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
     }
 }

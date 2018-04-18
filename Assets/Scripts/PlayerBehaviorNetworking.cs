@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using TMPro;
 
 #if UNITY_EDITOR
 using Input = GoogleARCore.InstantPreviewInput;
@@ -22,6 +23,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [SerializeField] AudioClip snapSound;
     [SerializeField] AudioClip nonInteractableSound;
     [SerializeField] AudioClip releaseSound;
+
+    public TextMeshProUGUI time;
+    public TextMeshProUGUI score;
+    bool hasCanvas;
 
     void Start()
     {
@@ -51,8 +56,15 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     void Update()
     {
+        if (GameObject.Find("ScoreBoard") && !time && !score && !hasCanvas)
+        {
+            time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
+            score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
+            hasCanvas = true;
+        }
+
         // count time
-        if (GameSingleton.instance.allowSnap)
+        if (hasCanvas && GameSingleton.instance && GameSingleton.instance.allowSnap)
         {
             CmdTimer();
         }
@@ -91,6 +103,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     void RpcTimer()
     {
         GameSingleton.instance.CountTime();
+        time.SetText("Time: " + GameSingleton.instance.PrintTime());
     }
 
     [Command]
@@ -166,6 +179,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [Command]
     void CmdRelease()
     {
+        RpcRelease();
+    }
+
+    [ClientRpc]
+    void RpcRelease()
+    {
         StartCoroutine(ReleasePiece());
         if (piece != null)
         {
@@ -177,24 +196,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             audioSource.PlayOneShot(releaseSound);
         }
+        Debug.Log("rpc release");
     }
-
-    //[ClientRpc]
-    //void RpcRelease()
-    //{
-    //    StartCoroutine(ReleasePiece());
-    //    if (piece != null)
-    //    {
-    //        CmdRemoveLocalPlayerAuth(piece);
-    //    }
-    //    isSnapped = false;
-    //    isInNet = false;
-    //    if (!audioSource.isPlaying)
-    //    {
-    //        audioSource.PlayOneShot(releaseSound);
-    //    }
-    //    Debug.Log("rpc release");
-    //}
 
     [Command]
     void CmdDestroy()
@@ -228,7 +231,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     void RpcAddScore()
     {
         GameSingleton.instance.AddScore();
-        Debug.Log("score: " + GameSingleton.instance.totalScore);
+        score.SetText(GameSingleton.instance.PrintScore());
     }
 
     [Command]
