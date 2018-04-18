@@ -54,7 +54,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         // count time
         if (GameSingleton.instance.allowSnap)
         {
-            GameSingleton.instance.CountTime();
+            CmdTimer();
         }
 
         if (Input.touchCount >= 1 && !isTabbed)
@@ -81,16 +81,20 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
             CmdAddScore();
         }
     }
-
     [Command]
-    void CmdSnap()
+    void CmdTimer()
     {
-        RpcSnap();
-        Debug.Log("cmd snap");
+        RpcTimer();
     }
 
     [ClientRpc]
-    void RpcSnap()
+    void RpcTimer()
+    {
+        GameSingleton.instance.CountTime();
+    }
+
+    [Command]
+    void CmdSnap()
     {
         CmdSetLocalPlayerAuth(piece);
         piece.transform.parent = container.transform;
@@ -101,31 +105,42 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("rpc snap");
+        Debug.Log("cmd snap");
     }
+
+    //[ClientRpc]
+    //void RpcSnap()
+    //{
+    //    CmdSetLocalPlayerAuth(piece);
+    //    piece.transform.parent = container.transform;
+    //    StartCoroutine(SnapToPhone());
+    //    isSnapped = true;
+    //    isInNet = true;
+    //    if (!audioSource.isPlaying)
+    //    {
+    //        audioSource.PlayOneShot(snapSound);
+    //    }
+    //    Debug.Log("rpc snap");
+    //}
 
     [Command]
     void CmdFollowPhone()
-    {
-        RpcFollowPhone();
-    }
-
-    [ClientRpc]
-    void RpcFollowPhone()
     {
         piece.transform.position
             = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
         Debug.Log("stop coroutine and follow phone");
     }
 
+    //[ClientRpc]
+    //void RpcFollowPhone()
+    //{
+    //    piece.transform.position
+    //        = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
+    //    Debug.Log("stop coroutine and follow phone");
+    //}
+
     [Command]
     void CmdNotInteractable()
-    {
-        RpcNotInteractable();
-    }
-
-    [ClientRpc]
-    void RpcNotInteractable()
     {
         StartCoroutine(BounceBack());
         isInNet = false;
@@ -136,14 +151,20 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         }
     }
 
+    //[ClientRpc]
+    //void RpcNotInteractable()
+    //{
+    //    StartCoroutine(BounceBack());
+    //    isInNet = false;
+    //    if (!audioSource.isPlaying)
+    //    {
+    //        audioSource.PlayOneShot(nonInteractableSound);
+    //        Debug.Log("not interactable");
+    //    }
+    //}
+
     [Command]
     void CmdRelease()
-    {
-        RpcRelease();
-    }
-
-    [ClientRpc]
-    void RpcRelease()
     {
         StartCoroutine(ReleasePiece());
         if (piece != null)
@@ -156,12 +177,31 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             audioSource.PlayOneShot(releaseSound);
         }
-        Debug.Log("rpc release");
     }
+
+    //[ClientRpc]
+    //void RpcRelease()
+    //{
+    //    StartCoroutine(ReleasePiece());
+    //    if (piece != null)
+    //    {
+    //        CmdRemoveLocalPlayerAuth(piece);
+    //    }
+    //    isSnapped = false;
+    //    isInNet = false;
+    //    if (!audioSource.isPlaying)
+    //    {
+    //        audioSource.PlayOneShot(releaseSound);
+    //    }
+    //    Debug.Log("rpc release");
+    //}
 
     [Command]
     void CmdDestroy()
     {
+        isSnapped = false;
+        isInNet = false;
+        startFollowing = false;
         Debug.Log("cmd destroy");
         RpcDestroy();
     }
@@ -171,9 +211,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
         Destroy(piece);
-        isSnapped = false;
-        isInNet = false;
-        startFollowing = false;
+        //isSnapped = false;
+        //isInNet = false;
+        //startFollowing = false;
         GameSingleton.instance.SetIsPieceAbsorbed(false);
         Debug.Log("rpc destroy");
     }
@@ -194,33 +234,33 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [Command]
     void CmdSetLocalPlayerAuth(GameObject gameObject)
     {
-        RpcSetLocalPlayerAuth(gameObject);
+        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         Debug.Log("cmd set local player authority");
     }
 
-    [ClientRpc]
-    void RpcSetLocalPlayerAuth(GameObject gameObject)
-    {
-        if (!gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority)
-        {
-            gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-        }
-        Debug.Log("rpc set local player authority");
-    }
+    //[ClientRpc]
+    //void RpcSetLocalPlayerAuth(GameObject gameObject)
+    //{
+    //    if (!gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority)
+    //    {
+    //        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+    //    }
+    //    Debug.Log("rpc set local player authority");
+    //}
 
     [Command]
     void CmdRemoveLocalPlayerAuth(GameObject gameObject)
     {
-        RpcRemoveLocalPlayerAuth(gameObject);
+        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
         Debug.Log("cmd remove local player authority");
     }
 
-    [ClientRpc]
-    void RpcRemoveLocalPlayerAuth(GameObject gameObject)
-    {
-        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
-        Debug.Log("rpc remove local player authority");
-    }
+    //[ClientRpc]
+    //void RpcRemoveLocalPlayerAuth(GameObject gameObject)
+    //{
+    //    gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
+    //    Debug.Log("rpc remove local player authority");
+    //}
 
     IEnumerator SnapToPhone()
     {
