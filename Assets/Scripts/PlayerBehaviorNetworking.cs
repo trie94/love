@@ -14,7 +14,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [SerializeField] Collider col;
     [SerializeField] GameObject container;
     GameObject matchedGrid;
-    [SerializeField] GameObject player;
+    GameObject player;
     bool isSnapped;
     bool isInNet;
     bool isTabbed;
@@ -25,9 +25,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [SerializeField] AudioClip nonInteractableSound;
     [SerializeField] AudioClip releaseSound;
 
-    public TextMeshProUGUI time;
-    public TextMeshProUGUI score;
-    public TextMeshProUGUI id;
+    TextMeshProUGUI time;
+    TextMeshProUGUI score;
+    TextMeshProUGUI id;
 
     bool hasCanvas;
 
@@ -47,6 +47,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             piece = other.gameObject;
 
+            //if host
             if (NetworkServer.active)
             {
                 if (piece.tag == "piece1" || piece.tag == "piece2")
@@ -135,7 +136,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         piece.transform.parent = container.transform;
         StartCoroutine(SnapToPhone());
         isSnapped = true;
-        isInNet = true;
+        //isInNet = true;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
@@ -153,7 +154,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     void NotInteractable()
     {
         StartCoroutine(BounceBack());
-        isInNet = false;
+        //isInNet = false;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(nonInteractableSound);
@@ -169,7 +170,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
             RemoveLocalPlayerAuth(piece);
         }
         isSnapped = false;
-        isInNet = false;
+        startFollowing = false;
+        //isInNet = false;
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);
@@ -190,7 +192,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         // Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
         // Destroy(piece);
         isSnapped = false;
-        isInNet = false;
+        //isInNet = false;
         startFollowing = false;
         GameSingleton.instance.SetIsPieceAbsorbed(false);
     }
@@ -221,7 +223,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
         while (true)
         {
-            if (lerpTime >= 1f)
+            if (lerpTime >= 0.8f)
             {
                 startFollowing = true;
                 Debug.Log("start following");
@@ -241,7 +243,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        float bounceRange = -1f;
+        float bounceRange = -0.5f;
         Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
         col.enabled = false;
 
@@ -250,7 +252,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
             if (lerpTime >= 1f)
             {
                 col.enabled = true;
-                isInNet = false;
+                //isInNet = false;
 
                 if (piece.transform.parent != null)
                 {
@@ -274,14 +276,16 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        float bounceRange = -1f;
+        float bounceRange = -0.5f;
         Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
+        col.enabled = false;
 
         while (true)
         {
             if (lerpTime >= 1f)
             {
                 RemoveLocalPlayerAuth(piece);
+                col.enabled = true;
                 yield break;
             }
             else
