@@ -14,6 +14,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     [SerializeField] Collider col;
     [SerializeField] GameObject container;
     GameObject matchedGrid;
+    [SerializeField] GameObject player;
     bool isSnapped;
     bool isInNet;
     bool isTabbed;
@@ -26,12 +27,15 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     public TextMeshProUGUI time;
     public TextMeshProUGUI score;
+    public TextMeshProUGUI id;
+
     bool hasCanvas;
 
     void Start()
     {
         if (!isLocalPlayer)
         {
+            col.enabled = false;
             this.enabled = false;
             return;
         }
@@ -43,37 +47,57 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             piece = other.gameObject;
 
-            if (piece.tag == "piece1" || piece.tag == "piece2")
+            if (NetworkServer.active)
             {
-                CmdSnap();
+                if (piece.tag == "piece1" || piece.tag == "piece2")
+                {
+                    Snap();
+                }
+                else if (piece.tag == "piece3" || piece.tag == "piece4")
+                {
+                    NotInteractable();
+                }
             }
-            else if (piece.tag == "piece3" || piece.tag == "piece4")
+            else
             {
-                CmdNotInteractable();
+                if (piece.tag == "piece3" || piece.tag == "piece4")
+                {
+                    Snap();
+                }
+                else if (piece.tag == "piece1" || piece.tag == "piece2")
+                {
+                    NotInteractable();
+                }
             }
         }
     }
 
     void Update()
     {
+        Debug.Log("is snapped: "+ isSnapped);
+        id.SetText("is snapped: " + isSnapped);
+
         if (GameObject.Find("ScoreBoard") && !time && !score && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
             score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
+            id = GameObject.Find("id").GetComponent<TextMeshProUGUI>();
+            player = GameObject.Find("Andy(Clone)");
+            player.transform.parent = this.transform;
             hasCanvas = true;
         }
 
         // count time
         if (hasCanvas && GameSingleton.instance && GameSingleton.instance.allowSnap)
         {
-            CmdTimer();
+            Timer();
         }
 
         if (Input.touchCount >= 1 && !isTabbed)
         {
             if (isSnapped)
             {
-                CmdRelease();
+                Release();
                 isTabbed = true;
             }
             else
@@ -90,26 +114,24 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             CmdDestroy();
-            CmdAddScore();
+            AddScore();
+        }
+
+        if (piece && piece.transform.parent && startFollowing)
+        {
+            FollowPhone();
         }
     }
-    [Command]
-    void CmdTimer()
-    {
-        RpcTimer();
-    }
 
-    [ClientRpc]
-    void RpcTimer()
+    void Timer()
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
     }
 
-    [Command]
-    void CmdSnap()
+    void Snap()
     {
-        CmdSetLocalPlayerAuth(piece);
+        piece.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         piece.transform.parent = container.transform;
         StartCoroutine(SnapToPhone());
         isSnapped = true;
@@ -118,42 +140,17 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("cmd snap");
+        Debug.Log("snap");
     }
 
-    //[ClientRpc]
-    //void RpcSnap()
-    //{
-    //    CmdSetLocalPlayerAuth(piece);
-    //    piece.transform.parent = container.transform;
-    //    StartCoroutine(SnapToPhone());
-    //    isSnapped = true;
-    //    isInNet = true;
-    //    if (!audioSource.isPlaying)
-    //    {
-    //        audioSource.PlayOneShot(snapSound);
-    //    }
-    //    Debug.Log("rpc snap");
-    //}
-
-    [Command]
-    void CmdFollowPhone()
+    void FollowPhone()
     {
         piece.transform.position
             = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
         Debug.Log("stop coroutine and follow phone");
     }
 
-    //[ClientRpc]
-    //void RpcFollowPhone()
-    //{
-    //    piece.transform.position
-    //        = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
-    //    Debug.Log("stop coroutine and follow phone");
-    //}
-
-    [Command]
-    void CmdNotInteractable()
+    void NotInteractable()
     {
         StartCoroutine(BounceBack());
         isInNet = false;
@@ -164,31 +161,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         }
     }
 
-    //[ClientRpc]
-    //void RpcNotInteractable()
-    //{
-    //    StartCoroutine(BounceBack());
-    //    isInNet = false;
-    //    if (!audioSource.isPlaying)
-    //    {
-    //        audioSource.PlayOneShot(nonInteractableSound);
-    //        Debug.Log("not interactable");
-    //    }
-    //}
-
-    [Command]
-    void CmdRelease()
-    {
-        RpcRelease();
-    }
-
-    [ClientRpc]
-    void RpcRelease()
+    void Release()
     {
         StartCoroutine(ReleasePiece());
         if (piece != null)
         {
-            CmdRemoveLocalPlayerAuth(piece);
+            RemoveLocalPlayerAuth(piece);
         }
         isSnapped = false;
         isInNet = false;
@@ -196,74 +174,44 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         {
             audioSource.PlayOneShot(releaseSound);
         }
-        Debug.Log("rpc release");
+        Debug.Log("release");
     }
 
     [Command]
     void CmdDestroy()
     {
+        RpcDestory();
+        Debug.Log("destroy");
+    }
+
+    [ClientRpc]
+    void RpcDestory()
+    {
+        // Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
+        // Destroy(piece);
         isSnapped = false;
         isInNet = false;
         startFollowing = false;
-        Debug.Log("cmd destroy");
-        RpcDestroy();
-    }
-
-    [ClientRpc]
-    void RpcDestroy()
-    {
-        Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
-        Destroy(piece);
-        //isSnapped = false;
-        //isInNet = false;
-        //startFollowing = false;
         GameSingleton.instance.SetIsPieceAbsorbed(false);
-        Debug.Log("rpc destroy");
     }
 
-    [Command]
-    void CmdAddScore()
-    {
-        RpcAddScore();
-    }
-
-    [ClientRpc]
-    void RpcAddScore()
+    void AddScore()
     {
         GameSingleton.instance.AddScore();
-        score.SetText(GameSingleton.instance.PrintScore());
+        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
     }
 
-    [Command]
-    void CmdSetLocalPlayerAuth(GameObject gameObject)
+    void SetLocalPlayerAuth(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
         Debug.Log("cmd set local player authority");
     }
 
-    //[ClientRpc]
-    //void RpcSetLocalPlayerAuth(GameObject gameObject)
-    //{
-    //    if (!gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority)
-    //    {
-    //        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-    //    }
-    //    Debug.Log("rpc set local player authority");
-    //}
-
-    [Command]
-    void CmdRemoveLocalPlayerAuth(GameObject gameObject)
+    void RemoveLocalPlayerAuth(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
         Debug.Log("cmd remove local player authority");
     }
-
-    //[ClientRpc]
-    //void RpcRemoveLocalPlayerAuth(GameObject gameObject)
-    //{
-    //    gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
-    //    Debug.Log("rpc remove local player authority");
-    //}
 
     IEnumerator SnapToPhone()
     {
@@ -293,7 +241,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        float bounceRange = 1f;
+        float bounceRange = -1f;
         Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
         col.enabled = false;
 
@@ -326,14 +274,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        float bounceRange = 1f;
+        float bounceRange = -1f;
         Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
 
         while (true)
         {
             if (lerpTime >= 1f)
             {
-                CmdRemoveLocalPlayerAuth(piece);
+                RemoveLocalPlayerAuth(piece);
                 yield break;
             }
             else

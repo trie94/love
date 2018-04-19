@@ -162,3 +162,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2bf66b80580ffe478aab445fb833a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matchedGrid: {fileID: 0}
+  col: {fileID: 65006486607276392}

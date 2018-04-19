@@ -186,15 +186,10 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
-  piecesNum: 35
+  piecesNum: 36
   wallPrefab: {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   gridNum: 20
-  canvas: {fileID: 0}
-  time: {fileID: 0}
-  score: {fileID: 0}
   height: 1.2
-  controllersPrefab:
-  - {fileID: 1949447996575882, guid: f4f8f38a7871a5d4c8621cf8a0cb7a3e, type: 2}
-  - {fileID: 1734265912357596, guid: 51b739260f9c5d443a77d8f68865d4d3, type: 2}
+  controllersPrefab: []
   audioSource: {fileID: 82649186557707326}
   spawnSound: {fileID: 8300000, guid: ac1a2b3ec231cb146b6db25e004f2b56, type: 3}

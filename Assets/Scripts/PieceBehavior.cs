@@ -10,6 +10,7 @@ public class PieceBehavior : NetworkBehaviour
 
     Vector3 anchor;
     public GameObject matchedGrid;
+    [SerializeField] Collider col;
 
     Vector3 stopPos;
 
@@ -53,11 +54,12 @@ public class PieceBehavior : NetworkBehaviour
 
         if (transform.parent)
         {
-            Stop();
+            //Stop();
         }
+
         else
         {
-            Float();
+            //Float();
         }
     }
 
@@ -90,6 +92,8 @@ public class PieceBehavior : NetworkBehaviour
             if (lerpTime >= 1f)
             {
                 isAbsorbed = true;
+                transform.parent = null;
+                col.enabled = false;
                 yield break;
             }
             else

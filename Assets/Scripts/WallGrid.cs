@@ -9,6 +9,9 @@ public class WallGrid : NetworkBehaviour {
     AudioSource audioSource;
 
     [SerializeField]
+    Collider col;
+
+    [SerializeField]
     AudioClip matchSound;
 
     GameObject matchedPiece;
@@ -30,6 +33,7 @@ public class WallGrid : NetworkBehaviour {
 
     void Match()
     {
+        col.enabled = false;
         matchedPiece.GetComponent<PieceBehavior>().SetIsMatch(true);
         matchedPiece.GetComponent<PieceBehavior>().matchedGrid = this.gameObject;
 

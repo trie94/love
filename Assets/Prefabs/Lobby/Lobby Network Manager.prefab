@@ -86,7 +86,6 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
-  - {fileID: 1949447996575882, guid: f4f8f38a7871a5d4c8621cf8a0cb7a3e, type: 2}
   - {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
@@ -149,7 +148,7 @@ MonoBehaviour:
   m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 114744920142361056, guid: d0bfb56e24341cf49b4948c0a1b761f9,
     type: 2}
-  m_GamePlayerPrefab: {fileID: 1164273264216806, guid: 5b5530f997e8acb4db4b320abc0cd37b,
+  m_GamePlayerPrefab: {fileID: 1135194724264054, guid: 32f194939f5d6014ca6afe50f9f30417,
     type: 2}
   m_LobbyScene: Lobby
   m_PlayScene: Main

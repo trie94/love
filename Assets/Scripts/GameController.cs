@@ -20,14 +20,20 @@ public class GameController : NetworkBehaviour {
 
     bool didSpawn;
 
-    [SerializeField] GameObject[] controllersPrefab;
+    [SerializeField] GameObject[] spawnablesPrefab;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip spawnSound;
 
     void Start ()
     {
-        SpawnControllers();
+        if (!isServer)
+        {
+            this.enabled = false;
+            return;
+        }
+
+        //SpawnControllers();
 
         wallGrid = new WallGrid[gridNum];
         for (int i = 0; i < wallGrid.Length; i++)
@@ -44,6 +50,7 @@ public class GameController : NetworkBehaviour {
             // server spawns pieces and wall
             SpawnPieces();
             SpawnWall();
+            Spawnables();
             didSpawn = true;
         }
 	}
@@ -83,12 +90,12 @@ public class GameController : NetworkBehaviour {
         Debug.Log("wall");
     }
 
-    void SpawnControllers()
+    void Spawnables()
     {
-        for (int i = 0; i < controllersPrefab.Length; i++)
+        for (int i = 0; i < spawnablesPrefab.Length; i++)
         {
-            GameObject controllers = Instantiate(controllersPrefab[i]);
-            NetworkServer.Spawn(controllers);
+            GameObject spawnables = Instantiate(spawnablesPrefab[i]);
+            NetworkServer.Spawn(spawnables);
         }
     }
 }
