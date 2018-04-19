@@ -114,7 +114,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
-            CmdDestroy();
+            Destroy();
             AddScore();
         }
 
@@ -179,15 +179,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         Debug.Log("release");
     }
 
-    [Command]
-    void CmdDestroy()
-    {
-        RpcDestory();
-        Debug.Log("destroy");
-    }
-
-    [ClientRpc]
-    void RpcDestory()
+    void Destroy()
     {
         // Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
         // Destroy(piece);
