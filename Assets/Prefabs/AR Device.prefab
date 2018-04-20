@@ -540,15 +540,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   col: {fileID: 65403008440085084}
   container: {fileID: 1625603938239940}
-  player: {fileID: 0}
   audioSource: {fileID: 82290648092727966}
   snapSound: {fileID: 8300000, guid: 95175d4eaf6bd9e49b0d674547282bb1, type: 3}
   nonInteractableSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841,
     type: 3}
   releaseSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841, type: 3}
-  time: {fileID: 0}
-  score: {fileID: 0}
-  id: {fileID: 0}
 --- !u!114 &114675999143077442
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -10,7 +10,7 @@ public class PieceBehavior : NetworkBehaviour
 
     Vector3 anchor;
     public GameObject matchedGrid;
-    [SerializeField] Collider col;
+    Collider col;
 
     Vector3 stopPos;
 
@@ -43,6 +43,7 @@ public class PieceBehavior : NetworkBehaviour
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
+        col = GetComponent<Collider>();
     }
 
     void Update()

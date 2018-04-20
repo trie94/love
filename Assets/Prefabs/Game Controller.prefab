@@ -187,9 +187,10 @@ MonoBehaviour:
   - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
   - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   piecesNum: 36
-  wallPrefab: {fileID: 1008740390178340, guid: 820044cbfa14c4f78a38ae9e3cbb4fa1, type: 2}
+  wallPrefab: {fileID: 1248182038015278, guid: d1e2fd21eaa716e49bcb04b4789687ed, type: 2}
   gridNum: 20
   height: 1.2
-  controllersPrefab: []
+  spawnablesPrefab:
+  - {fileID: 1904138336091026, guid: 5a86efd3194c1b841b01c4eea70752f6, type: 2}
   audioSource: {fileID: 82649186557707326}
   spawnSound: {fileID: 8300000, guid: ac1a2b3ec231cb146b6db25e004f2b56, type: 3}

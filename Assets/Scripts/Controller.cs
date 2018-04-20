@@ -198,9 +198,9 @@ public class Controller : NetworkBehaviour
 
         for (int i = 0; i < piecesNum; i++)
         {
-            float yRange = Random.Range(0, 3.5f);
-            float xRange = Random.Range(-3f, 3f);
-            float zRange = Random.Range(-3f, 3f);
+            float yRange = Random.Range(0, 0.3f);
+            float xRange = Random.Range(-0.2f, 0.2f);
+            float zRange = Random.Range(-0.2f, 0.2f);
             int index = i % piecesPrefab.Length;
             pieces = Instantiate(piecesPrefab[index], trackedPlane.CenterPose.position + new Vector3(xRange, yRange, zRange), Random.rotation);
             NetworkServer.Spawn(pieces);

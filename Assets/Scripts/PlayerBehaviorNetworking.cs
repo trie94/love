@@ -223,7 +223,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void CmdRemoveClientAuthority(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
-        gameObject.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToServer);
     }
 
     //IEnumerator SnapToPhone()
