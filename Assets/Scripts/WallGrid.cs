@@ -8,13 +8,17 @@ public class WallGrid : NetworkBehaviour {
     [SerializeField]
     AudioSource audioSource;
 
-    [SerializeField]
     Collider col;
 
     [SerializeField]
     AudioClip matchSound;
 
     GameObject matchedPiece;
+
+    void Start()
+    {
+        col = GetComponent<Collider>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -33,9 +37,12 @@ public class WallGrid : NetworkBehaviour {
 
     void Match()
     {
-        col.enabled = false;
         matchedPiece.GetComponent<PieceBehavior>().SetIsMatch(true);
         matchedPiece.GetComponent<PieceBehavior>().matchedGrid = this.gameObject;
+
+        // no more piece allowed
+        col.enabled = false;
+        this.enabled = false;
 
         if (!audioSource.isPlaying)
         {

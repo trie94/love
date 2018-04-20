@@ -8,13 +8,14 @@ using TMPro;
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
-public class PlayerBehaviorNetworking : NetworkBehaviour {
-
+public class PlayerBehaviorNetworking : NetworkBehaviour
+{
     GameObject piece;
     [SerializeField] Collider col;
     [SerializeField] GameObject container;
     GameObject matchedGrid;
     GameObject player;
+    bool isAndy;
     bool isSnapped;
     bool isInNet;
     bool isTabbed;
@@ -27,7 +28,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     TextMeshProUGUI time;
     TextMeshProUGUI score;
-    TextMeshProUGUI id;
+    TextMeshProUGUI debug;
 
     bool hasCanvas;
 
@@ -75,23 +76,39 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     void Update()
     {
-        Debug.Log("is snapped: "+ isSnapped);
-        id.SetText("is snapped: " + isSnapped);
+        Debug.Log("is snapped: " + isSnapped);
 
-        if (GameObject.Find("ScoreBoard") && !time && !score && !hasCanvas)
+        if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
             score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
-            id = GameObject.Find("id").GetComponent<TextMeshProUGUI>();
-            player = GameObject.Find("Andy(Clone)");
-            player.transform.parent = this.transform;
+            debug = GameObject.Find("id").GetComponent<TextMeshProUGUI>();
             hasCanvas = true;
+        }
+
+        // check debug log
+        if (debug)
+        {
+            debug.SetText("is snapped: " + isSnapped);
+        }
+
+        // if andy spawned
+        if (player && !isAndy)
+        {
+            player.transform.parent = this.transform;
+            player.transform.position = this.transform.position + new Vector3(0f, 0f, -0.1f);
+            player.transform.rotation = Quaternion.identity;
+            isAndy = true;
+        }
+        else
+        {
+            player = GameObject.Find("Andy(Clone)");
         }
 
         // count time
         if (hasCanvas && GameSingleton.instance && GameSingleton.instance.allowSnap)
         {
-            Timer();
+            Board();
         }
 
         if (Input.touchCount >= 1 && !isTabbed)
@@ -105,17 +122,13 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
             {
                 Debug.Log("nothing to release");
             }
-        }
 
-        if (isTabbed)
-        {
             isTabbed = false;
         }
 
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
-            AddScore();
         }
 
         if (piece && piece.transform.parent && startFollowing)
@@ -124,19 +137,21 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
         }
     }
 
-    void Timer()
+    void Board()
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
+        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
     }
 
     void Snap()
     {
-        piece.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+        SetLocalPlayerAuth(piece);
         piece.transform.parent = container.transform;
-        StartCoroutine(SnapToPhone());
+        //StartCoroutine(SnapToPhone());
         isSnapped = true;
-        //isInNet = true;
+        startFollowing = true;
+
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
@@ -148,13 +163,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
     {
         piece.transform.position
             = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
-        Debug.Log("stop coroutine and follow phone");
+        Debug.Log("follow phone");
     }
 
     void NotInteractable()
     {
-        StartCoroutine(BounceBack());
-        //isInNet = false;
+        SetLocalPlayerAuth(piece);
+        StartCoroutine(BouncePiece());
+
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(nonInteractableSound);
@@ -164,14 +180,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     void Release()
     {
-        StartCoroutine(ReleasePiece());
-        if (piece != null)
-        {
-            RemoveLocalPlayerAuth(piece);
-        }
         isSnapped = false;
         startFollowing = false;
-        //isInNet = false;
+        piece.transform.parent = null;
+        StartCoroutine(BouncePiece());
+
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(releaseSound);
@@ -181,110 +194,84 @@ public class PlayerBehaviorNetworking : NetworkBehaviour {
 
     void Destroy()
     {
-        // Destroy(piece.GetComponent<PieceBehavior>().matchedGrid);
-        // Destroy(piece);
+        piece.GetComponent<PieceBehavior>().SetIsAbsorbed(false);
         isSnapped = false;
-        //isInNet = false;
         startFollowing = false;
-        GameSingleton.instance.SetIsPieceAbsorbed(false);
-    }
-
-    void AddScore()
-    {
-        GameSingleton.instance.AddScore();
-        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /10");
     }
 
     void SetLocalPlayerAuth(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-        Debug.Log("cmd set local player authority");
+        CmdAssignClientAuthority(gameObject);
+        Debug.Log("set local player authority");
     }
 
     void RemoveLocalPlayerAuth(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
-        Debug.Log("cmd remove local player authority");
+        CmdRemoveClientAuthority(gameObject);
+        Debug.Log("remove local player authority");
     }
 
-    IEnumerator SnapToPhone()
+    [Command]
+    void CmdAssignClientAuthority(GameObject gameObject)
+    {
+        gameObject.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
+    }
+
+    [Command]
+    void CmdRemoveClientAuthority(GameObject gameObject)
+    {
+        gameObject.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
+        gameObject.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToServer);
+    }
+
+    //IEnumerator SnapToPhone()
+    //{
+    //    float lerpTime = 0f;
+    //    float lerpSpeed = 0.5f;
+    //    startFollowing = false;
+
+    //    while (true)
+    //    {
+    //        if (lerpTime >= 0.8f)
+    //        {
+    //            startFollowing = true;
+    //            Debug.Log("start following");
+    //            yield break;
+    //        }
+    //        else
+    //        {
+    //            lerpTime += Time.deltaTime * lerpSpeed;
+    //            piece.transform.position = Vector3.Lerp(piece.transform.position, container.transform.position, lerpTime);
+    //            Debug.Log("snap to phone coroutine");
+    //        }
+    //        yield return null;
+    //    }
+    //}
+
+    IEnumerator BouncePiece()
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        startFollowing = false;
-
-        while (true)
-        {
-            if (lerpTime >= 0.8f)
-            {
-                startFollowing = true;
-                Debug.Log("start following");
-                yield break;
-            }
-            else
-            {
-                lerpTime += Time.deltaTime * lerpSpeed;
-                piece.transform.position = Vector3.Lerp(piece.transform.position, container.transform.position, lerpTime);
-                Debug.Log("snap to phone coroutine");
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator ReleasePiece()
-    {
-        float lerpTime = 0f;
-        float lerpSpeed = 0.5f;
-        float bounceRange = -0.5f;
-        Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
+        Vector3 releasePos = piece.transform.position + container.transform.forward; ;
         col.enabled = false;
 
         while (true)
         {
             if (lerpTime >= 1f)
             {
-                col.enabled = true;
                 //isInNet = false;
-
-                if (piece.transform.parent != null)
-                {
-                    piece.transform.parent = null;
-                }
-                Debug.Log("release and net set active");
+                RemoveLocalPlayerAuth(piece);
+                col.enabled = true;
+                Debug.Log("release and collider set active");
                 yield break;
             }
             else if (piece != null)
             {
                 Debug.Log("release coroutine");
                 lerpTime += Time.deltaTime * lerpSpeed;
-                piece.transform.position = Vector3.Lerp(piece.transform.position,
-                    transform.InverseTransformDirection(releasePos), lerpTime);
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator BounceBack()
-    {
-        float lerpTime = 0f;
-        float lerpSpeed = 0.5f;
-        float bounceRange = -0.5f;
-        Vector3 releasePos = container.transform.position + container.transform.TransformDirection(new Vector3(0f, 0f, bounceRange));
-        col.enabled = false;
-
-        while (true)
-        {
-            if (lerpTime >= 1f)
-            {
-                RemoveLocalPlayerAuth(piece);
-                col.enabled = true;
-                yield break;
-            }
-            else
-            {
-                lerpTime += Time.deltaTime * lerpSpeed;
-                piece.transform.position = Vector3.Lerp(piece.transform.position,
-                    transform.TransformDirection(releasePos), lerpTime);
+                piece.transform.position = Vector3.Lerp(piece.transform.position, releasePos, lerpTime);
             }
             yield return null;
         }

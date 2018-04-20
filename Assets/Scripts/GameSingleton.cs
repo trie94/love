@@ -104,6 +104,6 @@ public class GameSingleton : NetworkBehaviour {
 
     public string PrintTime()
     {
-        return playTime.ToString();
+        return Mathf.Round(playTime).ToString();
     }
 }

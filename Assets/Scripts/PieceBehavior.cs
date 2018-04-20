@@ -76,11 +76,14 @@ public class PieceBehavior : NetworkBehaviour
     void Match()
     {
         StartCoroutine(Absorb());
-        isMatch = false;
     }
 
     IEnumerator Absorb()
     {
+        transform.parent = null;
+        isMatch = false;
+        isAbsorbed = true;
+
         speed = 0f;
         float lerpTime = 0f;
         float absorbSpeed = 0.5f;
@@ -91,9 +94,10 @@ public class PieceBehavior : NetworkBehaviour
 
             if (lerpTime >= 1f)
             {
-                isAbsorbed = true;
-                transform.parent = null;
+                col.isTrigger = false;
                 col.enabled = false;
+                GameSingleton.instance.AddScore();
+                this.enabled = false;
                 yield break;
             }
             else
