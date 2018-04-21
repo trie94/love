@@ -5,11 +5,9 @@ using UnityEngine.Networking;
 
 public class WallGrid : NetworkBehaviour {
 
-    [SerializeField]
-    AudioSource audioSource;
-
     Collider col;
 
+    AudioSource audioSource;
     [SerializeField]
     AudioClip matchSound;
 
@@ -18,6 +16,7 @@ public class WallGrid : NetworkBehaviour {
     void Start()
     {
         col = GetComponent<Collider>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void OnTriggerEnter(Collider other)

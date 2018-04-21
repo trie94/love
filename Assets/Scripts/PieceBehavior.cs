@@ -97,6 +97,7 @@ public class PieceBehavior : NetworkBehaviour
             {
                 col.isTrigger = false;
                 col.enabled = false;
+                //transform.rotation = Quaternion.identity;
                 GameSingleton.instance.AddScore();
                 this.enabled = false;
                 yield break;
@@ -104,6 +105,7 @@ public class PieceBehavior : NetworkBehaviour
             else
             {
                 transform.position = Vector3.Lerp(transform.position, matchedGrid.transform.position, lerpTime);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, lerpTime);
             }
             yield return null;
         }
