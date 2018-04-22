@@ -60,9 +60,9 @@ public class GameController : NetworkBehaviour {
         // spawn pieces
         for (int i = 0; i < piecesNum; i++)
         {
-            float yRange = Random.Range(0, 3.5f);
-            float xRange = Random.Range(-3f, 3f);
-            float zRange = Random.Range(-3f, 3f);
+            float yRange = Random.Range(0, 1.5f);
+            float xRange = Random.Range(-2f, 2f);
+            float zRange = Random.Range(-2f, 2f);
             int index = i % piecesPrefab.Length;
             GameObject pieces = Instantiate(piecesPrefab[index], GameSingleton.instance.anchor + new Vector3(xRange, yRange, zRange), Random.rotation);
 
