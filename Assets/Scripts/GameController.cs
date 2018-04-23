@@ -27,13 +27,18 @@ public class GameController : NetworkBehaviour {
 
     void Start ()
     {
-        if (!isServer)
+        //if (!isServer)
+        //{
+        //    this.enabled = false;
+        //    return;
+        //}
+
+        if (!NetworkServer.active)
         {
+            Debug.Log("this is not the host");
             this.enabled = false;
             return;
         }
-
-        //SpawnControllers();
 
         wallGrid = new WallGrid[gridNum];
         for (int i = 0; i < wallGrid.Length; i++)

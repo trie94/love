@@ -39,13 +39,13 @@ public class WallGrid : NetworkBehaviour {
         matchedPiece.GetComponent<PieceBehavior>().SetIsMatch(true);
         matchedPiece.GetComponent<PieceBehavior>().matchedGrid = this.gameObject;
 
-        // no more piece allowed
-        col.enabled = false;
-        this.enabled = false;
-
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(matchSound);
         }
+
+        // no more piece allowed
+        col.enabled = false;
+        this.enabled = false;
     }
 }

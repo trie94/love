@@ -26,6 +26,16 @@ public class PlaneController : NetworkBehaviour
     private List<TrackedPlane> m_NewPlanes = new List<TrackedPlane>();
     private List<TrackedPlane> m_AllPlanes = new List<TrackedPlane>();
 
+    void Start()
+    {
+        if (!NetworkServer.active)
+        {
+            Debug.Log("this is not the host");
+            this.enabled = false;
+            return;
+        }
+    }
+
     void Update()
     {
         if (Input.GetKey(KeyCode.Escape))

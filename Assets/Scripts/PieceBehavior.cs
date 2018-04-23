@@ -81,8 +81,8 @@ public class PieceBehavior : NetworkBehaviour
 
     IEnumerator Absorb()
     {
-        transform.parent = null;
         isMatch = false;
+        transform.parent = null;
         isAbsorbed = true;
 
         speed = 0f;
