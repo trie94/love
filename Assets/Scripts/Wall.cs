@@ -20,7 +20,7 @@ public class Wall : NetworkBehaviour {
 	
 	void Update ()
     {
-        if (GameSingleton.instance.totalScore == 10 && !isFinal)
+        if (GameSingleton.instance.totalScore == 20 && !isFinal)
         {
             if (!audioSource.isPlaying)
             {

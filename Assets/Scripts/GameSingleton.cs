@@ -17,7 +17,7 @@ public class GameSingleton : NetworkBehaviour {
     public float playTime = 0f;
     [SyncVar]
     public int totalScore = 0;
-    [SyncVar]
+
     public bool isPieceAbsorbed;
     [SyncVar]
     public GameObject targetGrid;
