@@ -11,6 +11,7 @@ public class PieceBehavior : NetworkBehaviour
     Vector3 anchor;
     public GameObject matchedGrid;
     public Collider col;
+    GameObject player;
 
     Vector3 stopPos;
 
@@ -44,6 +45,7 @@ public class PieceBehavior : NetworkBehaviour
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
+        player = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
     void Update()
@@ -51,16 +53,6 @@ public class PieceBehavior : NetworkBehaviour
         if (isMatch)
         {
             Match();
-        }
-
-        if (transform.parent)
-        {
-            //Stop();
-        }
-
-        else
-        {
-            //Float();
         }
     }
 
@@ -95,11 +87,9 @@ public class PieceBehavior : NetworkBehaviour
 
             if (lerpTime >= 1f)
             {
-                GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
-                player.GetComponent<PlayerBehaviorNetworking>().CmdDestroyCollider(this.gameObject);
+                player.GetComponent<PlayerBehaviorNetworking>().CmdDestoryCollider(this.gameObject);
                 //col.isTrigger = false;
                 //col.enabled = false;
-                GameSingleton.instance.AddScore();
                 //this.enabled = false;
                 yield break;
             }

@@ -17,6 +17,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     GameObject player;
     bool isAndy;
     bool isSnapped;
+    public bool GetIsSnapped()
+    {
+        return isSnapped;
+    }
     bool isInNet;
     bool isTabbed;
     bool startFollowing;
@@ -29,6 +33,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     TextMeshProUGUI time;
     TextMeshProUGUI score;
     TextMeshProUGUI debug;
+
+    [SyncVar]
+    Transform pieceTransform;
+
+    int totalScore;
 
     bool hasCanvas;
 
@@ -47,13 +56,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         if (!isSnapped)
         {
             piece = other.gameObject;
+            pieceTransform = piece.transform;
 
             //if host
             if (NetworkServer.active)
             {
                 if (piece.tag == "piece1" || piece.tag == "piece2")
                 {
-                    Snap();
+                    CmdSnap(piece);
                 }
                 else if (piece.tag == "piece3" || piece.tag == "piece4")
                 {
@@ -77,6 +87,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void Update()
     {
         Debug.Log("is snapped: " + isSnapped);
+
+        if (piece)
+        {
+            pieceTransform = piece.transform;
+        }
 
         if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
         {
@@ -129,6 +144,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
+            CmdAddScore();
         }
 
         if (piece && piece.transform.parent && startFollowing)
@@ -141,14 +157,37 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /20");
+        score.SetText("Score: " + totalScore + " /20");
     }
 
     void Snap()
     {
-        SetLocalPlayerAuth(piece);
+        //SetLocalPlayerAuth(piece);
         piece.transform.parent = container.transform;
         //StartCoroutine(SnapToPhone());
+        isSnapped = true;
+        startFollowing = true;
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(snapSound);
+        }
+        Debug.Log("snap");
+    }
+
+    [Command]
+    void CmdSnap(GameObject gameObject)
+    {
+        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        pieceId.AssignClientAuthority(connectionToClient);
+        RpcSnap(gameObject);
+        pieceId.RemoveClientAuthority(connectionToClient);
+    }
+
+    [ClientRpc]
+    void RpcSnap(GameObject gameObject)
+    {
+        gameObject.transform.parent = container.transform;
         isSnapped = true;
         startFollowing = true;
 
@@ -168,7 +207,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void NotInteractable()
     {
-        SetLocalPlayerAuth(piece);
+        //SetLocalPlayerAuth(piece);
         StartCoroutine(BouncePiece());
 
         if (!audioSource.isPlaying)
@@ -195,13 +234,15 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void Destroy()
     {
         piece.GetComponent<PieceBehavior>().SetIsAbsorbed(false);
+        piece.GetComponent<PieceBehavior>().col.isTrigger = false;
+        piece.GetComponent<PieceBehavior>().col.enabled = false;
         isSnapped = false;
         startFollowing = false;
     }
 
     // this function is called from the piece
     [Command]
-    public void CmdDestroyCollider(GameObject gameObject)
+    public void CmdDestoryCollider(GameObject gameObject)
     {
         RpcDestroyCollider(gameObject);
     }
@@ -213,6 +254,19 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         gameObject.GetComponent<PieceBehavior>().col.enabled = false;
         //gameObject.GetComponent<PieceBehavior>().enabled = false;
         Debug.Log("destroy collider");
+    }
+
+    [Command]
+    void CmdAddScore()
+    {
+        RpcAddScore();
+    }
+
+    [ClientRpc]
+    void RpcAddScore()
+    {
+        totalScore ++;
+        Debug.Log("add score");
     }
 
     void SetLocalPlayerAuth(GameObject gameObject)
@@ -230,13 +284,13 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     }
 
     [Command]
-    void CmdAssignClientAuthority(GameObject gameObject)
+    public void CmdAssignClientAuthority(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
     }
 
     [Command]
-    void CmdRemoveClientAuthority(GameObject gameObject)
+    public void CmdRemoveClientAuthority(GameObject gameObject)
     {
         gameObject.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
     }

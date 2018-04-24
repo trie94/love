@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   matchedGrid: {fileID: 0}
+  col: {fileID: 0}
 --- !u!114 &114747943971980148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,4 +163,4 @@ MonoBehaviour:
     i14: 21
     i15: 97
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
