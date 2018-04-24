@@ -129,7 +129,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
-            CmdDestroyCollider();
         }
 
         if (piece && piece.transform.parent && startFollowing)
@@ -200,18 +199,19 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         startFollowing = false;
     }
 
+    // this function is called from the piece
     [Command]
-    void CmdDestroyCollider()
+    public void CmdDestroyCollider(GameObject gameObject)
     {
-        RpcDestroyCollider();
+        RpcDestroyCollider(gameObject);
     }
 
     [ClientRpc]
-    void RpcDestroyCollider()
+    public void RpcDestroyCollider(GameObject gameObject)
     {
-        piece.GetComponent<Collider>().isTrigger = false;
-        piece.GetComponent<Collider>().enabled = false;
-        piece.GetComponent<PieceBehavior>().enabled = false;
+        gameObject.GetComponent<PieceBehavior>().col.isTrigger = false;
+        gameObject.GetComponent<PieceBehavior>().col.enabled = false;
+        //gameObject.GetComponent<PieceBehavior>().enabled = false;
         Debug.Log("destroy collider");
     }
 
@@ -277,7 +277,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             if (lerpTime >= 1f)
             {
                 //isInNet = false;
-                RemoveLocalPlayerAuth(piece);
+                //RemoveLocalPlayerAuth(piece);
                 col.enabled = true;
                 Debug.Log("release and collider set active");
                 yield break;

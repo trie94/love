@@ -10,7 +10,7 @@ public class PieceBehavior : NetworkBehaviour
 
     Vector3 anchor;
     public GameObject matchedGrid;
-    Collider col;
+    public Collider col;
 
     Vector3 stopPos;
 
@@ -95,9 +95,10 @@ public class PieceBehavior : NetworkBehaviour
 
             if (lerpTime >= 1f)
             {
-                col.isTrigger = false;
+                GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
+                player.GetComponent<PlayerBehaviorNetworking>().CmdDestroyCollider(this.gameObject);
+                //col.isTrigger = false;
                 //col.enabled = false;
-                //transform.rotation = Quaternion.identity;
                 GameSingleton.instance.AddScore();
                 //this.enabled = false;
                 yield break;

@@ -36,13 +36,6 @@ public class GameController : NetworkBehaviour {
 
         Debug.Log("is server");
 
-        //if (!NetworkServer.active)
-        //{
-        //    Debug.Log("this is not the host");
-        //    this.enabled = false;
-        //    return;
-        //}
-
         wallGrid = new WallGrid[gridNum];
         for (int i = 0; i < wallGrid.Length; i++)
         {

@@ -167,7 +167,7 @@ MonoBehaviour:
     i13: 22
     i14: 157
     i15: 126
-  m_ServerOnly: 1
+  m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114390216699486928
 MonoBehaviour:

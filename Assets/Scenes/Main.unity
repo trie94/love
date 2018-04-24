@@ -760,11 +760,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114298870230248618, guid: cb5a83e8e736bec46996000415169d7e,
+    - target: {fileID: 114186606533746922, guid: cb5a83e8e736bec46996000415169d7e,
         type: 2}
-      propertyPath: m_ServerOnly
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: SearchingForPlaneUI
+      value: 
+      objectReference: {fileID: 2073029604}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cb5a83e8e736bec46996000415169d7e, type: 2}
   m_IsPrefabParent: 0
