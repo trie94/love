@@ -158,6 +158,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
+            CmdDestroyCollider();
         }
 
         if (piece && piece.transform.parent && startFollowing)
@@ -226,6 +227,21 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         piece.GetComponent<PieceBehavior>().SetIsAbsorbed(false);
         isSnapped = false;
         startFollowing = false;
+    }
+
+    [Command]
+    void CmdDestroyCollider()
+    {
+        RpcDestroyCollider();
+    }
+
+    [ClientRpc]
+    void RpcDestroyCollider()
+    {
+        piece.GetComponent<Collider>().isTrigger = false;
+        piece.GetComponent<Collider>().enabled = false;
+        piece.GetComponent<PieceBehavior>().enabled = false;
+        Debug.Log("destroy collider");
     }
 
     void SetLocalPlayerAuth(GameObject gameObject)

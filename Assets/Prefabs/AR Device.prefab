@@ -50,8 +50,6 @@ GameObject:
   - component: {fileID: 33108240192488944}
   - component: {fileID: 65633967854744864}
   - component: {fileID: 23297485365597356}
-  - component: {fileID: 114883435799610096}
-  - component: {fileID: 114733558669286476}
   m_Layer: 0
   m_Name: Container
   m_TagString: Untagged
@@ -69,7 +67,6 @@ GameObject:
   - component: {fileID: 224405358511169662}
   - component: {fileID: 222442648626552702}
   - component: {fileID: 114547950088667598}
-  - component: {fileID: 114338069627569876}
   m_Layer: 5
   m_Name: Debug
   m_TagString: Untagged
@@ -88,7 +85,6 @@ GameObject:
   - component: {fileID: 223568158982421858}
   - component: {fileID: 114703141101818942}
   - component: {fileID: 114517947102011036}
-  - component: {fileID: 114983147805683916}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -351,38 +347,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SessionConfig: {fileID: 11400000, guid: 9586a84d6c32f46b6ab7aeb6042f160d, type: 2}
---- !u!114 &114338069627569876
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1666124965598860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 50
-    i1: 241
-    i2: 148
-    i3: 147
-    i4: 159
-    i5: 93
-    i6: 96
-    i7: 20
-    i8: 202
-    i9: 106
-    i10: 254
-    i11: 80
-    i12: 249
-    i13: 243
-    i14: 4
-    i15: 23
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114517947102011036
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -606,65 +570,12 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114733558669286476
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1625603938239940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114753828751475794
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1135194724264054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 50
-    i1: 241
-    i2: 148
-    i3: 147
-    i4: 159
-    i5: 93
-    i6: 96
-    i7: 20
-    i8: 202
-    i9: 106
-    i10: 254
-    i11: 80
-    i12: 249
-    i13: 243
-    i14: 4
-    i15: 23
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
---- !u!114 &114883435799610096
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1625603938239940}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -710,38 +621,6 @@ MonoBehaviour:
   m_MovementThreshold: 0.001
   m_InterpolateRotation: 0.5
   m_InterpolateMovement: 0.5
---- !u!114 &114983147805683916
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1693732883282562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 50
-    i1: 241
-    i2: 148
-    i3: 147
-    i4: 159
-    i5: 93
-    i6: 96
-    i7: 20
-    i8: 202
-    i9: 106
-    i10: 254
-    i11: 80
-    i12: 249
-    i13: 243
-    i14: 4
-    i15: 23
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!222 &222442648626552702
 CanvasRenderer:
   m_ObjectHideFlags: 1

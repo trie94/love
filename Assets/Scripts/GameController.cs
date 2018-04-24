@@ -34,6 +34,8 @@ public class GameController : NetworkBehaviour {
             return;
         }
 
+        Debug.Log("is server");
+
         //if (!NetworkServer.active)
         //{
         //    Debug.Log("this is not the host");

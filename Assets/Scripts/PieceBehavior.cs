@@ -96,10 +96,10 @@ public class PieceBehavior : NetworkBehaviour
             if (lerpTime >= 1f)
             {
                 col.isTrigger = false;
-                col.enabled = false;
+                //col.enabled = false;
                 //transform.rotation = Quaternion.identity;
                 GameSingleton.instance.AddScore();
-                this.enabled = false;
+                //this.enabled = false;
                 yield break;
             }
             else
