@@ -35,7 +35,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     TextMeshProUGUI debug;
 
     [SyncVar]
+    Vector3 syncPos;
+    Vector3 lastPos;
+    float threshold = 0.5f;
+
     Transform pieceTransform;
+    [SyncVar]
+    Vector3 pieceSyncPos;
+    Vector3 pieceLastPos;
 
     int totalScore;
 
@@ -49,6 +56,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             this.enabled = false;
             return;
         }
+
+        syncPos = GetComponent<Transform>().position;
     }
 
     void OnTriggerEnter(Collider other)
@@ -74,7 +83,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             {
                 if (piece.tag == "piece3" || piece.tag == "piece4")
                 {
-                    Snap();
+                    CmdSnap(piece);
                 }
                 else if (piece.tag == "piece1" || piece.tag == "piece2")
                 {
@@ -82,6 +91,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                 }
             }
         }
+    }
+
+    void FixedUpdate()
+    {
+        TransmitPosition();
+        LerpPosition();
     }
 
     void Update()
@@ -175,6 +190,30 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         Debug.Log("snap");
     }
 
+    void LerpPosition()
+    {
+        if (!hasAuthority)
+        {
+            player.transform.position = Vector3.Lerp(player.transform.position, syncPos, Time.deltaTime * 0.5f);
+        }
+    }
+
+    [Command]
+    void CmdPosToServer(Vector3 position)
+    {
+        syncPos = position;
+    }
+
+    //[ClientCallback]
+    void TransmitPosition()
+    {
+        if (hasAuthority && Vector3.Distance(player.transform.position, lastPos) > threshold)
+        {
+            CmdPosToServer(player.transform.position);
+            lastPos = transform.position;
+        }
+    }
+
     [Command]
     void CmdSnap(GameObject gameObject)
     {
@@ -187,7 +226,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [ClientRpc]
     void RpcSnap(GameObject gameObject)
     {
-        gameObject.transform.parent = container.transform;
+        //gameObject.transform.parent = container.transform;
+        gameObject.transform.parent = player.transform;
         isSnapped = true;
         startFollowing = true;
 
@@ -330,15 +370,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             if (lerpTime >= 1f)
             {
-                //isInNet = false;
-                //RemoveLocalPlayerAuth(piece);
                 col.enabled = true;
                 Debug.Log("release and collider set active");
                 yield break;
             }
             else if (piece != null)
             {
-                Debug.Log("release coroutine");
                 lerpTime += Time.deltaTime * lerpSpeed;
                 piece.transform.position = Vector3.Lerp(piece.transform.position, releasePos, lerpTime);
             }
