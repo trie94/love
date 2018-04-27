@@ -220,7 +220,7 @@ BoxCollider:
   m_GameObject: {fileID: 1135194724264054}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0.45}
@@ -504,6 +504,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   col: {fileID: 65403008440085084}
   container: {fileID: 1625603938239940}
+  hoverDis: 1
+  interactiveDis: 0.5
   audioSource: {fileID: 82290648092727966}
   snapSound: {fileID: 8300000, guid: 95175d4eaf6bd9e49b0d674547282bb1, type: 3}
   nonInteractableSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841,

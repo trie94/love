@@ -41,7 +41,7 @@ public class PlayerManager : NetworkBehaviour
             net.enabled = true;
         }
 
-        if (GameSingleton.instance.totalScore >= 10)
+        if (GameSingleton.instance.totalScore >= 20)
         {
             isDone = true;
         }

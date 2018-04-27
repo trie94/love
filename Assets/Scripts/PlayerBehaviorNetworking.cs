@@ -15,6 +15,22 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SerializeField] GameObject container;
     GameObject matchedGrid;
     GameObject player;
+
+    // raycast
+    Transform camera;
+    int layerMask;
+    [SerializeField]
+    float hoverDis;
+    [SerializeField]
+    float interactiveDis;
+
+    bool isInteractable;
+    public bool GetIsInteractable()
+    {
+        return isInteractable;
+    }
+    bool isHovering;
+
     bool isAndy;
     bool isSnapped;
     public bool GetIsSnapped()
@@ -22,8 +38,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         return isSnapped;
     }
     bool isInNet;
-    bool isTabbed;
-    bool startFollowing;
+    bool isTapped;
+    bool hasFall;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip snapSound;
@@ -37,7 +53,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SyncVar]
     Vector3 syncPos;
     Vector3 lastPos;
-    float threshold = 0.5f;
+    float threshold = 0.01f;
 
     Transform pieceTransform;
     [SyncVar]
@@ -56,70 +72,30 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             this.enabled = false;
             return;
         }
-
+        lastPos = transform.position;
         syncPos = GetComponent<Transform>().position;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!isSnapped)
-        {
-            piece = other.gameObject;
-            pieceTransform = piece.transform;
-
-            //if host
-            if (NetworkServer.active)
-            {
-                if (piece.tag == "piece1" || piece.tag == "piece2")
-                {
-                    CmdSnap(piece);
-                }
-                else if (piece.tag == "piece3" || piece.tag == "piece4")
-                {
-                    NotInteractable();
-                }
-            }
-            else
-            {
-                if (piece.tag == "piece3" || piece.tag == "piece4")
-                {
-                    CmdSnap(piece);
-                }
-                else if (piece.tag == "piece1" || piece.tag == "piece2")
-                {
-                    NotInteractable();
-                }
-            }
-        }
+        camera = Camera.main.transform;
+        layerMask = LayerMask.GetMask("Piece");
     }
 
     void FixedUpdate()
     {
-        TransmitPosition();
-        LerpPosition();
+        //TransmitPosition();
+        //LerpPosition();
+        //TransmitPiecePosition();
+        //LerpPositionPiecePosition();
     }
 
     void Update()
     {
-        Debug.Log("is snapped: " + isSnapped);
-
-        if (piece)
-        {
-            pieceTransform = piece.transform;
-        }
-
+        Debug.Log("child count:" + this.transform.childCount);
+        // board
         if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
             score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
             debug = GameObject.Find("id").GetComponent<TextMeshProUGUI>();
             hasCanvas = true;
-        }
-
-        // check debug log
-        if (debug)
-        {
-            debug.SetText("is snapped: " + isSnapped);
         }
 
         // if andy spawned
@@ -141,19 +117,79 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             Board();
         }
 
-        if (Input.touchCount >= 1 && !isTabbed)
-        {
-            if (isSnapped)
-            {
-                Release();
-                isTabbed = true;
-            }
-            else
-            {
-                Debug.Log("nothing to release");
-            }
+        // raycast
+        Ray ray = new Ray(camera.position, camera.forward);
+        RaycastHit hit;
 
-            isTabbed = false;
+        if (Physics.Raycast(ray, out hit, hoverDis, layerMask))
+        {
+            // store hit info
+            piece = hit.collider.gameObject;
+            interactiveDis = Vector3.Distance(camera.position, piece.transform.position);
+
+            // check if the piece is snapped, if it is interactive, and if it is interacting
+            if (!isSnapped && !isInteractable && !isHovering)
+            {
+                // if host
+                if (NetworkServer.active)
+                {
+                    if (piece.tag == "piece1" || piece.tag == "piece2")
+                    {
+                        Interactable(piece);
+                    }
+                }
+                // if client
+                else
+                {
+                    if (piece.tag == "piece3" || piece.tag == "piece4")
+                    {
+                        Interactable(piece);
+                    }
+                }
+            }
+        }
+
+        // no hit and not interactable
+        else if (isInteractable)
+        {
+            isInteractable = false;
+        }
+
+        // make the piece not blink
+        else if (piece)
+        {
+            Debug.Log("no hit and make blinking stop");
+            piece.GetComponent<PieceHover>().NotHover();
+            isHovering = false;
+            piece = null;
+        }
+
+        // detect touch interaction & determine snap or release
+        if (Input.touchCount > 0)
+        {
+            foreach (Touch t in Input.touches)
+            {
+                if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
+                {
+                    isTapped = true;
+
+                    if (piece && this.transform.childCount <= 3)
+                    {
+                        Snap();
+                    }
+                    Debug.Log("tapping");
+                }
+                else
+                {
+                    isTapped = false;
+                    Debug.Log("not tapping");
+                }
+            }
+        }
+
+        if (!isTapped && piece && piece.transform.parent)
+        {
+            Release();
         }
 
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
@@ -161,11 +197,20 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             Destroy();
             CmdAddScore();
         }
+    }
 
-        if (piece && piece.transform.parent && startFollowing)
-        {
-            FollowPhone();
-        }
+    void DrawGizmos()
+    {
+        Gizmos.DrawRay(camera.position, camera.forward * 1);
+    }
+    void OnDrawGizmos()
+    {
+        DrawGizmos();
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        DrawGizmos();
     }
 
     void Board()
@@ -173,29 +218,46 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
         score.SetText("Score: " + totalScore + " /20");
+        debug.SetText("is snapped: " + isSnapped);
+    }
+
+    void Interactable(GameObject piece)
+    {
+        Debug.Log("piece: " + piece + " is interactable");
+        piece.GetComponent<PieceHover>().isShivering = true;
+        piece.GetComponent<PieceHover>().isBlinking = true;
+        isInteractable = true;
+        isHovering = true;
+        piece.GetComponent<PieceHover>().Hover();
     }
 
     void Snap()
     {
-        //SetLocalPlayerAuth(piece);
-        piece.transform.parent = container.transform;
-        //StartCoroutine(SnapToPhone());
-        isSnapped = true;
-        startFollowing = true;
+        if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
+        {
+            piece.GetComponent<PieceHover>().NotHover();
+        }
 
+        piece.transform.parent = camera;
+        piece.transform.position = Vector3.MoveTowards(piece.transform.position, camera.position, Time.deltaTime);
+        isSnapped = true;
+        hasFall = false;
+        Debug.Log("snap");
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("snap");
     }
 
     void LerpPosition()
     {
-        if (!hasAuthority)
-        {
-            player.transform.position = Vector3.Lerp(player.transform.position, syncPos, Time.deltaTime * 0.5f);
-        }
+        player.transform.position = Vector3.Lerp(player.transform.position, syncPos, Time.deltaTime * 0.5f);
+        Debug.Log("lerp position");
+    }
+
+    void LerpPositionPiecePosition()
+    {
+        piece.transform.position = Vector3.Lerp(transform.position, pieceSyncPos, Time.deltaTime * 0.5f);
     }
 
     [Command]
@@ -204,13 +266,30 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         syncPos = position;
     }
 
+    [Command]
+    void CmdPiecePosToServer(Vector3 position)
+    {
+        pieceSyncPos = position;
+    }
+
     //[ClientCallback]
     void TransmitPosition()
     {
-        if (hasAuthority && Vector3.Distance(player.transform.position, lastPos) > threshold)
+        if (hasAuthority && player && Vector3.Distance(player.transform.position, lastPos) > threshold)
         {
             CmdPosToServer(player.transform.position);
             lastPos = transform.position;
+            Debug.Log("transmit position");
+        }
+    }
+
+    void TransmitPiecePosition()
+    {
+        if (hasAuthority && piece && Vector3.Distance(piece.transform.position, pieceLastPos) > threshold)
+        {
+            CmdPosToServer(piece.transform.position);
+            pieceLastPos = piece.transform.position;
+            Debug.Log("transmit piece position");
         }
     }
 
@@ -219,30 +298,16 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
         pieceId.AssignClientAuthority(connectionToClient);
-        RpcSnap(gameObject);
-        pieceId.RemoveClientAuthority(connectionToClient);
-    }
-
-    [ClientRpc]
-    void RpcSnap(GameObject gameObject)
-    {
-        //gameObject.transform.parent = container.transform;
-        gameObject.transform.parent = player.transform;
+        gameObject.transform.parent = container.transform;
         isSnapped = true;
-        startFollowing = true;
+        hasFall = false;
 
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(snapSound);
         }
         Debug.Log("snap");
-    }
-
-    void FollowPhone()
-    {
-        piece.transform.position
-            = Vector3.MoveTowards(piece.transform.position, container.transform.position, Time.deltaTime);
-        Debug.Log("follow phone");
+        pieceId.RemoveClientAuthority(connectionToClient);
     }
 
     void NotInteractable()
@@ -259,10 +324,15 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void Release()
     {
+        if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
+        {
+            piece.GetComponent<PieceHover>().NotHover();
+        }
+
         isSnapped = false;
-        startFollowing = false;
         piece.transform.parent = null;
-        StartCoroutine(BouncePiece());
+        StartCoroutine(PieceFall(piece));
+        hasFall = true;
 
         if (!audioSource.isPlaying)
         {
@@ -276,8 +346,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         piece.GetComponent<PieceBehavior>().SetIsAbsorbed(false);
         piece.GetComponent<PieceBehavior>().col.isTrigger = false;
         piece.GetComponent<PieceBehavior>().col.enabled = false;
+        piece.GetComponent<PieceBehavior>().enabled = false;
         isSnapped = false;
-        startFollowing = false;
+        hasFall = true;
     }
 
     // this function is called from the piece
@@ -292,7 +363,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         gameObject.GetComponent<PieceBehavior>().col.isTrigger = false;
         gameObject.GetComponent<PieceBehavior>().col.enabled = false;
-        //gameObject.GetComponent<PieceBehavior>().enabled = false;
+        gameObject.GetComponent<PieceBehavior>().enabled = false;
         Debug.Log("destroy collider");
     }
 
@@ -335,30 +406,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         gameObject.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
     }
 
-    //IEnumerator SnapToPhone()
-    //{
-    //    float lerpTime = 0f;
-    //    float lerpSpeed = 0.5f;
-    //    startFollowing = false;
-
-    //    while (true)
-    //    {
-    //        if (lerpTime >= 0.8f)
-    //        {
-    //            startFollowing = true;
-    //            Debug.Log("start following");
-    //            yield break;
-    //        }
-    //        else
-    //        {
-    //            lerpTime += Time.deltaTime * lerpSpeed;
-    //            piece.transform.position = Vector3.Lerp(piece.transform.position, container.transform.position, lerpTime);
-    //            Debug.Log("snap to phone coroutine");
-    //        }
-    //        yield return null;
-    //    }
-    //}
-
     IEnumerator BouncePiece()
     {
         float lerpTime = 0f;
@@ -381,5 +428,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
             yield return null;
         }
+    }
+
+    IEnumerator PieceFall(GameObject piece)
+    {
+        piece.GetComponent<Rigidbody>().isKinematic = false;
+        yield return new WaitForSeconds(0.5f);
+        piece.GetComponent<Rigidbody>().isKinematic = true;
+        Debug.Log("fall");
+        yield break;
     }
 }

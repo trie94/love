@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 
 public class PieceBehavior : NetworkBehaviour
 {
+    [SerializeField]
     float speed = 2f;
 
     Vector3 anchor;
@@ -26,6 +27,8 @@ public class PieceBehavior : NetworkBehaviour
         return isMatch;
     }
 
+    public bool isInteracting;
+
     bool isSnapped;
     bool startFollowing;
 
@@ -40,7 +43,6 @@ public class PieceBehavior : NetworkBehaviour
         return isAbsorbed;
     }
 
-
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
@@ -54,6 +56,7 @@ public class PieceBehavior : NetworkBehaviour
         {
             Match();
         }
+        
     }
 
     void Float()
@@ -88,9 +91,6 @@ public class PieceBehavior : NetworkBehaviour
             if (lerpTime >= 1f)
             {
                 player.GetComponent<PlayerBehaviorNetworking>().CmdDestoryCollider(this.gameObject);
-                //col.isTrigger = false;
-                //col.enabled = false;
-                //this.enabled = false;
                 yield break;
             }
             else
@@ -101,4 +101,6 @@ public class PieceBehavior : NetworkBehaviour
             yield return null;
         }
     }
+
+
 }
