@@ -21,8 +21,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     int layerMask;
     [SerializeField]
     float hoverDis;
-    [SerializeField]
-    float interactiveDis;
 
     bool isInteractable;
     public bool GetIsInteractable()
@@ -125,7 +123,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             // store hit info
             piece = hit.collider.gameObject;
-            interactiveDis = Vector3.Distance(camera.position, piece.transform.position);
 
             // check if the piece is snapped, if it is interactive, and if it is interacting
             if (!isSnapped && !isInteractable && !isHovering)
@@ -137,6 +134,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     {
                         Interactable(piece);
                     }
+                    else
+                    {
+                        NotInteractable();
+                    }
                 }
                 // if client
                 else
@@ -144,6 +145,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     if (piece.tag == "piece3" || piece.tag == "piece4")
                     {
                         Interactable(piece);
+                    }
+                    else
+                    {
+                        NotInteractable();
                     }
                 }
             }
@@ -164,7 +169,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             piece = null;
         }
 
-        // detect touch interaction & determine snap or release
+        // detect tapping and snap the piece
         if (Input.touchCount > 0)
         {
             foreach (Touch t in Input.touches)
@@ -187,8 +192,19 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
+        // avoid bug
+        if (!isTapped)
+        {
+            isSnapped = false;
+        }
+
+        // if not tapping, release the piece
         if (!isTapped && piece && piece.transform.parent)
         {
+            if (isSnapped)
+            {
+                isSnapped = false;
+            }
             Release();
         }
 
@@ -239,7 +255,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
 
         piece.transform.parent = camera;
-        piece.transform.position = Vector3.MoveTowards(piece.transform.position, camera.position, Time.deltaTime);
+        piece.transform.rotation = Quaternion.identity;
         isSnapped = true;
         hasFall = false;
         Debug.Log("snap");
@@ -410,7 +426,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        Vector3 releasePos = piece.transform.position + container.transform.forward; ;
+        Vector3 releasePos = piece.transform.position + container.transform.forward;
         col.enabled = false;
 
         while (true)
