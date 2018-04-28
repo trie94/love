@@ -11,20 +11,25 @@ public class PieceHover : MonoBehaviour {
     Renderer rend;
     [SerializeField]
     float lerpSpeed;
+    [HideInInspector]
     public bool isBlinking;
 
     // shiver
     [SerializeField]
     float shiverSpeed;
+    [HideInInspector]
     public bool isShivering;
 
-    PieceBehavior pieceBehavior;
+    AudioSource audioSource;
+    [SerializeField]
+    AudioClip hoverSound;
 
     void Start()
     {
         rend = GetComponent<Renderer>();
-        pieceBehavior = GetComponent<PieceBehavior>();
-        rend.material.SetFloat("_RimPower", 1.0f);
+        audioSource = GetComponent<AudioSource>();
+        rend.material.SetFloat("_MKGlowPower", 0f);
+        rend.material.SetFloat("_MKGlowTexStrength", 0f);
     }
 
     public void Hover()
@@ -45,29 +50,40 @@ public class PieceHover : MonoBehaviour {
     IEnumerator Glow()
     {
         float lerpTime = 0f;
-        float minRimPow = 1.0f;
-        float maxRimPow = 6.0f;
-        float curRimPow = 6.0f;
+        float minGlowPower = 0f;
+        float maxGlowPower = 1f;
+        float curGlowPower = 0f;
+        float minGlowStrength = 0f;
+        float maxGlowStrength = 1f;
+        float curGlowStrength = 0f;
 
         while (true)
         {
             lerpTime += Time.deltaTime * lerpSpeed;
-            curRimPow = Mathf.Lerp(minRimPow, maxRimPow, lerpTime);
-            rend.material.SetFloat("_RimPower", curRimPow);
+            curGlowPower = Mathf.Lerp(minGlowPower, maxGlowPower, lerpTime);
+            curGlowStrength = Mathf.Lerp(minGlowStrength, maxGlowStrength, lerpTime);
+            rend.material.SetFloat("_MKGlowPower", curGlowPower);
+            rend.material.SetFloat("_MKGlowTexStrength", curGlowStrength);
             Debug.Log("glow");
 
             if (lerpTime >= 1f)
             {
-                float temp = maxRimPow;
-                maxRimPow = minRimPow;
-                minRimPow = temp;
+                float temp = maxGlowPower;
+                maxGlowPower = minGlowPower;
+                minGlowPower = temp;
+
+                float temp2 = maxGlowStrength;
+                maxGlowStrength = minGlowStrength;
+                minGlowStrength = temp2;
+
                 lerpTime = 0f;
             }
 
             if (!isBlinking)
             {
                 Debug.Log("glow break");
-                rend.material.SetFloat("_RimPower", 1.0f);
+                rend.material.SetFloat("_MKGlowPower", 0f);
+                rend.material.SetFloat("_MKGlowTexStrength", 0f);
                 yield break;
             }
 
@@ -78,7 +94,7 @@ public class PieceHover : MonoBehaviour {
     IEnumerator Shiver()
     {
         float lerpTime = 0f;
-        float randomRange = Random.Range(-0.03f, 0.03f);
+        float randomRange = Random.Range(-0.01f, 0.01f);
         Vector3 startPos = transform.position;
         Vector3 targetPos = transform.position + new Vector3(randomRange, randomRange, randomRange);
 
@@ -93,7 +109,7 @@ public class PieceHover : MonoBehaviour {
                 Vector3 temp = startPos;
                 startPos = targetPos;
                 targetPos = temp;
-                randomRange = Random.Range(-0.03f, 0.03f);
+                randomRange = Random.Range(-0.01f, 0.01f);
 
                 lerpTime = 0f;
             }

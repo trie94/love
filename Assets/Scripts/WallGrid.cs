@@ -7,45 +7,81 @@ public class WallGrid : NetworkBehaviour {
 
     Collider col;
 
-    AudioSource audioSource;
-    [SerializeField]
-    AudioClip matchSound;
-
     GameObject matchedPiece;
+    [SerializeField]
+    float lerpSpeed;
+
+    Renderer rend;
+    [HideInInspector]
+    public bool triggerHover;
+    bool isHovering;
+    public bool hasPiece;
 
     void Start()
     {
         col = GetComponent<Collider>();
-        audioSource = GetComponent<AudioSource>();
+        rend = GetComponent<Renderer>();
     }
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if (other.gameObject.transform.parent != null)
+        if (triggerHover && !isHovering)
         {
-            if ((this.gameObject.tag == "grid1" && other.gameObject.tag == "piece1")
-                || (this.gameObject.tag == "grid2" && other.gameObject.tag == "piece2")
-                || (this.gameObject.tag == "grid3" && other.gameObject.tag == "piece3")
-                || (this.gameObject.tag == "grid4" && other.gameObject.tag == "piece4"))
+            StartCoroutine(Glow());
+        }
+
+        if (hasPiece)
+        {
+            // no more piece allowed
+            Debug.Log("disable the grid script");
+            col.isTrigger = false;
+            col.enabled = false;
+            isHovering = false;
+            this.enabled = false;
+        }
+    }
+
+    IEnumerator Glow()
+    {
+        Debug.Log("grid glowing");
+        isHovering = true;
+        float lerpTime = 0f;
+        float minGlowPower = 0f;
+        float maxGlowPower = 1f;
+        float curGlowPower = 0f;
+        float minGlowStrength = 0f;
+        float maxGlowStrength = 1f;
+        float curGlowStrength = 0f;
+
+        while (true)
+        {
+            lerpTime += Time.deltaTime * lerpSpeed;
+            curGlowPower = Mathf.Lerp(minGlowPower, maxGlowPower, lerpTime);
+            curGlowStrength = Mathf.Lerp(minGlowStrength, maxGlowStrength, lerpTime);
+            rend.material.SetFloat("_MKGlowPower", curGlowPower);
+            rend.material.SetFloat("_MKGlowTexStrength", curGlowStrength);
+
+            if (lerpTime >= 1f)
             {
-                matchedPiece = other.gameObject;
-                Match();
+                float temp = maxGlowPower;
+                maxGlowPower = minGlowPower;
+                minGlowPower = temp;
+
+                float temp2 = maxGlowStrength;
+                maxGlowStrength = minGlowStrength;
+                minGlowStrength = temp2;
+
+                lerpTime = 0f;
             }
+
+            if (!triggerHover)
+            {
+                Debug.Log("grid glow break");
+                rend.material.SetFloat("_MKGlowPower", 0f);
+                rend.material.SetFloat("_MKGlowTexStrength", 0f);
+                yield break;
+            }
+            yield return null;
         }
-    }
-
-    void Match()
-    {
-        matchedPiece.GetComponent<PieceBehavior>().SetIsMatch(true);
-        matchedPiece.GetComponent<PieceBehavior>().matchedGrid = this.gameObject;
-
-        if (!audioSource.isPlaying)
-        {
-            audioSource.PlayOneShot(matchSound);
-        }
-
-        // no more piece allowed
-        col.enabled = false;
-        this.enabled = false;
     }
 }

@@ -36,12 +36,12 @@ public class GameController : NetworkBehaviour {
 
         Debug.Log("is server");
 
-        wallGrid = new WallGrid[gridNum];
-        for (int i = 0; i < wallGrid.Length; i++)
-        {
-            wallGrid[i] = wallPrefab.GetComponentInChildren<WallGrid>();
-            GameSingleton.instance.wallGrids.Add(wallGrid[i].gameObject);
-        }
+        //wallGrid = new WallGrid[gridNum];
+        //for (int i = 0; i < wallGrid.Length; i++)
+        //{
+        //    wallGrid[i] = wallPrefab.GetComponentInChildren<WallGrid>();
+        //    GameSingleton.instance.wallGrids.Add(wallGrid[i].gameObject);
+        //}
     }
 	
     void Update ()

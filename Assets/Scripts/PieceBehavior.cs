@@ -29,9 +29,6 @@ public class PieceBehavior : NetworkBehaviour
 
     public bool isInteracting;
 
-    bool isSnapped;
-    bool startFollowing;
-
     bool isAbsorbed;
     public void SetIsAbsorbed(bool _isAbsorbed)
     {
@@ -43,11 +40,22 @@ public class PieceBehavior : NetworkBehaviour
         return isAbsorbed;
     }
 
+    bool enableMatch;
+    public bool GetEnableMatch()
+    {
+        return enableMatch;
+    }
+
+    AudioSource audioSource;
+    [SerializeField]
+    AudioClip matchSound;
+
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
         player = GameObject.FindGameObjectWithTag("MainCamera");
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -56,7 +64,37 @@ public class PieceBehavior : NetworkBehaviour
         {
             Match();
         }
-        
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if ((this.gameObject.tag == "piece1" && other.gameObject.tag == "grid1")
+            || (this.gameObject.tag == "piece2" && other.gameObject.tag == "grid2")
+            || (this.gameObject.tag == "piece3" && other.gameObject.tag == "grid3")
+            || (this.gameObject.tag == "piece4" && other.gameObject.tag == "grid4"))
+        {
+            matchedGrid = other.gameObject;
+            enableMatch = true;
+            matchedGrid.GetComponent<WallGrid>().triggerHover = true;
+            Debug.Log("can be matched with " + matchedGrid);
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (matchedGrid != null && !enableMatch)
+        {
+            enableMatch = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (matchedGrid != null && matchedGrid.GetComponent<WallGrid>().triggerHover)
+        {
+            enableMatch = false;
+            matchedGrid.GetComponent<WallGrid>().triggerHover = false;
+        }
     }
 
     void Float()
@@ -79,10 +117,16 @@ public class PieceBehavior : NetworkBehaviour
         isMatch = false;
         transform.parent = null;
         isAbsorbed = true;
+        matchedGrid.GetComponent<WallGrid>().triggerHover = false;
 
         speed = 0f;
         float lerpTime = 0f;
         float absorbSpeed = 0.5f;
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(matchSound);
+        }
 
         while (true)
         {
@@ -90,7 +134,7 @@ public class PieceBehavior : NetworkBehaviour
 
             if (lerpTime >= 1f)
             {
-                player.GetComponent<PlayerBehaviorNetworking>().CmdDestoryCollider(this.gameObject);
+                matchedGrid.GetComponent<WallGrid>().hasPiece = true;
                 yield break;
             }
             else

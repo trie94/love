@@ -11,8 +11,6 @@ using Input = GoogleARCore.InstantPreviewInput;
 public class PlayerBehaviorNetworking : NetworkBehaviour
 {
     GameObject piece;
-    [SerializeField] Collider col;
-    [SerializeField] GameObject container;
     GameObject matchedGrid;
     GameObject player;
 
@@ -66,7 +64,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
-            col.enabled = false;
             this.enabled = false;
             return;
         }
@@ -193,19 +190,27 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
 
         // avoid bug
-        if (!isTapped)
+        if (!isSnapped && this.transform.childCount > 3)
         {
             isSnapped = false;
         }
 
-        // if not tapping, release the piece
+        // if not tapping, check if it is close to grid otherwise release the piece
         if (!isTapped && piece && piece.transform.parent)
         {
-            if (isSnapped)
+            if (piece.GetComponent<PieceBehavior>().GetEnableMatch() && piece.GetComponent<PieceBehavior>().matchedGrid != null && !piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
             {
-                isSnapped = false;
+                piece.GetComponent<PieceBehavior>().SetIsMatch(true);
+                Debug.Log("go to the grid");
             }
-            Release();
+            else
+            {
+                if (isSnapped)
+                {
+                    isSnapped = false;
+                }
+                Release();
+            }
         }
 
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
@@ -314,7 +319,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
         pieceId.AssignClientAuthority(connectionToClient);
-        gameObject.transform.parent = container.transform;
         isSnapped = true;
         hasFall = false;
 
@@ -426,15 +430,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         float lerpTime = 0f;
         float lerpSpeed = 0.5f;
-        Vector3 releasePos = piece.transform.position + container.transform.forward;
-        col.enabled = false;
+        Vector3 releasePos = piece.transform.position + transform.forward;
 
         while (true)
         {
             if (lerpTime >= 1f)
             {
-                col.enabled = true;
-                Debug.Log("release and collider set active");
                 yield break;
             }
             else if (piece != null)
@@ -449,8 +450,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     IEnumerator PieceFall(GameObject piece)
     {
         piece.GetComponent<Rigidbody>().isKinematic = false;
+        piece.GetComponent<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(0.5f);
         piece.GetComponent<Rigidbody>().isKinematic = true;
+        piece.GetComponent<Rigidbody>().useGravity = false;
         Debug.Log("fall");
         yield break;
     }
