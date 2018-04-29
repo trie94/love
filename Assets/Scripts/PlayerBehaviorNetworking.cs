@@ -202,6 +202,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         // avoid bug
         if (!isTapped)
         {
+            // when not tapping, no snap
             if (isSnapped)
             {
                 isSnapped = false;
@@ -214,7 +215,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
-        if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
+        if (piece && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
             CmdDestoryCollider(piece);
@@ -325,8 +326,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [Command]
     void CmdSnap(GameObject gameObject)
     {
-        //NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        //pieceId.AssignClientAuthority(connectionToClient);
+        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
         {
@@ -382,8 +383,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [Command]
     void CmdRelease(GameObject piece)
     {
-        //NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        //pieceId.AssignClientAuthority(connectionToClient);
+        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
         {
