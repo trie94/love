@@ -40,7 +40,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip snapSound;
     [SerializeField] AudioClip nonInteractableSound;
-    [SerializeField] AudioClip releaseSound;
+    [SerializeField] AudioClip fallSound;
 
     TextMeshProUGUI time;
     TextMeshProUGUI score;
@@ -74,14 +74,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     }
 
     void FixedUpdate()
-    {
-        //TransmitPosition();
-        //LerpPosition();
-        //TransmitPiecePosition();
-        //LerpPositionPiecePosition();
-    }
-
-    void Update()
     {
         // board
         if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
@@ -358,7 +350,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
         if (!audioSource.isPlaying)
         {
-            audioSource.PlayOneShot(releaseSound);
+            audioSource.PlayOneShot(fallSound);
         }
         Debug.Log("release");
     }

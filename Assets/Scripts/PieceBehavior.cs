@@ -62,7 +62,7 @@ public class PieceBehavior : NetworkBehaviour
         isSelected = false;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (isMatch)
         {
