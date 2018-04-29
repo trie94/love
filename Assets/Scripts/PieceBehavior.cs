@@ -79,6 +79,13 @@ public class PieceBehavior : NetworkBehaviour
             || (this.gameObject.tag == "piece3" && other.gameObject.tag == "grid3")
             || (this.gameObject.tag == "piece4" && other.gameObject.tag == "grid4"))
             {
+                if (matchedGrid && matchedGrid != other.gameObject)
+                {
+                    matchedGrid.GetComponent<WallGrid>().isHovering = false;
+                    matchedGrid.GetComponent<WallGrid>().triggerHover = false;
+                    matchedGrid = null;
+                }
+
                 matchedGrid = other.gameObject;
                 enableMatch = true;
                 matchedGrid.GetComponent<WallGrid>().isHovering = false;

@@ -143,7 +143,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
-        // no hit and not interactable
+        // no hit and make the piece not interactable
         else if (isInteractable)
         {
             isInteractable = false;
@@ -170,7 +170,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
                     if (piece && this.transform.childCount <= 3)
                     {
-                        //Snap();
+                        Snap();
                         CmdSnap(piece);
                     }
                     Debug.Log("tapping");
@@ -331,7 +331,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             audioSource.PlayOneShot(snapSound);
         }
         pieceId.RemoveClientAuthority(connectionToClient);
-        Debug.Log("snap");
+        Debug.Log("cmd snap");
     }
 
     void NotInteractable()
