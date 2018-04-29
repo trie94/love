@@ -15,7 +15,9 @@ public class WallGrid : NetworkBehaviour {
     Renderer rend;
     [HideInInspector]
     public bool triggerHover;
-    bool isHovering;
+    [HideInInspector]
+    public bool isHovering;
+    [HideInInspector]
     public bool hasPiece;
 
     void Start()
@@ -36,7 +38,7 @@ public class WallGrid : NetworkBehaviour {
             Debug.Log("disable the grid script");
             col.isTrigger = false;
             col.enabled = false;
-            isHovering = false;
+            triggerHover = false;
             this.enabled = false;
         }
     }

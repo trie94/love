@@ -24,6 +24,8 @@ public class PieceHover : MonoBehaviour {
     [SerializeField]
     AudioClip hoverSound;
 
+    bool isFinal;
+
     void Start()
     {
         rend = GetComponent<Renderer>();
@@ -47,6 +49,12 @@ public class PieceHover : MonoBehaviour {
         Debug.Log("not hover");
     }
 
+    public void Final()
+    {
+        StartCoroutine(Glow());
+        isFinal = true;
+    }
+
     IEnumerator Glow()
     {
         float lerpTime = 0f;
@@ -68,6 +76,12 @@ public class PieceHover : MonoBehaviour {
 
             if (lerpTime >= 1f)
             {
+                if (isFinal)
+                {
+                    Debug.Log("final blink ends");
+                    yield break;
+                }
+
                 float temp = maxGlowPower;
                 maxGlowPower = minGlowPower;
                 minGlowPower = temp;

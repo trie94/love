@@ -81,6 +81,7 @@ public class PieceBehavior : NetworkBehaviour
             {
                 matchedGrid = other.gameObject;
                 enableMatch = true;
+                matchedGrid.GetComponent<WallGrid>().isHovering = false;
                 matchedGrid.GetComponent<WallGrid>().triggerHover = true;
                 Debug.Log("can be matched with " + matchedGrid);
             }
@@ -95,8 +96,10 @@ public class PieceBehavior : NetworkBehaviour
         }
         if (matchedGrid && !matchedGrid.GetComponent<WallGrid>().triggerHover)
         {
+            matchedGrid.GetComponent<WallGrid>().isHovering = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = true;
         }
+        Debug.Log("on trigger stay: " + matchedGrid);
     }
 
     void OnTriggerExit(Collider other)
@@ -104,8 +107,9 @@ public class PieceBehavior : NetworkBehaviour
         if (matchedGrid && matchedGrid.GetComponent<WallGrid>().triggerHover)
         {
             enableMatch = false;
+            matchedGrid.GetComponent<WallGrid>().isHovering = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = false;
-            matchedGrid = null;
+            //matchedGrid = null;
         }
     }
 
@@ -122,6 +126,8 @@ public class PieceBehavior : NetworkBehaviour
     void Match()
     {
         StartCoroutine(Absorb());
+        matchedGrid.GetComponent<WallGrid>().triggerHover = false;
+        //this.GetComponent<PieceHover>().Final();
     }
 
     IEnumerator Absorb()
@@ -129,7 +135,7 @@ public class PieceBehavior : NetworkBehaviour
         isMatch = false;
         transform.parent = null;
         isAbsorbed = true;
-        matchedGrid.GetComponent<WallGrid>().triggerHover = false;
+        matchedGrid.GetComponent<WallGrid>().hasPiece = true;
 
         speed = 0f;
         float lerpTime = 0f;
@@ -146,7 +152,6 @@ public class PieceBehavior : NetworkBehaviour
 
             if (lerpTime >= 1f)
             {
-                matchedGrid.GetComponent<WallGrid>().hasPiece = true;
                 yield break;
             }
             else
