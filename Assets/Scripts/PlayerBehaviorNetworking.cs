@@ -60,6 +60,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     bool hasCanvas;
 
+    [SyncVar]
+    int totalScore;
+
     void Start()
     {
         //if (!isLocalPlayer)
@@ -72,6 +75,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         syncPos = GetComponent<Transform>().position;
         camera = Camera.main.transform;
         layerMask = LayerMask.GetMask("Piece");
+        totalScore = 0;
     }
 
     void Update()
@@ -219,11 +223,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             Destroy();
             CmdDestoryCollider(piece);
-            CmdAddScore();
-            if (!isServer)
-            {
-                GameSingleton.instance.AddScore();
-            }
+            totalScore++;
+            Debug.Log("total score: " +totalScore);
         }
     }
 
@@ -245,7 +246,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /20");
+        score.SetText("Score: " + totalScore + " /20");
         tap.SetText("is tapped: " + isTapped);
         snap.SetText("is snapped: " + isSnapped);
     }
@@ -327,6 +328,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void CmdSnap(GameObject gameObject)
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        if (isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        {
+            pieceId.RemoveClientAuthority(connectionToClient);
+        }
         pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
@@ -384,6 +389,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void CmdRelease(GameObject piece)
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        if (isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        {
+            pieceId.RemoveClientAuthority(connectionToClient);
+        }
         pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
