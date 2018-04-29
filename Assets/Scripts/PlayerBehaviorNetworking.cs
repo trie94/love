@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using GoogleARCore;
 using TMPro;
 
 #if UNITY_EDITOR
@@ -73,7 +74,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         layerMask = LayerMask.GetMask("Piece");
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // board
         if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
@@ -124,7 +125,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     }
                     else
                     {
-                        NotInteractable();
+                        //NotInteractable();
                     }
                 }
                 // if client
@@ -136,7 +137,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     }
                     else
                     {
-                        NotInteractable();
+                        //NotInteractable();
                     }
                 }
             }
@@ -169,7 +170,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
                     if (piece && this.transform.childCount <= 3)
                     {
-                        Snap();
+                        //Snap();
+                        CmdSnap(piece);
                     }
                     Debug.Log("tapping");
                 }
@@ -231,7 +233,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
         score.SetText("Score: " + totalScore + " /20");
-        debug.SetText("is snapped: " + isSnapped);
+        debug.SetText("is tapped: " + isTapped);
     }
 
     void Interactable(GameObject piece)
@@ -312,6 +314,15 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
         pieceId.AssignClientAuthority(connectionToClient);
+
+        if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
+        {
+            piece.GetComponent<PieceHover>().NotHover();
+        }
+
+        piece.GetComponent<PieceBehavior>().isSelected = true;
+        piece.transform.parent = camera;
+        piece.transform.rotation = Quaternion.identity;
         isSnapped = true;
         hasFall = false;
 
@@ -319,8 +330,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             audioSource.PlayOneShot(snapSound);
         }
-        Debug.Log("snap");
         pieceId.RemoveClientAuthority(connectionToClient);
+        Debug.Log("snap");
     }
 
     void NotInteractable()
