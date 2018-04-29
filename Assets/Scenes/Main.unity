@@ -210,12 +210,22 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114501686457082054, guid: 51b739260f9c5d443a77d8f68865d4d3,
+    - target: {fileID: 114139959389000628, guid: 51b739260f9c5d443a77d8f68865d4d3,
         type: 2}
       propertyPath: m_havePropertiesChanged
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114501686457082054, guid: 51b739260f9c5d443a77d8f68865d4d3,
+    - target: {fileID: 114139959389000628, guid: 51b739260f9c5d443a77d8f68865d4d3,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114473034332003376, guid: 51b739260f9c5d443a77d8f68865d4d3,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114473034332003376, guid: 51b739260f9c5d443a77d8f68865d4d3,
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
@@ -230,12 +240,12 @@ Prefab:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114139959389000628, guid: 51b739260f9c5d443a77d8f68865d4d3,
+    - target: {fileID: 114501686457082054, guid: 51b739260f9c5d443a77d8f68865d4d3,
         type: 2}
       propertyPath: m_havePropertiesChanged
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114139959389000628, guid: 51b739260f9c5d443a77d8f68865d4d3,
+    - target: {fileID: 114501686457082054, guid: 51b739260f9c5d443a77d8f68865d4d3,
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1

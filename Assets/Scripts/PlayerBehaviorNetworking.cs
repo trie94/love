@@ -45,7 +45,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     TextMeshProUGUI time;
     TextMeshProUGUI score;
-    TextMeshProUGUI debug;
+    TextMeshProUGUI tap;
+    TextMeshProUGUI snap;
 
     [SyncVar]
     Vector3 syncPos;
@@ -56,8 +57,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SyncVar]
     Vector3 pieceSyncPos;
     Vector3 pieceLastPos;
-
-    int totalScore;
 
     bool hasCanvas;
 
@@ -78,11 +77,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void Update()
     {
         // board
-        if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
+        if (GameObject.Find("ScoreBoard") && !time && !score && !tap && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
             score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
-            debug = GameObject.Find("id").GetComponent<TextMeshProUGUI>();
+            tap = GameObject.Find("tap").GetComponent<TextMeshProUGUI>();
+            snap = GameObject.Find("snap").GetComponent<TextMeshProUGUI>();
             hasCanvas = true;
         }
 
@@ -184,12 +184,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
-        // avoid bug
-        if (!isSnapped && this.transform.childCount > 3)
-        {
-            isSnapped = false;
-        }
-
         // if not tapping, check if it is close to grid otherwise release the piece
         if (!isTapped && piece && piece.transform.parent)
         {
@@ -200,19 +194,27 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
             else
             {
-                if (isSnapped)
-                {
-                    isSnapped = false;
-                }
                 Release();
                 CmdRelease(piece);
             }
         }
 
+        // avoid bug
+        if (!isTapped && piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
+        {
+            Release();
+            CmdRelease(piece);
+        }
+
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
+            CmdDestoryCollider(piece);
             CmdAddScore();
+            if (!isServer)
+            {
+                GameSingleton.instance.AddScore();
+            }
         }
     }
 
@@ -234,8 +236,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + totalScore + " /20");
-        debug.SetText("is tapped: " + isTapped);
+        score.SetText("Score: " + GameSingleton.instance.PrintScore() + " /20");
+        tap.SetText("is tapped: " + isTapped);
+        snap.SetText("is snapped: " + isSnapped);
     }
 
     void Interactable(GameObject piece)
@@ -428,7 +431,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [ClientRpc]
     void RpcAddScore()
     {
-        totalScore ++;
+        GameSingleton.instance.AddScore();
         Debug.Log("add score");
     }
 
