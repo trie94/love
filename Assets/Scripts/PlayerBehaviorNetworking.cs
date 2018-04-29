@@ -200,10 +200,18 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
 
         // avoid bug
-        if (!isTapped && piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
+        if (!isTapped)
         {
-            Release();
-            CmdRelease(piece);
+            if (isSnapped)
+            {
+                isSnapped = false;
+            }
+
+            if (piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
+            {
+                Release();
+                CmdRelease(piece);
+            }
         }
 
         if (piece && isSnapped && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
@@ -317,8 +325,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [Command]
     void CmdSnap(GameObject gameObject)
     {
-        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        pieceId.AssignClientAuthority(connectionToClient);
+        //NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        //pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
         {
@@ -335,7 +343,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         //{
         //    audioSource.PlayOneShot(snapSound);
         //}
-        pieceId.RemoveClientAuthority(connectionToClient);
+        //pieceId.RemoveClientAuthority(connectionToClient);
         Debug.Log("cmd snap");
     }
 
@@ -374,8 +382,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [Command]
     void CmdRelease(GameObject piece)
     {
-        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        pieceId.AssignClientAuthority(connectionToClient);
+        //NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        //pieceId.AssignClientAuthority(connectionToClient);
 
         if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
         {
@@ -392,7 +400,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         //{
         //    audioSource.PlayOneShot(fallSound);
         //}
-        pieceId.RemoveClientAuthority(connectionToClient);
+        //pieceId.RemoveClientAuthority(connectionToClient);
         Debug.Log("cmd release");
     }
 
