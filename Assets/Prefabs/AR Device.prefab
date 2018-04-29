@@ -501,14 +501,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3d6757ab6dc554dbfe68c7b49177c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 0}
-  container: {fileID: 1625603938239940}
   hoverDis: 1
   audioSource: {fileID: 82290648092727966}
   snapSound: {fileID: 8300000, guid: 95175d4eaf6bd9e49b0d674547282bb1, type: 3}
   nonInteractableSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841,
     type: 3}
-  releaseSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841, type: 3}
+  fallSound: {fileID: 8300000, guid: c133209144597664485c7eb4a190321d, type: 3}
 --- !u!114 &114675999143077442
 MonoBehaviour:
   m_ObjectHideFlags: 1

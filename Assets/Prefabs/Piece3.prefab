@@ -265,6 +265,7 @@ MonoBehaviour:
   col: {fileID: 0}
   isInteracting: 0
   matchSound: {fileID: 8300000, guid: 010d3a654a9a83144af751ba3d4effca, type: 3}
+  isSelected: 0
 --- !u!114 &114713446604209142
 MonoBehaviour:
   m_ObjectHideFlags: 1
