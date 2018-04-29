@@ -83,7 +83,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void Update()
     {
-        Debug.Log("child count:" + this.transform.childCount);
         // board
         if (GameObject.Find("ScoreBoard") && !time && !score && !debug && !hasCanvas)
         {
@@ -163,6 +162,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             Debug.Log("no hit and make blinking stop");
             piece.GetComponent<PieceHover>().NotHover();
             isHovering = false;
+            piece.GetComponent<PieceBehavior>().isSelected = false;
             piece = null;
         }
 
@@ -259,6 +259,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             piece.GetComponent<PieceHover>().NotHover();
         }
 
+        piece.GetComponent<PieceBehavior>().isSelected = true;
         piece.transform.parent = camera;
         piece.transform.rotation = Quaternion.identity;
         isSnapped = true;
@@ -351,6 +352,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
         isSnapped = false;
         piece.transform.parent = null;
+        piece.GetComponent<PieceBehavior>().isSelected = false;
         StartCoroutine(PieceFall(piece));
         hasFall = true;
 

@@ -11,6 +11,7 @@ public class WallGrid : NetworkBehaviour {
     [SerializeField]
     float lerpSpeed;
 
+    [SerializeField]
     Renderer rend;
     [HideInInspector]
     public bool triggerHover;
@@ -20,7 +21,6 @@ public class WallGrid : NetworkBehaviour {
     void Start()
     {
         col = GetComponent<Collider>();
-        rend = GetComponent<Renderer>();
     }
 
     void Update()

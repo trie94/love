@@ -50,12 +50,16 @@ public class PieceBehavior : NetworkBehaviour
     [SerializeField]
     AudioClip matchSound;
 
+    [HideInInspector]
+    public bool isSelected;
+
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
         player = GameObject.FindGameObjectWithTag("MainCamera");
         audioSource = GetComponent<AudioSource>();
+        isSelected = false;
     }
 
     void Update()
@@ -68,32 +72,40 @@ public class PieceBehavior : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if ((this.gameObject.tag == "piece1" && other.gameObject.tag == "grid1")
+        if (player.GetComponent<PlayerBehaviorNetworking>().GetIsSnapped() && isSelected)
+        {
+            if ((this.gameObject.tag == "piece1" && other.gameObject.tag == "grid1")
             || (this.gameObject.tag == "piece2" && other.gameObject.tag == "grid2")
             || (this.gameObject.tag == "piece3" && other.gameObject.tag == "grid3")
             || (this.gameObject.tag == "piece4" && other.gameObject.tag == "grid4"))
-        {
-            matchedGrid = other.gameObject;
-            enableMatch = true;
-            matchedGrid.GetComponent<WallGrid>().triggerHover = true;
-            Debug.Log("can be matched with " + matchedGrid);
+            {
+                matchedGrid = other.gameObject;
+                enableMatch = true;
+                matchedGrid.GetComponent<WallGrid>().triggerHover = true;
+                Debug.Log("can be matched with " + matchedGrid);
+            }
         }
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (matchedGrid != null && !enableMatch)
+        if (matchedGrid && !enableMatch)
         {
             enableMatch = true;
+        }
+        if (matchedGrid && !matchedGrid.GetComponent<WallGrid>().triggerHover)
+        {
+            matchedGrid.GetComponent<WallGrid>().triggerHover = true;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (matchedGrid != null && matchedGrid.GetComponent<WallGrid>().triggerHover)
+        if (matchedGrid && matchedGrid.GetComponent<WallGrid>().triggerHover)
         {
             enableMatch = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = false;
+            matchedGrid = null;
         }
     }
 
