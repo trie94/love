@@ -9,22 +9,18 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField]
     PlayerBehavior playerBehavior;
 
-    [SerializeField]
-    Net net;
-
     bool isDone;
 
     void Start()
     {
         playerBehavior.enabled = false;
-        net.enabled = false;
 
-        if (!isLocalPlayer)
-        {
-            Debug.Log("this is not a local player");
-            Destroy(this);
-            return;
-        }
+        //if (!isLocalPlayer)
+        //{
+        //    Debug.Log("this is not a local player");
+        //    Destroy(this);
+        //    return;
+        //}
     }
 
     void Update()
@@ -38,7 +34,6 @@ public class PlayerManager : NetworkBehaviour
         if (GameSingleton.instance.allowSnap)
         {
             playerBehavior.enabled = true;
-            net.enabled = true;
         }
 
         if (GameSingleton.instance.totalScore >= 20)

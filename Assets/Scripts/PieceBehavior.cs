@@ -79,6 +79,7 @@ public class PieceBehavior : NetworkBehaviour
             || (this.gameObject.tag == "piece3" && other.gameObject.tag == "grid3")
             || (this.gameObject.tag == "piece4" && other.gameObject.tag == "grid4"))
             {
+                // disable the previous grid
                 if (matchedGrid && matchedGrid != other.gameObject)
                 {
                     matchedGrid.GetComponent<WallGrid>().isHovering = false;
@@ -86,6 +87,7 @@ public class PieceBehavior : NetworkBehaviour
                     matchedGrid = null;
                 }
 
+                // get new closest grid and make it glow
                 matchedGrid = other.gameObject;
                 enableMatch = true;
                 matchedGrid.GetComponent<WallGrid>().isHovering = false;

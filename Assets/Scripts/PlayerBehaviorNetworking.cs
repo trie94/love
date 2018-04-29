@@ -63,11 +63,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void Start()
     {
-        if (!isLocalPlayer)
-        {
-            this.enabled = false;
-            return;
-        }
+        //if (!isLocalPlayer)
+        //{
+        //    this.gameObject.SetActive(false);
+        //    this.enabled = false;
+        //    return;
+        //}
         lastPos = transform.position;
         syncPos = GetComponent<Transform>().position;
         camera = Camera.main.transform;
@@ -117,7 +118,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             if (!isSnapped && !isInteractable && !isHovering)
             {
                 // if host
-                if (NetworkServer.active)
+                if (isServer)
                 {
                     if (piece.tag == "piece1" || piece.tag == "piece2")
                     {
@@ -204,6 +205,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     isSnapped = false;
                 }
                 Release();
+                CmdRelease(piece);
             }
         }
 
@@ -326,10 +328,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         isSnapped = true;
         hasFall = false;
 
-        if (!audioSource.isPlaying)
-        {
-            audioSource.PlayOneShot(snapSound);
-        }
+        //if (!audioSource.isPlaying)
+        //{
+        //    audioSource.PlayOneShot(snapSound);
+        //}
         pieceId.RemoveClientAuthority(connectionToClient);
         Debug.Log("cmd snap");
     }
@@ -364,6 +366,31 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             audioSource.PlayOneShot(fallSound);
         }
         Debug.Log("release");
+    }
+
+    [Command]
+    void CmdRelease(GameObject piece)
+    {
+        NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
+        pieceId.AssignClientAuthority(connectionToClient);
+
+        if (piece.GetComponent<PieceHover>().isShivering || piece.GetComponent<PieceHover>().isBlinking)
+        {
+            piece.GetComponent<PieceHover>().NotHover();
+        }
+
+        isSnapped = false;
+        piece.transform.parent = null;
+        piece.GetComponent<PieceBehavior>().isSelected = false;
+        StartCoroutine(PieceFall(piece));
+        hasFall = true;
+
+        //if (!audioSource.isPlaying)
+        //{
+        //    audioSource.PlayOneShot(fallSound);
+        //}
+        pieceId.RemoveClientAuthority(connectionToClient);
+        Debug.Log("cmd release");
     }
 
     void Destroy()
