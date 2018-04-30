@@ -34,7 +34,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         return isSnapped;
     }
-    bool isInNet;
+
     bool isTapped;
     bool hasFall;
 
@@ -203,9 +203,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
 
         // if not tapping, check if it is close to grid otherwise release the piece
-        if (!isTapped && piece && piece.transform.parent)
+        if (!isTapped)
         {
-            if (isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
+            if (piece && piece.transform.parent && isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
             {
                 if (isServer)
                 {
@@ -217,12 +217,17 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     CmdRelease(piece);
                 }
             }
-            else
+            else if (piece && piece.transform.parent)
             {
-                piece.GetComponent<PieceBehavior>().SetIsMatch(true);
+                piece.GetComponent<PieceBehavior>().Match();
                 isSnapped = false;
                 piece.transform.parent = null;
                 Debug.Log("go to the grid");
+            }
+
+            if (isSnapped)
+            {
+                isSnapped = false;
             }
         }
 
@@ -243,19 +248,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             Debug.Log("total score: " + GameSingleton.instance.totalScore);
         }
-
-        //if (!isTapped)
-        //{
-        //    if (isSnapped)
-        //    {
-        //        isSnapped = false;
-        //    }
-        //}
     }
 
     void DrawGizmos()
     {
-        Gizmos.DrawRay(camera.position, camera.forward * 1);
+        if (camera)
+        {
+            Gizmos.DrawRay(camera.position, camera.forward * 1);
+        }
     }
     void OnDrawGizmos()
     {
@@ -303,50 +303,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             audioSource.PlayOneShot(snapSound);
             isplayed = true;
-        }
-    }
-
-    void LerpPosition()
-    {
-        player.transform.position = Vector3.Lerp(player.transform.position, syncPos, Time.deltaTime * 0.5f);
-        Debug.Log("lerp position");
-    }
-
-    void LerpPositionPiecePosition()
-    {
-        piece.transform.position = Vector3.Lerp(transform.position, pieceSyncPos, Time.deltaTime * 0.5f);
-    }
-
-    [Command]
-    void CmdPosToServer(Vector3 position)
-    {
-        syncPos = position;
-    }
-
-    [Command]
-    void CmdPiecePosToServer(Vector3 position)
-    {
-        pieceSyncPos = position;
-    }
-
-    //[ClientCallback]
-    void TransmitPosition()
-    {
-        if (hasAuthority && player && Vector3.Distance(player.transform.position, lastPos) > threshold)
-        {
-            CmdPosToServer(player.transform.position);
-            lastPos = transform.position;
-            Debug.Log("transmit position");
-        }
-    }
-
-    void TransmitPiecePosition()
-    {
-        if (hasAuthority && piece && Vector3.Distance(piece.transform.position, pieceLastPos) > threshold)
-        {
-            CmdPosToServer(piece.transform.position);
-            pieceLastPos = piece.transform.position;
-            Debug.Log("transmit piece position");
         }
     }
 

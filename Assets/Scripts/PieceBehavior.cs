@@ -16,17 +16,6 @@ public class PieceBehavior : NetworkBehaviour
 
     Vector3 stopPos;
 
-    bool isMatch;
-    public void SetIsMatch(bool _isMatch)
-    {
-        isMatch = _isMatch;
-    }
-
-    public bool GetIsMatch()
-    {
-        return isMatch;
-    }
-
     public bool isInteracting;
 
     bool isAbsorbed;
@@ -60,14 +49,6 @@ public class PieceBehavior : NetworkBehaviour
         player = GameObject.FindGameObjectWithTag("MainCamera");
         audioSource = GetComponent<AudioSource>();
         isSelected = false;
-    }
-
-    void Update()
-    {
-        if (isMatch)
-        {
-            Match();
-        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -118,7 +99,6 @@ public class PieceBehavior : NetworkBehaviour
             enableMatch = false;
             matchedGrid.GetComponent<WallGrid>().isHovering = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = false;
-            //matchedGrid = null;
         }
     }
 
@@ -132,7 +112,7 @@ public class PieceBehavior : NetworkBehaviour
         speed = 0f;
     }
 
-    void Match()
+    public void Match()
     {
         StartCoroutine(Absorb());
         matchedGrid.GetComponent<WallGrid>().triggerHover = false;
@@ -141,7 +121,6 @@ public class PieceBehavior : NetworkBehaviour
 
     IEnumerator Absorb()
     {
-        isMatch = false;
         transform.parent = null;
         isAbsorbed = true;
         matchedGrid.GetComponent<WallGrid>().hasPiece = true;
