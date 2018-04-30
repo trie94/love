@@ -131,6 +131,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     else
                     {
                         //NotInteractable();
+                        isInteractable = false;
                     }
                 }
                 // if client
@@ -143,6 +144,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     else
                     {
                         //NotInteractable();
+                        isInteractable = false;
                     }
                 }
             }
@@ -175,8 +177,22 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
                     if (piece && this.transform.childCount <= 3)
                     {
-                        Snap();
-                        CmdSnap(piece);
+                        // if host
+                        if (isServer)
+                        {
+                            if (piece.tag == "piece1" || piece.tag == "piece2")
+                            {
+                                Snap();
+                            }
+                        }
+                        // if client
+                        else
+                        {
+                            if (piece.tag == "piece3" || piece.tag == "piece4")
+                            {
+                                CmdSnap(piece);
+                            }
+                        }
                     }
                     Debug.Log("tapping");
                 }
@@ -198,8 +214,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
             else
             {
-                Release();
-                CmdRelease(piece);
+                if (isServer)
+                {
+                    Release();
+                }
+                else
+                {
+                    CmdRelease(piece);
+                }
             }
         }
 
