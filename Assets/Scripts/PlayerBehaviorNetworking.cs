@@ -205,45 +205,24 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         // if not tapping, check if it is close to grid otherwise release the piece
         if (!isTapped && piece && piece.transform.parent)
         {
-            if (piece.GetComponent<PieceBehavior>().GetEnableMatch() && piece.GetComponent<PieceBehavior>().matchedGrid != null && !piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
+            if (isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
             {
-                piece.GetComponent<PieceBehavior>().SetIsMatch(true);
-                Debug.Log("go to the grid");
+                if (isServer)
+                {
+                    CmdRelease(piece);
+                }
+                else
+                {
+                    Release();
+                    CmdRelease(piece);
+                }
             }
             else
             {
-                if (isServer)
-                {
-                    CmdRelease(piece);
-                }
-                else
-                {
-                    Release();
-                    CmdRelease(piece);
-                }
-            }
-        }
-
-        // avoid bug
-        if (!isTapped)
-        {
-            // when not tapping, no snap
-            if (isSnapped)
-            {
+                piece.GetComponent<PieceBehavior>().SetIsMatch(true);
                 isSnapped = false;
-            }
-
-            if (piece && piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
-            {
-                if (isServer)
-                {
-                    CmdRelease(piece);
-                }
-                else
-                {
-                    Release();
-                    CmdRelease(piece);
-                }
+                piece.transform.parent = null;
+                Debug.Log("go to the grid");
             }
         }
 
@@ -254,7 +233,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             if (isServer)
             {
-                CmdAddScore();
+                GameSingleton.instance.AddScore();
             }
             else
             {
@@ -264,6 +243,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             Debug.Log("total score: " + GameSingleton.instance.totalScore);
         }
+
+        //if (!isTapped)
+        //{
+        //    if (isSnapped)
+        //    {
+        //        isSnapped = false;
+        //    }
+        //}
     }
 
     void DrawGizmos()
@@ -284,7 +271,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + GameSingleton.instance.totalScore.ToString() + " /20");
+        score.SetText("Score: " + GameSingleton.instance.totalScore.ToString() + " /10");
         tap.SetText("is tapped: " + isTapped);
         snap.SetText("is snapped: " + isSnapped);
     }
