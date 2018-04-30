@@ -182,7 +182,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                         {
                             if (piece.tag == "piece1" || piece.tag == "piece2")
                             {
-                                Snap();
+                                CmdSnap(piece);
                             }
                         }
                         // if client
@@ -190,6 +190,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                         {
                             if (piece.tag == "piece3" || piece.tag == "piece4")
                             {
+                                Snap();
                                 CmdSnap(piece);
                             }
                         }
@@ -216,10 +217,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             {
                 if (isServer)
                 {
-                    Release();
+                    CmdRelease(piece);
                 }
                 else
                 {
+                    Release();
                     CmdRelease(piece);
                 }
             }
@@ -234,10 +236,17 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                 isSnapped = false;
             }
 
-            if (piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
+            if (piece && piece.transform.parent && piece.GetComponent<PieceBehavior>().matchedGrid == null)
             {
-                Release();
-                CmdRelease(piece);
+                if (isServer)
+                {
+                    CmdRelease(piece);
+                }
+                else
+                {
+                    Release();
+                    CmdRelease(piece);
+                }
             }
         }
 
@@ -245,7 +254,17 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             Destroy();
             CmdDestoryCollider(piece);
-            totalScore++;
+
+            if (isServer)
+            {
+                CmdAddScore();
+            }
+            else
+            {
+                totalScore++;
+                CmdAddScore();
+            }
+
             Debug.Log("total score: " +totalScore);
         }
     }
@@ -350,7 +369,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void CmdSnap(GameObject gameObject)
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        if (isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        if (!isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
         {
             pieceId.RemoveClientAuthority(connectionToClient);
         }
@@ -367,11 +386,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         isSnapped = true;
         hasFall = false;
 
-        //if (!audioSource.isPlaying)
-        //{
-        //    audioSource.PlayOneShot(snapSound);
-        //}
-        //pieceId.RemoveClientAuthority(connectionToClient);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(snapSound);
+        }
+        if (!isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        {
+            pieceId.RemoveClientAuthority(connectionToClient);
+        }
         Debug.Log("cmd snap");
     }
 
@@ -411,7 +433,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void CmdRelease(GameObject piece)
     {
         NetworkIdentity pieceId = gameObject.GetComponent<NetworkIdentity>();
-        if (isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        if (!isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
         {
             pieceId.RemoveClientAuthority(connectionToClient);
         }
@@ -428,11 +450,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         StartCoroutine(PieceFall(piece));
         hasFall = true;
 
-        //if (!audioSource.isPlaying)
-        //{
-        //    audioSource.PlayOneShot(fallSound);
-        //}
-        //pieceId.RemoveClientAuthority(connectionToClient);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(fallSound);
+        }
+        if (!isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
+        {
+            pieceId.RemoveClientAuthority(connectionToClient);
+        }
         Debug.Log("cmd release");
     }
 
@@ -465,7 +490,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [Command]
     void CmdAddScore()
     {
-        RpcAddScore();
+        totalScore++;
     }
 
     [ClientRpc]
