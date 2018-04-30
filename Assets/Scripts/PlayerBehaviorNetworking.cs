@@ -59,9 +59,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     Vector3 pieceLastPos;
 
     bool hasCanvas;
-
-    [SyncVar]
-    int totalScore;
+    bool isplayed;
 
     void Start()
     {
@@ -75,7 +73,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         syncPos = GetComponent<Transform>().position;
         camera = Camera.main.transform;
         layerMask = LayerMask.GetMask("Piece");
-        totalScore = 0;
     }
 
     void Update()
@@ -261,11 +258,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
             else
             {
-                totalScore++;
+                GameSingleton.instance.AddScore();
                 CmdAddScore();
             }
 
-            Debug.Log("total score: " +totalScore);
+            Debug.Log("total score: " + GameSingleton.instance.totalScore);
         }
     }
 
@@ -287,7 +284,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         GameSingleton.instance.CountTime();
         time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + totalScore + " /20");
+        score.SetText("Score: " + GameSingleton.instance.totalScore.ToString() + " /20");
         tap.SetText("is tapped: " + isTapped);
         snap.SetText("is snapped: " + isSnapped);
     }
@@ -315,9 +312,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         isSnapped = true;
         hasFall = false;
         Debug.Log("snap");
-        if (!audioSource.isPlaying)
+        if (!audioSource.isPlaying && !isplayed)
         {
             audioSource.PlayOneShot(snapSound);
+            isplayed = true;
         }
     }
 
@@ -386,9 +384,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         isSnapped = true;
         hasFall = false;
 
-        if (!audioSource.isPlaying)
+        if (!audioSource.isPlaying && !isplayed)
         {
             audioSource.PlayOneShot(snapSound);
+            isplayed = true;
         }
         if (!isServer && pieceId.GetComponent<NetworkIdentity>().hasAuthority)
         {
@@ -407,6 +406,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             audioSource.PlayOneShot(nonInteractableSound);
             Debug.Log("not interactable");
         }
+        isplayed = false;
     }
 
     void Release()
@@ -426,6 +426,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             audioSource.PlayOneShot(fallSound);
         }
+
+        isplayed = false;
         Debug.Log("release");
     }
 
@@ -458,6 +460,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         {
             pieceId.RemoveClientAuthority(connectionToClient);
         }
+        isplayed = false;
         Debug.Log("cmd release");
     }
 
@@ -469,6 +472,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         piece.GetComponent<PieceBehavior>().enabled = false;
         isSnapped = false;
         hasFall = true;
+        isplayed = false;
     }
 
     // this function is called from the piece
@@ -484,13 +488,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         gameObject.GetComponent<PieceBehavior>().col.isTrigger = false;
         gameObject.GetComponent<PieceBehavior>().col.enabled = false;
         gameObject.GetComponent<PieceBehavior>().enabled = false;
+        isplayed = false;
         Debug.Log("destroy collider");
     }
 
     [Command]
     void CmdAddScore()
     {
-        totalScore++;
+        RpcAddScore();
     }
 
     [ClientRpc]

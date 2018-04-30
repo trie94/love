@@ -15,7 +15,7 @@ public class GameSingleton : NetworkBehaviour {
     public Vector3 anchor;
     [SyncVar]
     public float playTime = 0f;
-    [SyncVar]
+
     public int totalScore = 0;
 
     public bool isPieceAbsorbed;
