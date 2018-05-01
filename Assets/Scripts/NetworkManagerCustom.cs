@@ -10,4 +10,10 @@ public class NetworkManagerCustom : NetworkManager {
     {
         base.StartHost();
     }
+
+    public void EnableMatchMaking()
+    {
+        StartMatchMaker();
+
+    }
 }

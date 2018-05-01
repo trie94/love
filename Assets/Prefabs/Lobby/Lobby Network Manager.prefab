@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4708635384783408}
   - component: {fileID: 114791497294796646}
   - component: {fileID: 114442452513866092}
+  - component: {fileID: 114189350771158486}
+  - component: {fileID: 114065639459867634}
   m_Layer: 0
   m_Name: Lobby Network Manager
   m_TagString: Untagged
@@ -41,6 +43,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114065639459867634
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1626804565334230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114189350771158486
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1626804565334230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114442452513866092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -82,10 +106,10 @@ MonoBehaviour:
   m_OfflineScene: Lobby
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 1977984724763658, guid: e8f6902d392a6e44f8669c39733c83cf, type: 2}
-  - {fileID: 1256664334083216, guid: 6118a4550de7bd4438be30a5e48b632f, type: 2}
-  - {fileID: 1993767978915024, guid: 7cf9a23c6d8ada64182a5f9c12c7e660, type: 2}
-  - {fileID: 1380648364020258, guid: 92904fccc9e844f478cf1abedf93d9c0, type: 2}
+  - {fileID: 1258271792516574, guid: 99abfcf5ef7bd9a42adb1c46b10cafbd, type: 2}
+  - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
+  - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
+  - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
   - {fileID: 1248182038015278, guid: d1e2fd21eaa716e49bcb04b4789687ed, type: 2}
   - {fileID: 1904138336091026, guid: 5a86efd3194c1b841b01c4eea70752f6, type: 2}
   m_CustomConfig: 0
@@ -142,7 +166,7 @@ MonoBehaviour:
   matchName: default
   matchSize: 4
   isNetworkActive: 0
-  matchMaker: {fileID: 0}
+  matchMaker: {fileID: 114065639459867634}
   m_ShowLobbyGUI: 1
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 4
