@@ -93,7 +93,6 @@ public class MainMenu : NetworkBehaviour {
         lobbyManager.matchMaker.JoinMatch(lobbyManager.matches[lobbyManager.matches.Count - 1].networkId, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
         readyGame.SetActive(true);
         joinRoom.SetActive(false);
-        Debug.Log("??");
     }
 
     public void FindMatch()
