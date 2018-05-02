@@ -122,6 +122,7 @@ public class MainMenu : NetworkBehaviour {
 
         roomList.gameObject.SetActive(true);
         roomList.text = typeRoom.text;
+        Debug.Log("room list: " + roomList.text);
     }
 
     IEnumerator Ready()

@@ -14,12 +14,10 @@ public class GameSingleton : NetworkBehaviour {
     [SyncVar]
     public Vector3 anchor;
     [SyncVar]
-    public float playTime = 0f;
+    public float playTime = 0;
     public float minutes;
     public float seconds;
-
-    public string sMinutes;
-    public string sSeconds;
+    public string formatedTime;
 
     public int totalScore = 0;
 
@@ -40,6 +38,7 @@ public class GameSingleton : NetworkBehaviour {
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(this);
         }
         else if (instance != null)
         {
@@ -105,17 +104,11 @@ public class GameSingleton : NetworkBehaviour {
     public void CountTime()
     {
         playTime += Time.deltaTime;
-        minutes = Mathf.Floor(playTime / 60);
+        minutes = Mathf.FloorToInt(playTime / 60);
         seconds = Mathf.RoundToInt(playTime % 60);
 
-        if (minutes < 10)
-        {
-            sMinutes = "0" + minutes.ToString();
-        }
-        if (seconds < 10)
-        {
-            sSeconds = "0" + Mathf.RoundToInt(seconds).ToString();
-        }
+        formatedTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+        Debug.Log("play time: " + playTime);
     }
 
     public string PrintTime()

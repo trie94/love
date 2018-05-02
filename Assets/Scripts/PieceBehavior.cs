@@ -89,7 +89,6 @@ public class PieceBehavior : NetworkBehaviour
             matchedGrid.GetComponent<WallGrid>().isHovering = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = true;
         }
-        Debug.Log("on trigger stay: " + matchedGrid);
     }
 
     void OnTriggerExit(Collider other)

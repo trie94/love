@@ -36,6 +36,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     }
 
     bool isTapped;
+    bool isFalling;
     bool hasFall;
 
     [SerializeField] AudioSource audioSource;
@@ -74,6 +75,16 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         if (GameObject.Find("ScoreBoard") && !time && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
+
+            if (isServer)
+            {
+                GameObject.Find("colorC").SetActive(false);
+            }
+            else
+            {
+                GameObject.Find("colorH").SetActive(false);
+            }
+
             hasCanvas = true;
         }
 
@@ -87,7 +98,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         Ray ray = new Ray(camera.position, camera.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, hoverDis, layerMask))
+        if (Physics.Raycast(ray, out hit, hoverDis, layerMask) && !isFalling)
         {
             // store hit info
             piece = hit.collider.gameObject;
@@ -122,115 +133,125 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     }
                 }
             }
-        }
 
-        // no hit and make the piece not interactable
-        else if (isInteractable)
-        {
-            isInteractable = false;
-        }
-
-        // make the piece not blink
-        else if (piece)
-        {
-            Debug.Log("no hit and make blinking stop");
-            piece.GetComponent<PieceHover>().NotHover();
-            isHovering = false;
-            piece.GetComponent<PieceBehavior>().isSelected = false;
-            piece = null;
-        }
-
-        // detect tapping and snap the piece
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch t in Input.touches)
+            // if not tapping, check if it is close to grid otherwise release the piece
+            if (!isTapped)
             {
-                if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
+                if (piece && piece.GetComponent<PieceBehavior>().isSelected)
                 {
-                    isTapped = true;
-
-                    if (piece && this.transform.childCount <= 3)
+                    // match
+                    if (isSnapped && piece.GetComponent<PieceBehavior>().GetEnableMatch())
                     {
-                        // if host
+                        piece.GetComponent<PieceBehavior>().Match();
+                        isSnapped = false;
+                        piece = null;
+                        Debug.Log("go to the grid");
+                    }
+                    // release
+                    else
+                    {
                         if (isServer)
                         {
-                            if (piece.tag == "piece1" || piece.tag == "piece2")
-                            {
-                                CmdSnap(piece);
-                            }
+                            CmdRelease(piece);
                         }
-                        // if client
                         else
                         {
-                            if (piece.tag == "piece3" || piece.tag == "piece4")
-                            {
-                                Snap();
-                                //CmdSnap(piece);
-                            }
+                            Release();
+                            //CmdRelease(piece);
                         }
                     }
-                    Debug.Log("tapping");
                 }
-                else
+                if (isSnapped)
                 {
-                    isTapped = false;
-                    Debug.Log("not tapping");
+                    if (isServer)
+                    {
+                        CmdRelease(piece);
+                    }
+                    else
+                    {
+                        Release();
+                        //CmdRelease(piece);
+                    }
                 }
             }
-        }
 
-        // if not tapping, check if it is close to grid otherwise release the piece
-        if (!isTapped)
-        {
-            if (piece && piece.transform.parent && isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
+            // no hit and make the piece not interactable
+            else if (isInteractable)
             {
+                isInteractable = false;
+            }
+
+            // make the piece not blink
+            else if (piece)
+            {
+                Debug.Log("no hit and make blinking stop");
+                piece.GetComponent<PieceHover>().NotHover();
+                isHovering = false;
+                piece.GetComponent<PieceBehavior>().isSelected = false;
+                piece = null;
+            }
+
+            // detect tapping and snap the piece
+            if (Input.touchCount > 0)
+            {
+                foreach (Touch t in Input.touches)
+                {
+                    if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
+                    {
+                        isTapped = true;
+
+                        if (piece && this.transform.childCount <= 3)
+                        {
+                            // if host
+                            if (isServer)
+                            {
+                                if (piece.tag == "piece1" || piece.tag == "piece2")
+                                {
+                                    CmdSnap(piece);
+                                }
+                            }
+                            // if client
+                            else
+                            {
+                                if (piece.tag == "piece3" || piece.tag == "piece4")
+                                {
+                                    Snap();
+                                    //CmdSnap(piece);
+                                }
+                            }
+                        }
+                        Debug.Log("tapping");
+                    }
+                    else
+                    {
+                        isTapped = false;
+                        Debug.Log("not tapping");
+                    }
+                }
+            }
+
+
+            if (piece && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
+            {
+                Destroy();
+                CmdDestoryCollider(piece);
+
                 if (isServer)
                 {
-                    CmdRelease(piece);
+                    GameSingleton.instance.AddScore();
                 }
                 else
                 {
-                    Release();
-                    //CmdRelease(piece);
+                    GameSingleton.instance.AddScore();
+                    CmdAddScore();
                 }
+
+                Debug.Log("total score: " + GameSingleton.instance.totalScore);
             }
-            else if (piece && piece.transform.parent)
-            {
-                piece.GetComponent<PieceBehavior>().Match();
-                isSnapped = false;
-                piece.transform.parent = null;
-                Debug.Log("go to the grid");
-            }
-            else
-            {
-                isSnapped = false;
-                if (piece.transform.parent)
-                {
-                    piece.transform.parent = null;
-                }
-            }
+
         }
-
-        if (piece && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
-        {
-            Destroy();
-            CmdDestoryCollider(piece);
-
-            if (isServer)
-            {
-                GameSingleton.instance.AddScore();
-            }
-            else
-            {
-                GameSingleton.instance.AddScore();
-                CmdAddScore();
-            }
-
-            Debug.Log("total score: " + GameSingleton.instance.totalScore);
-        }
-
         // if score hits 10, go to the score board
-        if (GameSingleton.instance.totalScore >= 10 && !isFinal)
+        if (GameSingleton.instance.allowSnap && GameSingleton.instance.playTime >= 120 && !isFinal)
         {
             StartCoroutine(Final());
         }
@@ -257,7 +278,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void Board()
     {
         GameSingleton.instance.CountTime();
-        time.SetText(GameSingleton.instance.sMinutes +":" + GameSingleton.instance.sSeconds);
+        time.SetText(GameSingleton.instance.formatedTime);
     }
 
     void Interactable(GameObject piece)
@@ -483,9 +504,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         piece.GetComponent<Rigidbody>().isKinematic = false;
         piece.GetComponent<Rigidbody>().useGravity = true;
+        isFalling = true;
         yield return new WaitForSeconds(0.5f);
         piece.GetComponent<Rigidbody>().isKinematic = true;
         piece.GetComponent<Rigidbody>().useGravity = false;
+        piece = null;
+        isFalling = false;
         Debug.Log("fall");
         yield break;
     }
