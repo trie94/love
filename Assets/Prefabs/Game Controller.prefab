@@ -182,10 +182,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planeController: {fileID: 114186606533746922}
   piecesPrefab:
-  - {fileID: 1258271792516574, guid: 99abfcf5ef7bd9a42adb1c46b10cafbd, type: 2}
-  - {fileID: 1258271792516574, guid: 67b1a75cea360ee47a3fe35ac80ff945, type: 2}
-  - {fileID: 1258271792516574, guid: b62ed748937323e43a21d56945d2e0b0, type: 2}
-  - {fileID: 1258271792516574, guid: 15521c7cd462b434aa21c25d7d731561, type: 2}
+  - {fileID: 1781971795411336, guid: 4cedf4073267498459dbb721a085001f, type: 2}
+  - {fileID: 1514658617391384, guid: 6efb92b242d691c4294e4bf9ab0fed04, type: 2}
+  - {fileID: 1367531736817900, guid: aae4d28b2502ba54ca5448a4d993d6fe, type: 2}
+  - {fileID: 1265991887052202, guid: d5dc3ff342cfa574894954887fa74325, type: 2}
   piecesNum: 36
   wallPrefab: {fileID: 1248182038015278, guid: d1e2fd21eaa716e49bcb04b4789687ed, type: 2}
   gridNum: 20

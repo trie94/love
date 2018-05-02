@@ -41,6 +41,8 @@ public class MainMenu : NetworkBehaviour {
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        NetworkServer.Reset();
+        NetworkServer.ResetConnectionStats();
     }
 
     public void OnClickEnableMatchMaker()

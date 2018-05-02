@@ -51,7 +51,7 @@ public class GameController : NetworkBehaviour {
             // server spawns pieces and wall
             SpawnPieces();
             SpawnWall();
-            Spawnables();
+            //Spawnables();
             didSpawn = true;
         }
 	}

@@ -398,19 +398,36 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114442452513866092, guid: a1aef29f96d2220459d86a64caee661d,
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
         type: 2}
-      propertyPath: showGUI
-      value: 1
+      propertyPath: matchMaker
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
         type: 2}
-      propertyPath: m_ShowLobbyGUI
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114189350771158486, guid: a1aef29f96d2220459d86a64caee661d, type: 2}
-    - {fileID: 114065639459867634, guid: a1aef29f96d2220459d86a64caee661d, type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1781971795411336, guid: 4cedf4073267498459dbb721a085001f,
+        type: 2}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1514658617391384, guid: 6efb92b242d691c4294e4bf9ab0fed04,
+        type: 2}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 1367531736817900, guid: aae4d28b2502ba54ca5448a4d993d6fe,
+        type: 2}
+    - target: {fileID: 114791497294796646, guid: a1aef29f96d2220459d86a64caee661d,
+        type: 2}
+      propertyPath: m_SpawnPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 1265991887052202, guid: d5dc3ff342cfa574894954887fa74325,
+        type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a1aef29f96d2220459d86a64caee661d, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &363803039

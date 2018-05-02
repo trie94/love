@@ -507,6 +507,7 @@ MonoBehaviour:
   nonInteractableSound: {fileID: 8300000, guid: 13befbe0c690987418af60e372194841,
     type: 3}
   fallSound: {fileID: 8300000, guid: c133209144597664485c7eb4a190321d, type: 3}
+  finalSound: {fileID: 8300000, guid: b40ede3ebf38f8f489058a794e5c3b25, type: 3}
 --- !u!114 &114675999143077442
 MonoBehaviour:
   m_ObjectHideFlags: 1

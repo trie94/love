@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using GoogleARCore;
 using TMPro;
 
@@ -28,7 +29,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     }
     bool isHovering;
 
-    bool isAndy;
     bool isSnapped;
     public bool GetIsSnapped()
     {
@@ -42,66 +42,43 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SerializeField] AudioClip snapSound;
     [SerializeField] AudioClip nonInteractableSound;
     [SerializeField] AudioClip fallSound;
+    [SerializeField] AudioClip finalSound;
 
     TextMeshProUGUI time;
-    TextMeshProUGUI score;
-    TextMeshProUGUI tap;
-    TextMeshProUGUI snap;
-
-    [SyncVar]
-    Vector3 syncPos;
-    Vector3 lastPos;
-    float threshold = 0.01f;
-
-    Transform pieceTransform;
-    [SyncVar]
-    Vector3 pieceSyncPos;
-    Vector3 pieceLastPos;
 
     bool hasCanvas;
     bool isplayed;
+    bool isFinal;
 
     void Start()
     {
-        //if (!isLocalPlayer)
-        //{
-        //    this.gameObject.SetActive(false);
-        //    this.enabled = false;
-        //    return;
-        //}
-        lastPos = transform.position;
-        syncPos = GetComponent<Transform>().position;
         camera = Camera.main.transform;
         layerMask = LayerMask.GetMask("Piece");
+
+        // assign color
+        // host
+        if (isServer)
+        {
+
+        }
+        // client
+        else
+        {
+
+        }
     }
 
     void Update()
     {
         // board
-        if (GameObject.Find("ScoreBoard") && !time && !score && !tap && !hasCanvas)
+        if (GameObject.Find("ScoreBoard") && !time && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
-            score = GameObject.Find("score").GetComponent<TextMeshProUGUI>();
-            tap = GameObject.Find("tap").GetComponent<TextMeshProUGUI>();
-            snap = GameObject.Find("snap").GetComponent<TextMeshProUGUI>();
             hasCanvas = true;
         }
 
-        // if andy spawned
-        if (player && !isAndy)
-        {
-            player.transform.parent = this.transform;
-            player.transform.position = this.transform.position + new Vector3(0f, 0f, -0.1f);
-            player.transform.rotation = Quaternion.identity;
-            isAndy = true;
-        }
-        else
-        {
-            player = GameObject.Find("Andy(Clone)");
-        }
-
         // count time
-        if (hasCanvas && GameSingleton.instance && GameSingleton.instance.allowSnap)
+        if (hasCanvas && GameSingleton.instance.allowSnap)
         {
             Board();
         }
@@ -205,7 +182,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         // if not tapping, check if it is close to grid otherwise release the piece
         if (!isTapped)
         {
-            if (piece && piece.transform.parent && isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
+            if (piece && piece.transform.parent && isSnapped && !matchedGrid && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
             {
                 if (isServer)
                 {
@@ -223,11 +200,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                 isSnapped = false;
                 piece.transform.parent = null;
                 Debug.Log("go to the grid");
-            }
-
-            if (isSnapped)
-            {
-                isSnapped = false;
             }
         }
 
@@ -248,6 +220,12 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             Debug.Log("total score: " + GameSingleton.instance.totalScore);
         }
+
+        // if score hits 10, go to the score board
+        if (GameSingleton.instance.totalScore >= 10 && !isFinal)
+        {
+            StartCoroutine(Final());
+        }
     }
 
     void DrawGizmos()
@@ -257,6 +235,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             Gizmos.DrawRay(camera.position, camera.forward * 1);
         }
     }
+
     void OnDrawGizmos()
     {
         DrawGizmos();
@@ -270,10 +249,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     void Board()
     {
         GameSingleton.instance.CountTime();
-        time.SetText("Time: " + GameSingleton.instance.PrintTime());
-        score.SetText("Score: " + GameSingleton.instance.totalScore.ToString() + " /10");
-        tap.SetText("is tapped: " + isTapped);
-        snap.SetText("is snapped: " + isSnapped);
+        time.SetText(GameSingleton.instance.sMinutes +":" + GameSingleton.instance.sSeconds);
     }
 
     void Interactable(GameObject piece)
@@ -504,5 +480,16 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         piece.GetComponent<Rigidbody>().useGravity = false;
         Debug.Log("fall");
         yield break;
+    }
+
+    IEnumerator Final()
+    {
+        isFinal = true;
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(finalSound);
+        }
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Score");
     }
 }
