@@ -89,9 +89,6 @@ public class MainMenu : NetworkBehaviour {
 
     public void JoinMatch()
     {
-        roomList.gameObject.SetActive(true);
-        roomList.text = typeRoom.text;
-
         lobbyManager.matchMaker.JoinMatch(lobbyManager.matches[lobbyManager.matches.Count - 1].networkId, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
         readyGame.SetActive(true);
         joinRoom.SetActive(false);
@@ -122,5 +119,14 @@ public class MainMenu : NetworkBehaviour {
             lobbyManager.matchSize = (uint)match.currentSize;
             //lobbyManager.matchMaker.JoinMatch(lobbyManager.matches[lobbyManager.matches.Count - 1].networkId, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
         }
+
+        roomList.gameObject.SetActive(true);
+        roomList.text = typeRoom.text;
+    }
+
+    void OnDisable()
+    {
+        // NetworkServer.Reset();
+       // NetworkServer.ResetConnectionStats();
     }
 }
