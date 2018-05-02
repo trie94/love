@@ -79,12 +79,12 @@ public class MainMenu : NetworkBehaviour {
 
     public void StartGame()
     {
-        lobbyManager.lobbySlots[0].SendReadyToBeginMessage();
+        StartCoroutine(StartHost());
     }
 
     public void ReadyGame()
     {
-        lobbyManager.lobbySlots[1].SendReadyToBeginMessage();
+        StartCoroutine(Ready());
     }
 
     public void JoinMatch()
@@ -124,9 +124,15 @@ public class MainMenu : NetworkBehaviour {
         roomList.text = typeRoom.text;
     }
 
-    void OnDisable()
+    IEnumerator Ready()
     {
-        // NetworkServer.Reset();
-       // NetworkServer.ResetConnectionStats();
+        yield return new WaitForSeconds(1f);
+        lobbyManager.lobbySlots[1].SendReadyToBeginMessage();
+    }
+
+    IEnumerator StartHost()
+    {
+        yield return new WaitForSeconds(1f);
+        lobbyManager.lobbySlots[0].SendReadyToBeginMessage();
     }
 }

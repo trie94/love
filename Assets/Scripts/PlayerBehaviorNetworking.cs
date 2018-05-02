@@ -165,7 +165,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                             if (piece.tag == "piece3" || piece.tag == "piece4")
                             {
                                 Snap();
-                                CmdSnap(piece);
+                                //CmdSnap(piece);
                             }
                         }
                     }
@@ -182,7 +182,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         // if not tapping, check if it is close to grid otherwise release the piece
         if (!isTapped)
         {
-            if (piece && piece.transform.parent && isSnapped && !matchedGrid && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
+            if (piece && piece.transform.parent && isSnapped && !piece.GetComponent<PieceBehavior>().GetEnableMatch())
             {
                 if (isServer)
                 {
@@ -191,7 +191,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                 else
                 {
                     Release();
-                    CmdRelease(piece);
+                    //CmdRelease(piece);
                 }
             }
             else if (piece && piece.transform.parent)
@@ -200,6 +200,14 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                 isSnapped = false;
                 piece.transform.parent = null;
                 Debug.Log("go to the grid");
+            }
+            else
+            {
+                isSnapped = false;
+                if (piece.transform.parent)
+                {
+                    piece.transform.parent = null;
+                }
             }
         }
 
