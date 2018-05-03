@@ -53,7 +53,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void Start()
     {
-        camera = Camera.main.transform;
+        camera = this.GetComponent<Camera>().transform;
         layerMask = LayerMask.GetMask("Piece");
     }
 
@@ -141,12 +141,13 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     {
                         if (isServer)
                         {
+                            //Release();
                             CmdRelease(piece);
                         }
                         else
                         {
                             Release();
-                            //CmdRelease(piece);
+                            CmdRelease(piece);
                         }
                     }
                 }
@@ -188,6 +189,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                         {
                             if (piece.tag == "piece1" || piece.tag == "piece2")
                             {
+                                //Snap();
                                 CmdSnap(piece);
                             }
                         }
@@ -197,7 +199,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                             if (piece.tag == "piece3" || piece.tag == "piece4")
                             {
                                 Snap();
-                                //CmdSnap(piece);
+                                CmdSnap(piece);
                             }
                         }
                     }
