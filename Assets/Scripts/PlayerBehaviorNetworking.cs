@@ -51,10 +51,31 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     bool isplayed;
     bool isFinal;
 
+    float threshold = 0.5f;
+    [SerializeField] float lerpRate = 5;
+    [SyncVar] Vector3 syncPos;
+    Vector3 lastPos;
+
     void Start()
     {
         camera = this.GetComponent<Camera>().transform;
         layerMask = LayerMask.GetMask("Piece");
+        syncPos = GetComponent<Transform>().position;
+
+        if (isServer)
+        {
+            this.gameObject.tag = "player1";
+        }
+        else
+        {
+            this.gameObject.tag = "player2";
+        }
+    }
+
+    void FixedUpdate()
+    {
+        TransmitPosition();
+        LerpPosition();
     }
 
     void Update()
@@ -501,5 +522,29 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Score");
+    }
+
+    void LerpPosition()
+    {
+        if (!hasAuthority)
+        {
+            transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * lerpRate);
+        }
+    }
+
+    [Command]
+    void CmdProvidePositionToServer(Vector3 pos)
+    {
+        syncPos = pos;
+    }
+
+    //[ClientCallback]
+    void TransmitPosition()
+    {
+        if (hasAuthority && Vector3.Distance(transform.position, lastPos) > threshold)
+        {
+            CmdProvidePositionToServer(transform.position);
+            lastPos = transform.position;
+        }
     }
 }

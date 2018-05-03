@@ -43,8 +43,31 @@ public class PieceBehavior : NetworkBehaviour
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
-        player = GameObject.FindGameObjectWithTag("MainCamera");
         audioSource = GetComponent<AudioSource>();
+
+        if (isServer)
+        {
+            player = GameObject.FindGameObjectWithTag("player1");
+        }
+        else
+        {
+            player = GameObject.FindGameObjectWithTag("player2");
+        }
+    }
+
+    void Update()
+    {
+        if (!player)
+        {
+            if (isServer)
+            {
+                player = GameObject.FindGameObjectWithTag("player1");
+            }
+            else
+            {
+                player = GameObject.FindGameObjectWithTag("player2");
+            }
+        }
     }
 
     void OnTriggerEnter(Collider other)
