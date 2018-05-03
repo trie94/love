@@ -108,7 +108,6 @@ public class GameSingleton : NetworkBehaviour {
         seconds = Mathf.RoundToInt(playTime % 60);
 
         formatedTime = string.Format("{0:0}:{1:00}", minutes, seconds);
-        Debug.Log("play time: " + playTime);
     }
 
     public string PrintTime()

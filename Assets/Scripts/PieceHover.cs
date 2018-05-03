@@ -36,10 +36,10 @@ public class PieceHover : MonoBehaviour {
 
     public void Hover()
     {
-        StartCoroutine(Glow());
-        StartCoroutine(Shiver());
         isBlinking = true;
         isShivering = true;
+        StartCoroutine(Glow());
+        StartCoroutine(Shiver());
     }
 
     public void NotHover()

@@ -53,7 +53,7 @@ public class PieceBehavior : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (player.GetComponent<PlayerBehaviorNetworking>().GetIsSnapped() && isSelected)
+        if (player.GetComponent<PlayerBehaviorNetworking>().GetIsSnapped())
         {
             if ((this.gameObject.tag == "piece1" && other.gameObject.tag == "grid1")
             || (this.gameObject.tag == "piece2" && other.gameObject.tag == "grid2")
