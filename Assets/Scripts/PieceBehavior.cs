@@ -39,16 +39,12 @@ public class PieceBehavior : NetworkBehaviour
     [SerializeField]
     AudioClip matchSound;
 
-    [HideInInspector]
-    public bool isSelected;
-
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
         player = GameObject.FindGameObjectWithTag("MainCamera");
         audioSource = GetComponent<AudioSource>();
-        isSelected = false;
     }
 
     void OnTriggerEnter(Collider other)

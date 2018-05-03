@@ -55,18 +55,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         camera = Camera.main.transform;
         layerMask = LayerMask.GetMask("Piece");
-
-        // assign color
-        // host
-        if (isServer)
-        {
-
-        }
-        // client
-        else
-        {
-
-        }
     }
 
     void Update()
@@ -172,12 +160,10 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             if (piece)
             {
-                Debug.Log("no hit and make blinking stop");
-                piece.GetComponent<PieceHover>().NotHover();
                 isHovering = false;
                 isTapped = false;
                 isSnapped = false;
-                piece.GetComponent<PieceBehavior>().isSelected = false;
+                piece.GetComponent<PieceHover>().NotHover();
                 if (piece.transform.parent)
                 {
                     piece.transform.parent = null;
@@ -186,7 +172,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
-        // detect tapping and snap the piece
+        // detect tapping and determine snapping
         if (Input.touchCount > 0)
         {
             foreach (Touch t in Input.touches)
@@ -225,6 +211,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             }
         }
 
+        // when a piece get absorbed into the grid, destory its collider not to get detected by raycasting
         if (piece && piece.GetComponent<PieceBehavior>().GetIsAbsorbed())
         {
             Destroy();
@@ -250,6 +237,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
     }
 
+    // show ray in the editor
     void DrawGizmos()
     {
         if (camera)
@@ -267,7 +255,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     {
         DrawGizmos();
     }
-
+    
+    // time counter, called by every frame
     void Board()
     {
         GameSingleton.instance.CountTime();
@@ -289,7 +278,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             piece.GetComponent<PieceHover>().NotHover();
         }
 
-        piece.GetComponent<PieceBehavior>().isSelected = true;
         piece.transform.parent = camera;
         piece.transform.rotation = Quaternion.identity;
         isSnapped = true;
@@ -317,7 +305,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             piece.GetComponent<PieceHover>().NotHover();
         }
 
-        piece.GetComponent<PieceBehavior>().isSelected = true;
         piece.transform.parent = camera;
         piece.transform.rotation = Quaternion.identity;
         isSnapped = true;
@@ -357,7 +344,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
         isSnapped = false;
         piece.transform.parent = null;
-        piece.GetComponent<PieceBehavior>().isSelected = false;
         StartCoroutine(PieceFall(piece));
         hasFall = true;
 
@@ -387,7 +373,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
         isSnapped = false;
         piece.transform.parent = null;
-        piece.GetComponent<PieceBehavior>().isSelected = false;
         StartCoroutine(PieceFall(piece));
         hasFall = true;
 
