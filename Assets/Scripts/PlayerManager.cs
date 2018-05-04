@@ -25,12 +25,6 @@ public class PlayerManager : NetworkBehaviour
 
     void Update()
     {
-        // start counting
-        if (!isDone && playerBehavior.enabled)
-        {
-            GameSingleton.instance.CountTime();
-        }
-
         if (GameSingleton.instance.allowSnap)
         {
             playerBehavior.enabled = true;
@@ -41,10 +35,4 @@ public class PlayerManager : NetworkBehaviour
             isDone = true;
         }
     }
-
-	void OnDisable()
-	{
-        Debug.Log("Total play time: " + GameSingleton.instance.PrintTime());
-        Debug.Log("Total score: " + GameSingleton.instance.PrintScore());
-	}
 }

@@ -13,10 +13,7 @@ public class GameSingleton : NetworkBehaviour {
     public int pieceNum;
     [SyncVar]
     public Vector3 anchor;
-    [SyncVar]
-    public float playTime = 0;
-    public float minutes;
-    public float seconds;
+
     public string formatedTime;
 
     public int totalScore = 0;
@@ -99,19 +96,5 @@ public class GameSingleton : NetworkBehaviour {
     public string PrintScore()
     {
         return totalScore.ToString();
-    }
-
-    public void CountTime()
-    {
-        playTime += Time.deltaTime;
-        minutes = Mathf.FloorToInt(playTime / 60);
-        seconds = Mathf.RoundToInt(playTime % 60);
-
-        formatedTime = string.Format("{0:0}:{1:00}", minutes, seconds);
-    }
-
-    public string PrintTime()
-    {
-        return Mathf.Round(playTime).ToString();
     }
 }

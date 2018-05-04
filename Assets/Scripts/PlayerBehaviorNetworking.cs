@@ -39,21 +39,36 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     bool isFalling;
     bool hasFall;
 
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip snapSound;
-    [SerializeField] AudioClip nonInteractableSound;
-    [SerializeField] AudioClip fallSound;
-    [SerializeField] AudioClip finalSound;
+    [SerializeField]
+    AudioSource audioSource;
+    [SerializeField]
+    AudioClip snapSound;
+    [SerializeField]
+    AudioClip nonInteractableSound;
+    [SerializeField]
+    AudioClip fallSound;
+    [SerializeField]
+    AudioClip finalSound;
 
     TextMeshProUGUI time;
 
     bool hasCanvas;
+    bool startCount;
     bool isplayed;
     bool isFinal;
 
+    [SerializeField]
+    float playTime = 120f;
+
+    string minutes;
+    string seconds;
+
     float threshold = 0.5f;
-    [SerializeField] float lerpRate = 5;
-    [SyncVar] Vector3 syncPos;
+    [SerializeField]
+    float lerpRate = 5;
+
+    [SyncVar]
+    Vector3 syncPos;
     Vector3 lastPos;
 
     void Start()
@@ -98,9 +113,9 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
 
         // count time
-        if (hasCanvas && GameSingleton.instance.allowSnap)
+        if (hasCanvas && GameSingleton.instance.allowSnap && !startCount)
         {
-            Board();
+            StartCoroutine(CountDown(playTime));
         }
 
         // raycast
@@ -124,7 +139,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     }
                     else
                     {
-                        //NotInteractable();
                         isInteractable = false;
                     }
                 }
@@ -137,7 +151,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
                     }
                     else
                     {
-                        //NotInteractable();
                         isInteractable = false;
                     }
                 }
@@ -252,12 +265,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             Debug.Log("total score: " + GameSingleton.instance.totalScore);
         }
-
-        // if score hits 10, go to the score board
-        if (GameSingleton.instance.allowSnap && GameSingleton.instance.playTime >= 120 && !isFinal)
-        {
-            StartCoroutine(Final());
-        }
     }
 
     // show ray in the editor
@@ -279,13 +286,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         DrawGizmos();
     }
     
-    // time counter, called by every frame
-    void Board()
-    {
-        GameSingleton.instance.CountTime();
-        time.SetText(GameSingleton.instance.formatedTime);
-    }
-
     void Interactable(GameObject piece)
     {
         Debug.Log("piece: " + piece + " is interactable");
@@ -343,19 +343,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             pieceId.RemoveClientAuthority(connectionToClient);
         }
         Debug.Log("cmd snap");
-    }
-
-    void NotInteractable()
-    {
-        //SetLocalPlayerAuth(piece);
-        StartCoroutine(BouncePiece());
-
-        if (!audioSource.isPlaying)
-        {
-            audioSource.PlayOneShot(nonInteractableSound);
-            Debug.Log("not interactable");
-        }
-        isplayed = false;
     }
 
     void Release()
@@ -452,20 +439,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         Debug.Log("add score");
     }
 
-    void SetLocalPlayerAuth(GameObject gameObject)
-    {
-        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
-        CmdAssignClientAuthority(gameObject);
-        Debug.Log("set local player authority");
-    }
-
-    void RemoveLocalPlayerAuth(GameObject gameObject)
-    {
-        gameObject.GetComponent<NetworkIdentity>().localPlayerAuthority = false;
-        CmdRemoveClientAuthority(gameObject);
-        Debug.Log("remove local player authority");
-    }
-
     [Command]
     public void CmdAssignClientAuthority(GameObject gameObject)
     {
@@ -513,17 +486,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         yield break;
     }
 
-    IEnumerator Final()
-    {
-        isFinal = true;
-        if (!audioSource.isPlaying)
-        {
-            audioSource.PlayOneShot(finalSound);
-        }
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("Score");
-    }
-
     void LerpPosition()
     {
         if (!hasAuthority)
@@ -538,7 +500,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         syncPos = pos;
     }
 
-    //[ClientCallback]
     void TransmitPosition()
     {
         if (hasAuthority && Vector3.Distance(transform.position, lastPos) > threshold)
@@ -547,4 +508,38 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
             lastPos = transform.position;
         }
     }
+
+    IEnumerator CountDown(float totalTime)
+    {
+        startCount = true;
+        playTime = totalTime;
+
+        while (playTime >= 0f)
+        {
+            playTime--;
+            minutes = Mathf.FloorToInt(playTime / 60).ToString("00");
+            seconds = Mathf.RoundToInt(playTime % 60).ToString("00");
+            time.SetText(minutes + ":" + seconds);
+
+            yield return new WaitForSeconds(1f);
+
+            if (playTime < 0f)
+            {
+                StartCoroutine(Final());
+                yield break;
+            }
+        }
+    }
+
+    IEnumerator Final()
+    {
+        isFinal = true;
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(finalSound);
+        }
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Score");
+    }
+
 }
