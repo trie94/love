@@ -39,11 +39,15 @@ public class PieceBehavior : NetworkBehaviour
     [SerializeField]
     AudioClip matchSound;
 
+    bool avoidCol;
+    Collider wallCollider;
+
     void Start()
     {
         anchor = GameSingleton.instance.anchor;
         col = GetComponent<Collider>();
         audioSource = GetComponent<AudioSource>();
+        wallCollider = GameObject.FindGameObjectWithTag("wall").GetComponent<Collider>();
 
         if (isServer)
         {
@@ -53,6 +57,9 @@ public class PieceBehavior : NetworkBehaviour
         {
             player = GameObject.FindGameObjectWithTag("player2");
         }
+
+        avoidCol = true;
+        StartCoroutine(DetectColInBeginning());
     }
 
     void Update()
@@ -72,6 +79,13 @@ public class PieceBehavior : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.tag == "wall" && avoidCol)
+        {
+            float ranVal = Random.Range(0.3f, 0.4f);
+            transform.position += new Vector3(ranVal, 0f, ranVal);
+            Debug.Log("collide with the wall and move position");
+        }
+
         if (player.GetComponent<PlayerBehaviorNetworking>().GetIsSnapped())
         {
             if ((this.gameObject.tag == "piece1" && other.gameObject.tag == "grid1")
@@ -99,6 +113,13 @@ public class PieceBehavior : NetworkBehaviour
 
     void OnTriggerStay(Collider other)
     {
+        if (other.gameObject.tag == "wall" && avoidCol)
+        {
+            float ranVal = Random.Range(0.3f, 0.4f);
+            transform.position += new Vector3(ranVal, 0f, ranVal);
+            Debug.Log("collide with the wall and move position");
+        }
+
         if (matchedGrid && !enableMatch)
         {
             enableMatch = true;
@@ -118,16 +139,6 @@ public class PieceBehavior : NetworkBehaviour
             matchedGrid.GetComponent<WallGrid>().isHovering = false;
             matchedGrid.GetComponent<WallGrid>().triggerHover = false;
         }
-    }
-
-    void Float()
-    {
-        transform.RotateAround(anchor, Vector3.up, Time.deltaTime * speed);
-    }
-
-    void Stop()
-    {
-        speed = 0f;
     }
 
     public void Match()
@@ -169,5 +180,22 @@ public class PieceBehavior : NetworkBehaviour
         }
     }
 
+    IEnumerator DetectColInBeginning()
+    {
+        float detectTimer = 3f;
+        while (detectTimer >= 0)
+        {
+            detectTimer -= Time.deltaTime;
+            yield return null;
 
+            if (detectTimer < 0)
+            {
+                avoidCol = false;
+                wallCollider.isTrigger = false;
+                wallCollider.enabled = false;
+                Debug.Log("no more move");
+                yield break;
+            }
+        }
+    }
 }

@@ -1489,9 +1489,10 @@ GameObject:
   - component: {fileID: 95102205899577588}
   - component: {fileID: 114134286164190796}
   - component: {fileID: 114017661310752806}
+  - component: {fileID: 65131128738344032}
   m_Layer: 0
   m_Name: Wall_Final
-  m_TagString: Untagged
+  m_TagString: wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11139,6 +11140,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65131128738344032
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1248182038015278}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.08, y: 0.065, z: 0.02}
+  m_Center: {x: 0, y: -0.008, z: 0}
 --- !u!65 &65191116791601718
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -11479,6 +11492,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23875355311073316}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114093921558087620
 MonoBehaviour:
@@ -11558,6 +11572,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23511964689832960}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114128046480603974
 MonoBehaviour:
@@ -11637,6 +11652,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23842048481637854}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114214943956307798
 MonoBehaviour:
@@ -11652,6 +11668,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23746795991371808}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114220965876237216
 MonoBehaviour:
@@ -11667,6 +11684,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23875927039412244}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114231543326707486
 MonoBehaviour:
@@ -11714,6 +11732,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23424740537453902}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114271976102612310
 MonoBehaviour:
@@ -11729,6 +11748,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23546629513562612}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114353622954583950
 MonoBehaviour:
@@ -11840,6 +11860,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23515148512199510}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114372678968588278
 MonoBehaviour:
@@ -11855,6 +11876,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23091795380379602}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114457053246649306
 MonoBehaviour:
@@ -11934,6 +11956,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23754245687105640}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114470142902870742
 MonoBehaviour:
@@ -11949,6 +11972,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23278591873869990}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114511074778668078
 MonoBehaviour:
@@ -11964,6 +11988,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23182107484401034}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114513497190315950
 MonoBehaviour:
@@ -11979,6 +12004,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23309565496081914}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114538734001819870
 MonoBehaviour:
@@ -11994,6 +12020,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23200425563509698}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114559261688617676
 MonoBehaviour:
@@ -12009,6 +12036,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23981969089134702}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114559761221497618
 MonoBehaviour:
@@ -12024,6 +12052,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23436151174828560}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114628268760497958
 MonoBehaviour:
@@ -12071,6 +12100,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23788996374297956}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114716852723999282
 MonoBehaviour:
@@ -12182,6 +12212,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23932270221015218}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114743903075173512
 MonoBehaviour:
@@ -12261,6 +12292,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23047109957298778}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114797072267501040
 MonoBehaviour:
@@ -12372,6 +12404,7 @@ MonoBehaviour:
   lerpSpeed: 3
   rend: {fileID: 23502090839803658}
   triggerHover: 0
+  isHovering: 0
   hasPiece: 0
 --- !u!114 &114925517989932572
 MonoBehaviour:

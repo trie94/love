@@ -71,11 +71,12 @@ public class GameController : NetworkBehaviour {
             // store piece list
             GameSingleton.instance.spawnedPieces.Add(pieces);
             Debug.Log("spawn");
-            // store piece num info
-            GameSingleton.instance.PieceNum(piecesNum);
-            // allow snapping interaction
-            GameSingleton.instance.AllowSnap(true);
         }
+
+        // store piece num info
+        GameSingleton.instance.PieceNum(piecesNum);
+        // allow snapping interaction
+        GameSingleton.instance.AllowSnap(true);
     }
 
     void SpawnWall()

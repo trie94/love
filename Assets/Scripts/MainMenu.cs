@@ -129,11 +129,13 @@ public class MainMenu : NetworkBehaviour {
     {
         yield return new WaitForSeconds(1f);
         lobbyManager.lobbySlots[1].SendReadyToBeginMessage();
+        yield break;
     }
 
     IEnumerator StartHost()
     {
         yield return new WaitForSeconds(1f);
         lobbyManager.lobbySlots[0].SendReadyToBeginMessage();
+        yield break;
     }
 }
