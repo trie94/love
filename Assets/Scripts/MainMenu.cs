@@ -43,6 +43,22 @@ public class MainMenu : NetworkBehaviour {
         audioSource = GetComponent<AudioSource>();
         NetworkServer.Reset();
         NetworkServer.ResetConnectionStats();
+
+        FirstSetting();
+    }
+
+    void FirstSetting()
+    {
+        background.SetActive(true);
+        enableMatch.SetActive(true);
+        backgroundWithoutCubes.SetActive(false);
+        createRoom.SetActive(false);
+        startGame.SetActive(false);
+        readyGame.SetActive(false);
+        findRoom.SetActive(false);
+        joinRoom.SetActive(false);
+        typeRoom.gameObject.SetActive(false);
+        roomList.gameObject.SetActive(false);
     }
 
     public void OnClickEnableMatchMaker()
@@ -67,6 +83,7 @@ public class MainMenu : NetworkBehaviour {
         findRoom.SetActive(false);
         startGame.SetActive(true);
         createRoom.SetActive(false);
+        Debug.Log("match name: " + typeRoom.text);
     }
 
     public void ButtonSound()
@@ -112,8 +129,8 @@ public class MainMenu : NetworkBehaviour {
 
         foreach (var match in lobbyManager.matches)
         {
-            roomList.text = match.name;
-            Debug.Log("match name: " + match.name);
+            roomList.text = typeRoom.text;
+            Debug.Log("match name: " + typeRoom.text);
 
             lobbyManager.matchName = match.name;
             lobbyManager.matchSize = (uint)match.currentSize;
@@ -122,7 +139,6 @@ public class MainMenu : NetworkBehaviour {
 
         roomList.gameObject.SetActive(true);
         roomList.text = typeRoom.text;
-        Debug.Log("room list: " + roomList.text);
     }
 
     IEnumerator Ready()
