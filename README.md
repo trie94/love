@@ -54,6 +54,7 @@ using Input = GoogleARCore.InstantPreviewInput;
 ```
 
 **5. Networking**
+
 **Comment Out Below Code in the ARCoreSession Script**
 ```
 if (m_SessionComponent != null)
@@ -64,7 +65,7 @@ if (m_SessionComponent != null)
      return;
 }
 ```
-AR Core Session does not allow multiple AR Core sessions in one scene. Thus, if you don't disable the above code, one AR Core session will disable the other one.
+AR Core Session *does not allow multiple AR Core sessions* in one scene. Thus, if you don't disable the above code, one AR Core session will disable the other one.
 
 ## Author
 
