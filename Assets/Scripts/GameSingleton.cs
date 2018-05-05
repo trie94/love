@@ -23,9 +23,6 @@ public class GameSingleton : NetworkBehaviour {
     public GameObject targetGrid;
 
     public List<GameObject> wallGrids = new List<GameObject>();
-
-    public List<GameObject> targetGrids = new List<GameObject>();
-
     public List<GameObject> spawnedPieces = new List<GameObject>();
 
     public bool testIsSnapped;
@@ -76,16 +73,6 @@ public class GameSingleton : NetworkBehaviour {
     public void AddScore()
     {
         totalScore++;
-    }
-
-    public void AddTargetGrid(GameObject _targetGrid)
-    {
-        targetGrids.Add(_targetGrid);
-    }
-
-    public void SetTargetGrid(GameObject _targetGrid)
-    {
-        targetGrid = _targetGrid;
     }
 
     public void SetIsPieceAbsorbed(bool _isPieceAbsorbed)

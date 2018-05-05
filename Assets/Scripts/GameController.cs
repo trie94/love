@@ -13,13 +13,12 @@ public class GameController : NetworkBehaviour {
     [SerializeField] int piecesNum;
 
     [SerializeField] GameObject wallPrefab;
-    WallGrid[] wallGrid;
-    [SerializeField] int gridNum;
 
+    // wall height
     [SerializeField] float height = 1.2f;
-
     bool didSpawn;
 
+    // when add new objects, use unity editor to add prefabs
     [SerializeField] GameObject[] spawnablesPrefab;
 
     [SerializeField] AudioSource audioSource;
@@ -35,13 +34,6 @@ public class GameController : NetworkBehaviour {
         }
 
         Debug.Log("is server");
-
-        //wallGrid = new WallGrid[gridNum];
-        //for (int i = 0; i < wallGrid.Length; i++)
-        //{
-        //    wallGrid[i] = wallPrefab.GetComponentInChildren<WallGrid>();
-        //    GameSingleton.instance.wallGrids.Add(wallGrid[i].gameObject);
-        //}
     }
 	
     void Update ()
@@ -92,6 +84,7 @@ public class GameController : NetworkBehaviour {
         Debug.Log("wall");
     }
 
+    // when add new spawn objects, use this function
     void Spawnables()
     {
         for (int i = 0; i < spawnablesPrefab.Length; i++)

@@ -134,7 +134,6 @@ public class MainMenu : NetworkBehaviour {
 
             lobbyManager.matchName = match.name;
             lobbyManager.matchSize = (uint)match.currentSize;
-            //lobbyManager.matchMaker.JoinMatch(lobbyManager.matches[lobbyManager.matches.Count - 1].networkId, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
         }
 
         roomList.gameObject.SetActive(true);

@@ -44,8 +44,6 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
     [SerializeField]
     AudioClip snapSound;
     [SerializeField]
-    AudioClip nonInteractableSound;
-    [SerializeField]
     AudioClip fallSound;
     [SerializeField]
     AudioClip finalSound;
@@ -87,6 +85,8 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         }
     }
 
+    // manually update player's transform information
+    // if this is not updated, the host player cannot see the client progress.
     void FixedUpdate()
     {
         TransmitPosition();
@@ -95,7 +95,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
     void Update()
     {
-        // board
+        // ui
         if (GameObject.Find("ScoreBoard") && !time && !hasCanvas)
         {
             time = GameObject.Find("time").GetComponent<TextMeshProUGUI>();
@@ -514,7 +514,7 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         startCount = true;
         playTime = totalTime;
 
-        while (playTime >= 0f)
+        while (playTime > 0f)
         {
             playTime--;
             minutes = Mathf.FloorToInt(playTime / 60).ToString("00");
@@ -523,9 +523,11 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
 
             yield return new WaitForSeconds(1f);
 
-            if (playTime < 0f)
+            if (playTime <= 0f)
             {
                 StartCoroutine(Final());
+                // avoid negative value
+                time.SetText("00:00");
                 yield break;
             }
         }
@@ -541,5 +543,4 @@ public class PlayerBehaviorNetworking : NetworkBehaviour
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Score");
     }
-
 }
