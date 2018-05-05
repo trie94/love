@@ -1,4 +1,4 @@
-# love
+# Brick
 
 Brick is a 2-player augmented reality game that challenges the players to accomplish collaborative tasks with their partner.
 
@@ -6,81 +6,51 @@ Brick is a 2-player augmented reality game that challenges the players to accomp
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
-
-* [AR Core Supported Devices](https://developers.google.com/ar/discover/#supported_devices)
-** [AR Core SDK for Unity](https://github.com/google-ar/arcore-unity-sdk/releases/download/v1.1.0/arcore-unity-sdk-v1.1.0.unitypackage)
-
-### Installing
-
-You have to set up Unity with AR Core.
-
-Install the Android SDK version 7.0 (API Level 24) or higher.
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-To test the game, you have to have two AR Core supported devices. To run in the Unity editor, the device should have AR Core instant preview.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
 * [Unity 2017.3.1f1](https://unity3d.com/unity/whats-new/unity-2017.3.1) - game engine
-* [Google AR Core](https://developers.google.com/ar/develop/unity/quickstart) - Dependency Management
+* [Google AR Core](https://developers.google.com/ar/develop/unity/quickstart)
 
-## Contributing
+### Prerequisites
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+* [AR Core Supported Devices](https://developers.google.com/ar/discover/#supported_devices)
+* [AR Core SDK for Unity](https://github.com/google-ar/arcore-unity-sdk/releases/download/v1.1.0/arcore-unity-sdk-v1.1.0.unitypackage)
+* [AR Core Instant Preview]
 
-## Versioning
+### Set Up
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+1. Install AR Core SDK Unity Package
+You have to set up Unity(2017.3.1f1 is recommended) with AR Core SDK.
 
-## Authors
+Install the Android SDK version 7.0 (API Level 24) or higher. Install Android Studio and Android SDK Manager tool in Android Studio. In Unity preferences(Edit -> Preferences -> External Tools), you have to assign the local address of SDK (See the figure below). If you don't have JDK, you should download it and assign the address as well. (NDK is optional.)
+![External Tools](https://github.com/trie94/love/blob/master/References/external_tool.PNG)
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+If there is any conflict between SDK and Unity, you have to download the lower version of SDK and change the latest SDK tools folder with the lower version. Note that other folders should be kept as the latest.
+* [Android SDK Platform Release Notes](https://developer.android.com/studio/releases/platforms)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+2. Set up devices
+When testing in the Unity editor, you have to make the device as a developer mode. You can change the mode in Settings -> System -> About phone -> Build number. When you hit Build number multiple times, it will notify you the developer mode is on. You will see Developer options once the mode is on.
+
+3. Install AR Core Instant Preview
+When you first connect your device to PC and hit play in Unity, it will automatically launch AR Core instant preview. When it successfully connected, you will see the screen below.
+![AR Core Instant Preivew Example 1](https://github.com/trie94/love/blob/master/References/instant_preview.PNG)
+
+You will not be able to see through the phone screen in the editor mode.
+![AR Core Instant Preivew Example 2](https://github.com/trie94/love/blob/master/References/instant_preview2.PNG)
+
+When you testing touch interaction in Unity, you need to add the code below. In this project, it is already added in the PlayerBehaviorNetworking script.
+
+```
+#if UNITY_EDITOR
+using Input = GoogleARCore.InstantPreviewInput;
+#endif
+```
+
+## Author
+
+* **Yein Jo** - *Initial work* - [GitHub](https://github.com/trie94)
+
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+This project is from a small group study in HCII at CMU and licensed under the CMU students: Po Bhattacharya, Ketki Jadhav, Radha Nath, Yein Jo; Jessica Hammer as an instructor.
