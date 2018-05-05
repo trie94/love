@@ -33,10 +33,10 @@ When testing in the Unity editor, you have to make the device as a developer mod
 
 3. Install AR Core Instant Preview
 When you first connect your device to PC and hit play in Unity, it will automatically launch AR Core instant preview. When it successfully connected, you will see the screen below.
-![AR Core Instant Preivew Example 1](https://github.com/trie94/love/blob/master/References/instant_preview.PNG)
+![AR Core Instant Preivew Example 1](https://github.com/trie94/love/blob/master/References/instant_preview1.jpg)
 
 You will not be able to see through the phone screen in the editor mode.
-![AR Core Instant Preivew Example 2](https://github.com/trie94/love/blob/master/References/instant_preview2.PNG)
+![AR Core Instant Preivew Example 2](https://github.com/trie94/love/blob/master/References/instant_preview2.jpg)
 
 When you testing touch interaction in Unity, you need to add the code below. In this project, it is already added in the PlayerBehaviorNetworking script.
 
