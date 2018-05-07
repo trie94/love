@@ -78,5 +78,5 @@ This project is from a small group study in HCII at CMU and licensed under the C
 
 * **Ketki Jadhav** - *Designer*
 * **Radha Nath** - *Researcher*
-* **Po Bhattacharya** - *Researcher* - [Portfolio](http://www.pobhattacharyya.com)
+* **Po Bhattacharya** - *Product Manager* - [Portfolio](http://www.pobhattacharyya.com)
 * **Yein Jo** - *Programmer* - [Portfolio](http://www.yeinjo.com/)
