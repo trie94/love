@@ -75,3 +75,8 @@ AR Core Session *does not allow multiple AR Core sessions* in one scene. Thus, i
 ## License
 
 This project is from a small group study in HCII at CMU and licensed under the CMU students: Po Bhattacharya, Ketki Jadhav, Radha Nath, Yein Jo; Jessica Hammer as an instructor.
+
+* **Ketki Jadhav** - *Designer*
+* **Radha Nath** - *Researcher*
+* **Po Bhattacharya** - *Researcher* - [Portfolio](http://www.pobhattacharyya.com)
+* **Yein Jo** - *Programmer* - [Portfolio](https://yeinjo.com)
