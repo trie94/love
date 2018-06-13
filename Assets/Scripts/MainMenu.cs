@@ -78,12 +78,20 @@ public class MainMenu : NetworkBehaviour {
 
     public void CreateRoomForMatch()
     {
-        lobbyManager.matchMaker.CreateMatch(typeRoom.text, (uint)lobbyManager.maxPlayers, true, "", "", "", 0, 0, lobbyManager.OnMatchCreate);
+        lobbyManager.matchMaker.CreateMatch(typeRoom.text, (uint)lobbyManager.maxPlayers, true, "", "", "", 0, 0, OnMatchCreate);
         joinRoom.SetActive(false);
         findRoom.SetActive(false);
         startGame.SetActive(true);
         createRoom.SetActive(false);
         Debug.Log("match name: " + typeRoom.text);
+    }
+
+    public void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+    {
+        Debug.Log("Success: " + success);
+        Debug.Log(extendedInfo);
+        Debug.Log(matchInfo);
+        lobbyManager.OnMatchCreate(success, extendedInfo, matchInfo);
     }
 
     public void ButtonSound()
